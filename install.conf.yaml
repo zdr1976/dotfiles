@@ -9,3 +9,6 @@
     ~/.screenrc: screenrc
     ~/.gitconfig: gitconfig
     ~/.vim: vim
+
+- shell:
+    - [git submodule update --init --recursive, Installing submodules]
