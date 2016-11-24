@@ -4,6 +4,9 @@ case $- in
 	*) return;;
 esac
 
+# OS detection
+OS=`uname -s`
+
 # don't put duplicate lines or lines starting with space in the history.
 HISTCONTROL=ignoreboth
 
@@ -15,6 +18,15 @@ HISTSIZE=10000
 HISTFILESIZE=10000
 
 EDITOR=vim
+
+# Only for MacOS
+if [ "$OS" == "Darwin" ]; then
+	export CLICOLOR=1
+	export LSCOLORS=GxFxCxDxBxegedabagaced
+	export PATH=$(/usr/local/bin/brew --prefix)/bin:$PATH
+	# Set architecture flags
+	export ARCHFLAGS="-arch x86_64"
+fi
 
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
@@ -55,23 +67,42 @@ if ! shopt -oq posix; then
 	elif [ -f /etc/bash_completion ]; then
 		. /etc/bash_completion
 	fi
+	# MacOS with brew installed
+	if [ "$OS" == "Darwin" ]; then
+		if [ -f $(brew --prefix)/etc/bash_completion ]; then
+			. $(brew --prefix)/etc/bash_completion
+		fi
+	fi
 fi
 
 # GO LANG
 export GOPATH=$HOME/Projects/GO
-export GOROOT=$HOME/bin/go
+if [ "$OS" == "Darwin" ]; then
+		export GOROOT=$(brew --prefix)/opt/go/lbexec/go
+elif [ "$OS" == "Linux" ]; then
+	export GOROOT=$HOME/bin/go
+fi
 export PATH=~/bin:$PATH:$GOROOT/bin
 
 # PYTHON
 # pip should only run if there is a virtualenv currently activated
 export PIP_REQUIRE_VIRTUALENV=true
-WORKON_HOME=~/.virtualenvs
-if [ -f /etc/bash_completion.d/virtualenvwrapper ]; then
-	. /etc/bash_completion.d/virtualenvwrapper
+export WORKON_HOME=~/.virtualenvs
+if [ "$OS" == "Darwin" ]; then
+	if [ -f $(/usr/local/bin/brew --prefix)/bin/virtualenvwrapper.sh ]; then
+		. $(/usr/local/bin/brew --prefix)/bin/virtualenvwrapper.sh
+	fi
+elif [ "$OS" == "Linux" ]; then
+	if [ -f /etc/bash_completion.d/virtualenvwrapper ]; then
+		. /etc/bash_completion.d/virtualenvwrapper
+	fi
 fi
+
 # Temporarily turn off restriction for pip
 gpip(){
 	PIP_REQUIRE_VIRTUALENV="" pip "$@"
 }
 
-TERM=xterm-256color
+
+# Uncomment if your terminal doesn't propagate that nut support 256 colors
+#TERM=xterm-256color
