@@ -1,0 +1,11 @@
+- defaults:
+    link:
+        relink: true
+
+- clean: ['~']
+
+- link:
+    ~/.bashrc: bashrc
+    ~/.screenrc: screenrc
+    ~/.gitconfig: gitconfig
+    ~/.vim: vim

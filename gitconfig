@@ -1,0 +1,11 @@
+[alias]
+	st = status
+	co = checkout
+	br = branch
+	up = rebase
+	ci = commit
+	df = diff
+[core]
+	editor = vim
+[push]
+	default = matching

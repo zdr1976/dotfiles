@@ -1,0 +1,310 @@
+
+" A sensible vimrc for Python and Go development
+
+" VUNDLE
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+
+" Let Vundle manage Vundle
+Plugin 'gmarik/Vundle.vim'
+
+" Utils
+Plugin 'scrooloose/nerdtree'
+Plugin 'vim-scripts/TaskList.vim'
+Plugin 'majutsushi/tagbar'
+
+" Python
+Plugin 'klen/python-mode'
+
+" Go Lang
+Plugin 'fatih/vim-go'
+
+" Code completion
+Plugin 'davidhalter/jedi-vim'		" Python autocompletion
+Plugin 'justmao945/vim-clang'		" C/C++
+"Plugin 'Valloric/YouCompleteMe'	" Completion engine for more languages
+
+" Syntax
+Plugin 'gabrielelana/vim-markdown'	" Markdown flavor implemented by Github
+Plugin 'sudar/vim-arduino-syntax'	" Arduino
+
+" Git wrapper
+Plugin 'tpope/vim-fugitive'
+
+" Status line
+Plugin 'vim-airline/vim-airline'
+Plugin 'vim-airline/vim-airline-themes'
+
+" Have a look
+"Plugin 'SirVer/ultisnips'
+"Plugin 'terryma/vim-multiple-cursors'
+
+call vundle#end()
+
+""""""""""""""""""""""
+"      Settings      "
+""""""""""""""""""""""
+filetype off                    " Reset filetype detection first ...
+filetype plugin indent on       " ... and enable filetype detection
+set nocompatible                " Enables us Vim specific features
+set ttyfast                     " Indicate fast terminal conn for faster redraw
+set ttymouse=xterm2             " Indicate terminal type for mouse codes
+set ttyscroll=3                 " Speedup scrolling
+set laststatus=2                " Show status line always
+set encoding=utf-8              " Set default encoding to UTF-8
+set autoread                    " Automatically read changed files
+set autoindent                  " Enabile Autoindent
+set backspace=indent,eol,start  " Makes backspace key more powerful.
+set incsearch                   " Shows the match while typing
+set hlsearch                    " Highlight found searches
+set noerrorbells                " No beeps
+set number                      " Show line numbers
+set showcmd                     " Show me what I'm typing
+set noswapfile                  " Don't use swapfile
+set nobackup                    " Don't create annoying backup files
+set splitright                  " Vertical windows should be split to right
+set splitbelow                  " Horizontal windows should split to bottom
+set autowrite                   " Automatically save before :next, :make etc.
+set hidden                      " Buffer should still exist if window is closed
+set fileformats=unix,dos,mac    " Prefer Unix over Windows over OS 9 formats
+set noshowmatch                 " Do not show matching brackets by flickering
+set noshowmode                  " We show the mode with airline or lightline
+set ignorecase                  " Search case insensitive...
+set smartcase                   " ... but not it begins with upper case
+set completeopt=menu,menuone    " Show popup menu, even if there is one entry
+set pumheight=10                " Completion window max size
+set nocursorcolumn              " Do not highlight column (speeds up highlighting)
+set nocursorline                " Do not highlight cursor (speeds up highlighting)
+set lazyredraw                  " Wait to redraw
+set undolevels=1000				" How many undos
+set undoreload=1000				" number of lines to save for undo
+set history=1000				" Remember more commands and search history
+set nofoldenable				" Don't fold by default
+set tabstop=4					" Tabs will be displayed as 4 spaces
+set ttimeoutlen=10				" Key code delays
+set timeoutlen=1000				" Papping delays ms
+set t_RV=						" Get rid of termresponse
+"set fo-=t						" Don't automatically wrap text when typing
+
+" Auto reload vimrc when it's saved
+autocmd! bufwritepost vimrc source %
+
+" Enable to copy to clipboard for operations like yank, delete, change and put
+if has('unnamedplus')
+	set clipboard^=unnamed
+	set clipboard^=unnamedplus
+endif
+
+" This enables us to undo files even if you exit Vim.
+if has('persistent_undo')
+	set undofile
+	set undodir=~/.vim/undo/
+endif
+
+" Colorscheme
+syntax enable
+set t_Co=256
+"set cursorline			" Highlight current line
+"set colorcolumn=100		" Highlight 100th column
+"highlight ColorColumn ctermbg=233
+colorscheme wombat256mod
+"let g:rehash256 = 1
+"let g:molokai_original = 1
+"colorscheme molokai
+
+" Custom Invisibles
+"set list
+"set listchars=tab:»·,trail:⋅,nbsp:¤
+
+" Functions
+function! LoadTemplate()
+	" load a template based on the file extension
+	silent 0r ~/.vim/templates/tmpl.%:e
+
+	" Replace some placeholders
+	"%s/%FILENAME%/\=expand("%:t")/g
+	%s/%DATE%/\=strftime("%b %d, %Y")/g
+endfunction
+
+""""""""""""""""""""""""""""""""""
+" Tamplates & Languages settings "
+""""""""""""""""""""""""""""""""""
+
+augroup templates
+	autocmd!
+	"Auto load wile creating new files
+	autocmd BufNewFile *.py call LoadTemplate()
+	autocmd BufNewFile *.c call LoadTemplate()
+augroup END
+
+"autocmd! bufwritepost .vimrc source % " Auto reload vimrc when it's saved
+autocmd Filetype gitcommit setlocal spell textwidth=72
+autocmd FileType python setlocal tabstop=4 softtabstop=4 shiftwidth=4 expandtab
+autocmd BufRead,BufNewFile *.h,*.c set filetype=c
+autocmd BufRead,BufNewFile *.ino,*.pde set filetype=arduino
+autocmd ColorScheme * highlight ExtraWhitespace ctermbg=red guibg=red
+autocmd InsertLeave * set nopaste " Disable paste mode when leaving Insert Mode
+
+" F1-F12 key calls
+" Disable formatting when pasting large chunks of code
+set pastetoggle=<F2>
+
+" Toggle line numbers
+nnoremap <silent> <F3> :set number! number?<CR>
+imap <silent> <F3> <C-o>:set number! number?<CR>
+
+" Show NERDTree
+nnoremap <silent> <F5> :NERDTreeToggle<CR>
+
+" Show TagList
+nnoremap <silent> <F6> :TagbarToggle<CR>
+
+" Spell checking
+" Once the cursor is on the word, use z=, and Vim will suggest a list of
+" alternatives that it thinks may be correct.
+map <silent> <F12> :set spell!<cr>
+
+" Custom mappings
+let mapleader="," " Change the mapleader from \ to ,
+" Map ; to : and save a million keystrokes ;)
+nnoremap ; :
+
+" Use Q for formatting the current paragraph (or selection)
+vmap Q gq
+nmap Q gqap
+
+" Reselect visual block after indent/outdent
+vnoremap < <gv
+vnoremap > >gv
+
+" Select all text in current buffer
+map <Leader>a ggVG
+
+" Bind nohl
+noremap <silent> <C-n> :nohl<CR>
+vnoremap <silent> <C-n> :nohl<CR>
+inoremap <silent> <C-n> :nohl<CR>
+
+" Easy window navigation
+" Navigating requires you to press Ctrl first, then a navigation keys
+nnoremap <C-UP> <C-W><C-K>
+nnoremap <C-DOWN> <C-W><C-J>
+nnoremap <C-LEFT> <C-W><C-H>
+nnoremap <C-RIGHT> <C-W><C-L>
+" Navigating requires you to press Ctrl first, then h,j,k,l
+"nnoremap <C-J> <C-W><C-J>
+"nnoremap <C-K> <C-W><C-K>
+"nnoremap <C-L> <C-W><C-L>
+"nnoremap <C-H> <C-W><C-H>
+
+" Use + and - to increase or decrease windows by a sane amount
+nnoremap <silent> + :exe "resize " . (winheight(0) * 3/2)<CR>
+nnoremap <silent> - :exe "resize " . (winheight(0) * 2/3)<CR>
+
+map <Leader>n <esc>:tabprevious<CR>
+map <Leader>m <esc>:tabnext<CR>
+noremap <leader>1 1gt
+noremap <leader>2 2gt
+noremap <leader>3 3gt
+noremap <leader>4 4gt
+noremap <leader>5 5gt
+noremap <leader>6 6gt
+noremap <leader>7 7gt
+noremap <leader>8 8gt
+noremap <leader>9 9gt
+noremap <leader>0 :tablast<cr>
+vnoremap <Leader>s :sort<CR>
+vnoremap <Leader>n :sort n<CR>
+"noremap <Leader>c :noautocmd vimgrep /TODO\|FIXME\|BUG\|XXX/j ** <CR>:cw<CR>
+
+" Remove all whitespace
+map <Leader>w :%s/\s\+$//
+
+" Enter automatically into the files directory
+autocmd BufEnter * silent! lcd %:p:h
+
+
+"""""""""""""""""""""
+"      Plugins      "
+"""""""""""""""""""""
+
+" Tasklist
+let g:tlWindowPosition = 1
+let g:tlTokenList = ['TODO', 'FIXME', 'BUG', 'XXX']
+
+" Jedi
+"let g:jedi#use_tabs_not_buffers = 1
+let g:jedi#use_splits_not_buffers = "top"
+let g:jedi#popup_select_first = 0
+
+" Airline
+let g:airline#extensions#branch#enabled = 1
+
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#left_sep = ' '
+let g:airline#extensions#tabline#left_alt_sep = '|'
+let g:airline#extensions#tabline#tab_nr_type = 1
+let g:airline#extensions#tabline#show_buffers = 0 " Working with Tabs instead of buffers
+"let g:airline#extensions#tabline#buffer_idx_mode = 1
+let g:airline#extensions#tabline#show_tabs = 1
+let g:airline#extensions#tabline#show_close_button = 0
+
+" Another nice themes (+ = nice, * = favorite)
+" +badwolf, *base16_bright, base16color, base16_monokai
+" base16_pop, *cool, *hybridline, jellybeans, murmur,
+" +papercolor, *powerlineish, *ravenpower
+let g:airline_theme='ravenpower'
+
+if !exists('g:airline_symbols')
+	let g:airline_symbols = {}
+endif
+
+let g:airline_left_sep=''
+let g:airline_right_sep=''
+"let g:airline_symbols.branch = 'git:'
+let g:airline_symbols.branch = '⎇ '
+let g:airline_symbols.linenr = 'LN:'
+let g:airline_symbols.readonly = 'RO'
+
+" python-mode	Disabled
+" Keys-shortcuts:
+" K             Show python docs
+" <Leader>b     Set, unset breakpoint (g:pymode_breakpoint enabled)
+" [[            Jump on previous class or function (normal, visual, operator modes)
+" ]]            Jump on next class or function (normal, visual, operator modes)
+" [M            Jump on previous class or method (normal, visual, operator modes)
+" ]M            Jump on next class or method (normal, visual, operator modes)
+let g:pymode_rope = 0
+
+" Documentation
+let g:pymode_doc = 1
+let g:pymode_doc_key = 'K'
+
+"Linting
+let g:pymode_lint = 1
+let g:pymode_lint_checker = "pyflakes,pep8"
+let g:pymode_lint_ignore = "E501,E402,C"
+
+" Auto check on save
+let g:pymode_lint_write = 1
+
+" Support virtualenv
+let g:pymode_virtualenv = 1
+
+" Enable breakpoints plugin
+let g:pymode_breakpoint = 1
+let g:pymode_breakpoint_bind = '<leader>b'
+
+" syntax highlighting
+let g:pymode_syntax = 1
+let g:pymode_syntax_all = 1
+let g:pymode_syntax_indent_errors = g:pymode_syntax_all
+let g:pymode_syntax_space_errors = g:pymode_syntax_all
+
+" Don't autofold code
+let g:pymode_folding = 0
+
+" Trim white spaces
+let g:pymode_trim_whitespaces = 1
+" Disable colorcolumn
+let g:pymode_options_colorcolumn = 0

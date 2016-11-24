@@ -1,0 +1,5 @@
+bundle/*
+!bundle/Vundle.vim
+undo/*
+*.bkp
+!*.gitkeep
