@@ -114,7 +114,7 @@ colorscheme wombat256mod
 
 " Custom Invisibles
 "set list
-"set listchars=tab:»·,trail:⋅,nbsp:¤
+set listchars=tab:»·,trail:⋅,nbsp:¤
 
 " Functions
 function! LoadTemplate()
@@ -152,6 +152,9 @@ set pastetoggle=<F2>
 " Toggle line numbers
 nnoremap <silent> <F3> :set number! number?<CR>
 imap <silent> <F3> <C-o>:set number! number?<CR>
+
+" F4: Toggle list (display unprintable characters).
+nnoremap <silent> <F4> :set list! list?<CR>
 
 " Show NERDTree
 nnoremap <silent> <F5> :NERDTreeToggle<CR>
@@ -265,6 +268,10 @@ let g:airline_right_sep=''
 let g:airline_symbols.branch = '⎇ '
 let g:airline_symbols.linenr = 'LN:'
 let g:airline_symbols.readonly = 'RO'
+
+" Define which filetypes have special treatment of /* */ comments.
+" let g:airline#extensions#whitespace#mixed_indent_algo = 1
+let g:airline#extensions#c_like_langs = ['c', 'cpp', 'go', 'javascript']
 
 " python-mode	Disabled
 " Keys-shortcuts:
