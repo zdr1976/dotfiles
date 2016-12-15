@@ -21,6 +21,7 @@ Some useful packages worth to install.
 brew install bash bash-completion mc vim colordiff sipcalc ipcalc htop ssh-copy-id wget python python3 cloc golang cmake
 ```
 
+Now we are ready to setup dotfiles locally.
 
 ```bash
 git clone git@github.com:zdr1976/dotfiles.git
