@@ -5,7 +5,9 @@
 	up = rebase
 	ci = commit
 	df = diff
+	pu = push
+	pl = pull
 [core]
 	editor = vim
 [push]
-	default = matching
+	default = simple
