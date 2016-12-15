@@ -1,17 +1,11 @@
 #!/bin/bash
 # Use !/usr/bin/env bash
 
-set -e
-
 BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 FILES_TO_LINK="bashrc screenrc gitconfig vim"
 NOW=$(date +"%Y%m%d")
 BACKUP="no"
 INSTALL="no"
-
-# DEBUG messages.
-#echo "PWD: $BASEDIR"
-#echo "NOW=$NOW"
 
 # HELP Message.
 usage() {
@@ -24,6 +18,7 @@ EOF
 	exit 1
 }
 
+# Without any parameter print HELP message.
 if [ $# -eq 0 ];
 then
 	usage;
@@ -53,10 +48,14 @@ for FILE in $FILES_TO_LINK; do
 	if [ "$INSTALL" == "yes" ];
 	then
 		echo "Create symlink to $FILE in home directory"
-		ln -s $BASEDIR/$FILE ~/.$FILE
+		ln -fs $BASEDIR/$FILE ~/.$FILE
 	fi
 done
 
 # Installing git submodules
 echo "Installing git submodules"
 git submodule update --init --recursive
+
+# Installing vim plugins
+echo "Installing vim plugins."
+vim -c VundleUpdate -c quitall
