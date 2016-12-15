@@ -48,7 +48,8 @@ for FILE in $FILES_TO_LINK; do
 	if [ "$INSTALL" == "yes" ];
 	then
 		echo "Create symlink to $FILE in home directory"
-		ln -fs $BASEDIR/$FILE ~/.$FILE
+		rm -rf ~/.$FILE
+		ln -s $BASEDIR/$FILE ~/.$FILE
 	fi
 done
 
