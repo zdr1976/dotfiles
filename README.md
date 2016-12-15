@@ -23,8 +23,12 @@ brew install bash bash-completion mc vim colordiff sipcalc ipcalc htop ssh-copy-
 
 
 ```bash
+git clone git@github.com:zdr1976/dotfiles.git
+or
 git clone https://github.com/zdr1976/dotfiles.git
 cd dotfiles
+git config user.email "you@example.com"
+git config user.name "Your Name"
 ./install
 vim -c VundleUpdate -c quitall
 ```
