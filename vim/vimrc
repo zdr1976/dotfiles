@@ -146,23 +146,23 @@ autocmd ColorScheme * highlight ExtraWhitespace ctermbg=red guibg=red
 autocmd InsertLeave * set nopaste " Disable paste mode when leaving Insert Mode
 
 " F1-F12 key calls
-" Disable formatting when pasting large chunks of code
+" F2: Disable formatting when pasting large chunks of code.
 set pastetoggle=<F2>
 
-" Toggle line numbers
+" F3: Toggle line numbers.
 nnoremap <silent> <F3> :set number! number?<CR>
 imap <silent> <F3> <C-o>:set number! number?<CR>
 
 " F4: Toggle list (display unprintable characters).
 nnoremap <silent> <F4> :set list! list?<CR>
 
-" Show NERDTree
+" F5: Show NERDTree.
 nnoremap <silent> <F5> :NERDTreeToggle<CR>
 
-" Show TagList
+" F6: Show TagList.
 nnoremap <silent> <F6> :TagbarToggle<CR>
 
-" Spell checking
+" F12: Spell checking
 " Once the cursor is on the word, use z=, and Vim will suggest a list of
 " alternatives that it thinks may be correct.
 map <silent> <F12> :set spell!<cr>
