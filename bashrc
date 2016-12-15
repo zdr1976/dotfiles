@@ -63,7 +63,7 @@ BOLD_CYAN="\e[1;36m"
 RESET_TEXT="\e[1;0m"
 
 # Prompt with Git branch if available.
-PS1="\[$BOLD_GREEN\]\h\[$BOLD_YELLOW \w\[$BOLD_BLUE $ \[$RESET_TEXT\]"
+PS1="\[$BOLD_GREEN\]\h\[$BOLD_YELLOW\] \w\[$BOLD_BLUE\]\$(parse_git_branch)\[$BOLD_YELLOW\] $ \[$RESET_TEXT\]"
 # Prompt without Git branch.
 #PS1="\[$BOLD_GREEN\]\h\[$BOLD_YELLOW\] \w $ \[$RESET_TEXT\]"
 
@@ -103,12 +103,12 @@ export PATH=~/bin:$PATH:$GOROOT/bin
 # PYTHON
 # pip should only run if there is a virtualenv currently activated
 export PIP_REQUIRE_VIRTUALENV=true
-export WORKON_HOME=~/.virtualenvs
-if [ "$OS" == "Darwin" ]; then
+export WORKON_HOME=~/virtualenvs
+if [ "$OS" == "OSX" ]; then
 	if [ -f $(/usr/local/bin/brew --prefix)/bin/virtualenvwrapper.sh ]; then
 		. $(/usr/local/bin/brew --prefix)/bin/virtualenvwrapper.sh
 	fi
-elif [ "$OS" == "Linux" ]; then
+elif [ "$OS" == "LINUX" ]; then
 	if [ -f /etc/bash_completion.d/virtualenvwrapper ]; then
 		. /etc/bash_completion.d/virtualenvwrapper
 	fi
@@ -120,5 +120,5 @@ gpip(){
 }
 
 
-# Uncomment if your terminal doesn't propagate that nut support 256 colors
+# Uncomment this line if your terminal doesn't propagate 256 colors support.
 #TERM=xterm-256color
