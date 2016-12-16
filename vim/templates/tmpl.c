@@ -1,4 +1,3 @@
-// Created <%DATE%>
 #include <stdio.h>
 
 int main() {

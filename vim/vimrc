@@ -123,7 +123,7 @@ function! LoadTemplate()
 
 	" Replace some placeholders
 	"%s/%FILENAME%/\=expand("%:t")/g
-	%s/%DATE%/\=strftime("%b %d, %Y")/g
+	"%s/%DATE%/\=strftime("%b %d, %Y")/g
 endfunction
 
 """"""""""""""""""""""""""""""""""
@@ -135,9 +135,10 @@ augroup templates
 	"Auto load wile creating new files
 	autocmd BufNewFile *.py call LoadTemplate()
 	autocmd BufNewFile *.c call LoadTemplate()
+	autocmd BufNewFile *.ino call LoadTemplate()
+	autocmd BufNewFile *.go call LoadTemplate()
 augroup END
 
-"autocmd! bufwritepost .vimrc source % " Auto reload vimrc when it's saved
 autocmd Filetype gitcommit setlocal spell textwidth=72
 autocmd FileType python setlocal tabstop=4 softtabstop=4 shiftwidth=4 expandtab
 autocmd BufRead,BufNewFile *.h,*.c set filetype=c
