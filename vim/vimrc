@@ -1,5 +1,5 @@
 
-" A sensible vimrc for Python and Go development
+" A sensible vimrc for Python, Arduino and Go development
 
 " VUNDLE
 set rtp+=~/.vim/bundle/Vundle.vim
@@ -18,11 +18,14 @@ Plugin 'klen/python-mode'
 
 " Go Lang
 Plugin 'fatih/vim-go'
+Plugin 'rdnetto/YCM-Generator'
 
 " Code completion
 Plugin 'davidhalter/jedi-vim'		" Python autocompletion
-Plugin 'justmao945/vim-clang'		" C/C++
-"Plugin 'Valloric/YouCompleteMe'	" Completion engine for more languages
+"Plugin 'justmao945/vim-clang'		" C/C++
+Plugin 'Valloric/YouCompleteMe'	" Completion engine for more languages
+" cd ~/.vim/bundle/YouCompleteMe && git submodule update --init --recursive
+" ./install.py --clang-completer --gocode-completer
 
 " Syntax
 Plugin 'gabrielelana/vim-markdown'	" Markdown flavor implemented by Github
@@ -44,9 +47,9 @@ call vundle#end()
 """"""""""""""""""""""
 "      Settings      "
 """"""""""""""""""""""
+set nocompatible                " Enables us Vim specific features
 filetype off                    " Reset filetype detection first ...
 filetype plugin indent on       " ... and enable filetype detection
-set nocompatible                " Enables us Vim specific features
 set ttyfast                     " Indicate fast terminal conn for faster redraw
 set ttymouse=xterm2             " Indicate terminal type for mouse codes
 set ttyscroll=3                 " Speedup scrolling
@@ -84,12 +87,14 @@ set tabstop=4					" Tabs will be displayed as 4 spaces
 set ttimeoutlen=10				" Key code delays
 set timeoutlen=1000				" Papping delays ms
 set t_RV=						" Get rid of termresponse
-"set fo-=t						" Don't automatically wrap text when typing
+set fo-=t						" Don't automatically wrap text when typing
+
 
 " Auto reload vimrc when it's saved
 autocmd! bufwritepost vimrc source %
 
-" Enable to copy to clipboard for operations like yank, delete, change and put
+" Enable to copy to clipboard for operations like yank, delete, change and
+" put.
 if has('unnamedplus')
 	set clipboard^=unnamed
 	set clipboard^=unnamedplus
@@ -120,10 +125,6 @@ set listchars=tab:»·,trail:⋅,nbsp:¤
 function! LoadTemplate()
 	" load a template based on the file extension
 	silent 0r ~/.vim/templates/tmpl.%:e
-
-	" Replace some placeholders
-	"%s/%FILENAME%/\=expand("%:t")/g
-	"%s/%DATE%/\=strftime("%b %d, %Y")/g
 endfunction
 
 """"""""""""""""""""""""""""""""""
@@ -135,7 +136,6 @@ augroup templates
 	"Auto load wile creating new files
 	autocmd BufNewFile *.py call LoadTemplate()
 	autocmd BufNewFile *.c call LoadTemplate()
-	autocmd BufNewFile *.ino call LoadTemplate()
 	autocmd BufNewFile *.go call LoadTemplate()
 augroup END
 
@@ -168,8 +168,8 @@ nnoremap <silent> <F6> :TagbarToggle<CR>
 " alternatives that it thinks may be correct.
 map <silent> <F12> :set spell!<cr>
 
-" Custom mappings
-let mapleader="," " Change the mapleader from \ to ,
+" Change the mapleader from \ to ,
+let mapleader=","
 " Map ; to : and save a million keystrokes ;)
 nnoremap ; :
 
@@ -201,7 +201,7 @@ nnoremap <C-RIGHT> <C-W><C-L>
 "nnoremap <C-L> <C-W><C-L>
 "nnoremap <C-H> <C-W><C-H>
 
-" Use + and - to increase or decrease windows by a sane amount
+" Use + and - to increase or decrease split windows by a sane amount.
 nnoremap <silent> + :exe "resize " . (winheight(0) * 3/2)<CR>
 nnoremap <silent> - :exe "resize " . (winheight(0) * 2/3)<CR>
 
@@ -227,6 +227,48 @@ map <Leader>w :%s/\s\+$//
 " Enter automatically into the files directory
 autocmd BufEnter * silent! lcd %:p:h
 
+" GoLang specifics setup.
+augroup go
+	autocmd!
+	" Show by default 2 spaces for a tab.
+	autocmd BufNewFile,BufRead *.go setlocal expandtab tabstop=2 shiftwidth=2
+	" :GoBuild and :GoTestCompile
+	autocmd FileType go nmap <leader>b :<C-u>call <SID>build_go_files()<CR>
+	" :GoTest
+	autocmd FileType go nmap <leader>t  <Plug>(go-test)
+	" :GoRun
+	autocmd FileType go nmap <leader>r  <Plug>(go-run)
+	" :GoDoc
+	autocmd FileType go nmap <Leader>d <Plug>(go-doc)
+	" :GoCoverageToggle
+	autocmd FileType go nmap <Leader>c <Plug>(go-coverage-toggle)
+	" :GoInfo
+	autocmd FileType go nmap <Leader>i <Plug>(go-info)
+	" :GoMetaLinter
+	autocmd FileType go nmap <Leader>l <Plug>(go-metalinter)
+	" :GoDef but opens in a vertical split.
+	autocmd FileType go nmap <Leader>v <Plug>(go-def-vertical)
+	" :GoDef but opens in a horizontal split.
+	autocmd FileType go nmap <Leader>s <Plug>(go-def-split)
+
+	" Run goimport when writing go files. Do we need this with vim-go ?
+	"autocmd BufWritePost *.go silent !goimports
+	" Run gofmt -s when writing go files.
+	autocmd BufWritePost *.go silent !gofmt -s % | redraw!
+	" Run gazelle when writing go files.
+	autocmd BufWritePost *.go silent !gazelle
+augroup END
+
+" build_go_files is a custom function that builds or compiles the test file.
+" It calls :GoBuild if its a Go file, or :GoTestCompile if it's a test file
+function! s:build_go_files()
+	let l:file = expand('%')
+	if l:file =~# '^\f\+_test\.go$'
+		call go#cmd#Test(0, 1)
+	elseif l:file =~# '^\f\+\.go$'
+		call go#cmd#Build(0)
+	endif
+endfunction
 
 """""""""""""""""""""
 "      Plugins      "
@@ -273,6 +315,23 @@ let g:airline_symbols.readonly = 'RO'
 " Define which filetypes have special treatment of /* */ comments.
 " let g:airline#extensions#whitespace#mixed_indent_algo = 1
 let g:airline#extensions#c_like_langs = ['c', 'cpp', 'go', 'javascript']
+
+
+" Make YCM sane.
+let g:ycm_autoclose_preview_window_after_completion = 1
+let g:ycm_autoclose_preview_window_after_insertion = 1
+
+" Autoload .ycm_extra_conf.py
+let g:ycm_confirm_extra_conf = 0
+
+" vim-go settings
+let g:go_highlight_functions = 1
+let g:go_highlight_methods = 1
+let g:go_highlight_fields = 1
+let g:go_highlight_types = 1
+let g:go_highlight_operators = 1
+let g:go_highlight_build_constraints = 1
+let g:go_fmt_command = "goimports"
 
 " python-mode	Disabled
 " Keys-shortcuts:
