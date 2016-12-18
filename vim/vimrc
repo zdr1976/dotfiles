@@ -185,9 +185,9 @@ vnoremap > >gv
 map <Leader>a ggVG
 
 " Bind nohl
-noremap <silent> <C-n> :nohl<CR>
-vnoremap <silent> <C-n> :nohl<CR>
-inoremap <silent> <C-n> :nohl<CR>
+noremap <silent> <C-h> :nohl<CR>
+vnoremap <silent> <C-h> :nohl<CR>
+inoremap <silent> <C-h> :nohl<CR>
 
 " Easy window navigation
 " Navigating requires you to press Ctrl first, then a navigation keys
@@ -217,8 +217,8 @@ noremap <leader>7 7gt
 noremap <leader>8 8gt
 noremap <leader>9 9gt
 noremap <leader>0 :tablast<cr>
-vnoremap <Leader>s :sort<CR>
-vnoremap <Leader>n :sort n<CR>
+"vnoremap <Leader>s :sort<CR>
+"vnoremap <Leader>n :sort n<CR>
 "noremap <Leader>c :noautocmd vimgrep /TODO\|FIXME\|BUG\|XXX/j ** <CR>:cw<CR>
 
 " Remove all whitespace
@@ -228,6 +228,13 @@ map <Leader>w :%s/\s\+$//
 autocmd BufEnter * silent! lcd %:p:h
 
 " GoLang specifics setup.
+
+" Jump to next error with Ctrl-n and previous error with Ctrl-m.
+map <C-n> :cnext<CR>
+map <C-m> :cprevious<CR>
+" Close the quickfix window with <leader>q
+nnoremap <leader>q :cclose<CR>
+
 augroup go
 	autocmd!
 	" Show by default 2 spaces for a tab.
@@ -254,9 +261,10 @@ augroup go
 	" Run goimport when writing go files. Do we need this with vim-go ?
 	"autocmd BufWritePost *.go silent !goimports
 	" Run gofmt -s when writing go files.
-	autocmd BufWritePost *.go silent !gofmt -s % | redraw!
+	autocmd BufWritePost *.go silent "!gofmt -s"
+	"autocmd BufWritePost *.go silent !gofmt -s % | redraw!
 	" Run gazelle when writing go files.
-	autocmd BufWritePost *.go silent !gazelle
+	"autocmd BufWritePost *.go silent !gazelle
 augroup END
 
 " build_go_files is a custom function that builds or compiles the test file.
