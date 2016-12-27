@@ -96,7 +96,7 @@ export GOPATH=$HOME/go
 if [ "$OS" == "LINUX" ]; then
 	export GOROOT=$HOME/bin/go
 elif [ "$OS" == "OSX" ]; then
-	export GOROOT=$(brew --prefix)/opt/go/lbexec/go
+	export GOROOT=$(brew --prefix)/opt/go/libexec/go
 fi
 export PATH=~/bin:$PATH:$GOROOT/bin
 
