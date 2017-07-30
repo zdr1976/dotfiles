@@ -29,7 +29,7 @@ HISTSIZE=10000
 HISTFILESIZE=10000
 
 # Default editor.
-EDITOR=vim
+export EDITOR=vim
 
 # Only apply for MacOS system.
 if [ "$OS" == "OSX" ]; then
