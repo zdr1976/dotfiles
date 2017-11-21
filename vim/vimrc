@@ -21,9 +21,9 @@ Plugin 'fatih/vim-go'
 Plugin 'rdnetto/YCM-Generator'
 
 " Code completion
-Plugin 'davidhalter/jedi-vim'		" Python autocompletion
+"Plugin 'davidhalter/jedi-vim'		" Python autocompletion
 "Plugin 'justmao945/vim-clang'		" C/C++
-Plugin 'Valloric/YouCompleteMe'	" Completion engine for more languages
+"Plugin 'Valloric/YouCompleteMe'	" Completion engine for more languages
 " cd ~/.vim/bundle/YouCompleteMe && git submodule update --init --recursive
 " ./install.py --clang-completer --gocode-completer
 
