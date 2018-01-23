@@ -12,3 +12,6 @@
 	editor = vim
 [push]
 	default = simple
+[user]
+	email = rastislav.slavicek@hpe.com
+	name = Rastislav Slavicek
