@@ -221,8 +221,8 @@ let g:tlTokenList = ['TODO', 'FIXME', 'BUG', 'XXX']
 
 " Jedi
 "let g:jedi#use_tabs_not_buffers = 1
-let g:jedi#use_splits_not_buffers = "top"
-let g:jedi#popup_select_first = 0
+"let g:jedi#use_splits_not_buffers = "top"
+"let g:jedi#popup_select_first = 0
 
 " Airline
 let g:airline#extensions#branch#enabled = 1
@@ -265,6 +265,7 @@ let g:airline#extensions#c_like_langs = ['c', 'cpp', 'go', 'javascript']
 " [M            Jump on previous class or method (normal, visual, operator modes)
 " ]M            Jump on next class or method (normal, visual, operator modes)
 let g:pymode_rope = 0
+let g:pymode_python = 'python3'
 
 " Documentation
 let g:pymode_doc = 1
