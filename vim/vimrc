@@ -191,16 +191,16 @@ nnoremap <silent> - :exe "resize " . (winheight(0) * 2/3)<CR>
 
 map <Leader>n <esc>:tabprevious<CR>
 map <Leader>m <esc>:tabnext<CR>
-noremap <leader>1 1gt
-noremap <leader>2 2gt
-noremap <leader>3 3gt
-noremap <leader>4 4gt
-noremap <leader>5 5gt
-noremap <leader>6 6gt
-noremap <leader>7 7gt
-noremap <leader>8 8gt
-noremap <leader>9 9gt
-noremap <leader>0 :tablast<cr>
+noremap <Leader>1 1gt
+noremap <Leader>2 2gt
+noremap <Leader>3 3gt
+noremap <Leader>4 4gt
+noremap <Leader>5 5gt
+noremap <Leader>6 6gt
+noremap <Leader>7 7gt
+noremap <Leader>8 8gt
+noremap <Leader>9 9gt
+noremap <Leader>0 :tablast<cr>
 "vnoremap <Leader>s :sort<CR>
 "vnoremap <Leader>n :sort n<CR>
 "noremap <Leader>c :noautocmd vimgrep /TODO\|FIXME\|BUG\|XXX/j ** <CR>:cw<CR>
@@ -216,13 +216,13 @@ autocmd BufEnter * silent! lcd %:p:h
 """""""""""""""""""""
 
 " Tasklist
+" Use <Leader>t
 let g:tlWindowPosition = 1
 let g:tlTokenList = ['TODO', 'FIXME', 'BUG', 'XXX']
 
 " Jedi
-"let g:jedi#use_tabs_not_buffers = 1
-"let g:jedi#use_splits_not_buffers = "top"
-"let g:jedi#popup_select_first = 0
+let g:jedi#show_call_signatures = 2
+let g:jedi#force_py_version = 3
 
 " Airline
 let g:airline#extensions#branch#enabled = 1
@@ -256,33 +256,30 @@ let g:airline_symbols.readonly = 'RO'
 " let g:airline#extensions#whitespace#mixed_indent_algo = 1
 let g:airline#extensions#c_like_langs = ['c', 'cpp', 'go', 'javascript']
 
-" python-mode	Disabled
-" Keys-shortcuts:
-" K             Show python docs
-" <Leader>b     Set, unset breakpoint (g:pymode_breakpoint enabled)
-" [[            Jump on previous class or function (normal, visual, operator modes)
-" ]]            Jump on next class or function (normal, visual, operator modes)
-" [M            Jump on previous class or method (normal, visual, operator modes)
-" ]M            Jump on next class or method (normal, visual, operator modes)
-let g:pymode_rope = 0
+"
+" python-mode
+"
 let g:pymode_python = 'python3'
-
-" Documentation
-let g:pymode_doc = 1
-let g:pymode_doc_key = 'K'
+let g:pymode_rope = 0
+let g:pymode_doc = 0
+let g:pymode_folding = 0
+let g:pymode_virtualenv = 1
+let g:pymode_trim_whitespaces = 1
+let g:pymode_options_colorcolumn = 0
 
 "Linting
 let g:pymode_lint = 1
-let g:pymode_lint_checker = "pyflakes,pep8"
-let g:pymode_lint_ignore = "E501,E402,C"
+let g:pymode_lint_on_write = 1
+let g:pymode_lint_unmodified = 0
+" http://pep8.readthedocs.io/en/release-1.7.x/intro.html#error-codes
+" http://flake8.pycqa.org/en/latest/user/error-codes.html
+let g:pymode_lint_checkers = ['pyflakes', 'pep8',]
+" Ignore
+" - line too long (82 > 79 characters)
+" - module level import not at top of file,
+let g:pymode_lint_ignore = ['E501', 'E402', ]
 
-" Auto check on save
-let g:pymode_lint_write = 1
-
-" Support virtualenv
-let g:pymode_virtualenv = 1
-
-" Enable breakpoints plugin
+" Debugger breakpoint
 let g:pymode_breakpoint = 1
 let g:pymode_breakpoint_bind = '<leader>b'
 
@@ -291,11 +288,3 @@ let g:pymode_syntax = 1
 let g:pymode_syntax_all = 1
 let g:pymode_syntax_indent_errors = g:pymode_syntax_all
 let g:pymode_syntax_space_errors = g:pymode_syntax_all
-
-" Don't autofold code
-let g:pymode_folding = 0
-
-" Trim white spaces
-let g:pymode_trim_whitespaces = 1
-" Disable colorcolumn
-let g:pymode_options_colorcolumn = 0
