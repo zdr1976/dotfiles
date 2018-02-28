@@ -26,9 +26,9 @@ Now we are ready to setup dotfiles locally.
 ```bash
 git clone git@github.com:zdr1976/dotfiles.git
 cd dotfiles
+./install
 git config --global user.email "you@example.com"
 git config --global user.name "Your Name"
-./install
 ```
 
 ## Postistall
