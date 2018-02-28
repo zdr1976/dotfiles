@@ -59,4 +59,4 @@ git submodule update --init --recursive
 
 # Installing vim plugins
 echo "Installing vim plugins."
-vim -c VundleUpdate -c quitall
+vim +PluginInstall +qall
