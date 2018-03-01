@@ -23,6 +23,9 @@ Plugin 'davidhalter/jedi-vim'		" Python autocompletion
 Plugin 'gabrielelana/vim-markdown'	" Markdown flavor implemented by Github
 "Plugin 'w0rp/ale'					" Asynchronous Lint Engine
 
+" Asible / Jinja2
+Plugin 'pearofducks/ansible-vim'
+
 " Git wrapper
 Plugin 'tpope/vim-fugitive'
 
@@ -129,6 +132,8 @@ autocmd Filetype gitcommit setlocal spell textwidth=72
 autocmd FileType python setlocal tabstop=4 softtabstop=4 shiftwidth=4 expandtab
 autocmd ColorScheme * highlight ExtraWhitespace ctermbg=red guibg=red
 autocmd InsertLeave * set nopaste " Disable paste mode when leaving Insert Mode
+autocmd BufRead,BufNewFile */playbooks/*.yml set filetype=ansible
+autocmd FileType yaml setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
 
 " F1-F12 key calls
 " F2: Disable formatting when pasting large chunks of code.
