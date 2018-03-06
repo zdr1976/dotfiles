@@ -111,6 +111,8 @@ if [ "$OS" == "OSX" ]; then
 elif [ "$OS" == "LINUX" ]; then
 	if [ -f /etc/bash_completion.d/virtualenvwrapper ]; then
 		. /etc/bash_completion.d/virtualenvwrapper
+	elif [ -f /etc/profile.d/virtualenvwrapper.sh ]; then
+		. /etc/profile.d/virtualenvwrapper.sh
 	fi
 fi
 
