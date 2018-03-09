@@ -134,6 +134,7 @@ autocmd ColorScheme * highlight ExtraWhitespace ctermbg=red guibg=red
 autocmd InsertLeave * set nopaste " Disable paste mode when leaving Insert Mode
 autocmd BufRead,BufNewFile */playbooks/*.yml set filetype=ansible
 autocmd FileType yaml setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
+autocmd BufRead,BufNewFile *.proto set filetype=proto
 
 " F1-F12 key calls
 " F2: Disable formatting when pasting large chunks of code.
