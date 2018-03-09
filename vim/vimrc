@@ -126,6 +126,7 @@ augroup templates
 	autocmd!
 	"Auto load wile creating new files
 	autocmd BufNewFile *.py call LoadTemplate()
+	autocmd BufNewFile *.proto call LoadTemplate()
 augroup END
 
 autocmd Filetype gitcommit setlocal spell textwidth=72
