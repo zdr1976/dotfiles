@@ -103,7 +103,10 @@ export PATH=~/bin:$PATH:$GOROOT/bin
 # PYTHON
 # pip should only run if there is a virtualenv currently activated
 export PIP_REQUIRE_VIRTUALENV=true
-export WORKON_HOME=~/virtualenvs
+export WORKON_HOME=$HOME/.virtualenvs
+export PROJECT_HOME=$HOME/Projects/Python
+export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
+export VIRTUALENVWRAPPER_VIRTUALENV=/usr/bin/virtualenv-3
 if [ "$OS" == "OSX" ]; then
 	if [ -f $(/usr/local/bin/brew --prefix)/bin/virtualenvwrapper.sh ]; then
 		. $(/usr/local/bin/brew --prefix)/bin/virtualenvwrapper.sh
