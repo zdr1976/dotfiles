@@ -282,6 +282,7 @@ let g:pymode_folding = 0
 let g:pymode_virtualenv = 1
 let g:pymode_trim_whitespaces = 1
 let g:pymode_options_colorcolumn = 0
+let g:pymode_run_bind = '<leader>e'
 
 "Linting
 let g:pymode_lint = 1
