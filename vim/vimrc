@@ -30,13 +30,13 @@ Plugin 'pearofducks/ansible-vim'
 Plugin 'tpope/vim-fugitive'
 
 " SnipMate
-Plugin 'MarcWeber/vim-addon-mw-utils'
-Plugin 'tomtom/tlib_vim'
-Plugin 'garbas/vim-snipmate'
+"Plugin 'MarcWeber/vim-addon-mw-utils'
+"Plugin 'tomtom/tlib_vim'
+"Plugin 'garbas/vim-snipmate'
 " Optional snippets
 "Plugin 'honza/vim-snippets'
-" Bootsrap4 snippets
-Plugin 'jvanja/vim-bootstrap4-snippets'
+" Bootsrap4 snppets
+"Plugin 'jvanja/vim-bootstrap4-snippets'
 
 " Status line
 Plugin 'vim-airline/vim-airline'
