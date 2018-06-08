@@ -8,6 +8,9 @@ call vundle#begin()
 " Let Vundle manage Vundle
 Plugin 'gmarik/Vundle.vim'
 
+" Themes
+Plugin 'mhartington/oceanic-next'
+
 " Utils
 Plugin 'scrooloose/nerdtree'
 Plugin 'vim-scripts/TaskList.vim'
@@ -89,12 +92,10 @@ set timeoutlen=1000				" Papping delays ms
 set t_RV=						" Get rid of termresponse
 set fo-=t						" Don't automatically wrap text when typing
 
-
 " Auto reload vimrc when it's saved
 autocmd! bufwritepost vimrc source %
 
-" Enable to copy to clipboard for operations like yank, delete, change and
-" put.
+" Enable to copy to clipboard for operations like yank, delete, change and put.
 if has('unnamedplus')
 	set clipboard^=unnamed
 	set clipboard^=unnamedplus
@@ -108,14 +109,19 @@ endif
 
 " Colorscheme
 syntax enable
+" for vim 7
 set t_Co=256
+" for vim 8
+if (has("termguicolors"))
+	set termguicolors
+endif
+let g:oceanic_next_terminal_bold = 1
+let g:oceanic_next_terminal_italic = 1
+colorscheme OceanicNext
+"colorscheme wombat256mod
 "set cursorline			" Highlight current line
 "set colorcolumn=100		" Highlight 100th column
 "highlight ColorColumn ctermbg=233
-colorscheme wombat256mod
-"let g:rehash256 = 1
-"let g:molokai_original = 1
-"colorscheme molokai
 
 " Custom Invisibles
 "set list
@@ -255,7 +261,8 @@ let g:airline#extensions#tabline#show_close_button = 0
 " +badwolf, *base16_bright, base16color, base16_monokai
 " base16_pop, *cool, *hybridline, jellybeans, murmur,
 " +papercolor, *powerlineish, *ravenpower
-let g:airline_theme='ravenpower'
+"let g:airline_theme='ravenpower'
+let g:airline_theme='oceanicnext'
 
 if !exists('g:airline_symbols')
 	let g:airline_symbols = {}
