@@ -67,7 +67,14 @@ PS1="\[$BOLD_GREEN\]\h\[$BOLD_YELLOW\] \w\[$BOLD_BLUE\]\$(parse_git_branch)\[$BO
 # Prompt without Git branch.
 #PS1="\[$BOLD_GREEN\]\h\[$BOLD_YELLOW\] \w $ \[$RESET_TEXT\]"
 
-# Source Aliases from external file (if exists).
+# Some nice aliases to have
+alias diff='colordiff'
+alias git-cloc='git ls-files | xargs cloc'
+alias sup='sudo su -'
+alias ls='ls --color'
+alias ll='ls -lA'
+
+# Source another Aliases from external file (if exists).
 if [ -f ~/.bash_aliases ]; then
 	. ~/.bash_aliases
 fi
@@ -123,7 +130,6 @@ fi
 gpip(){
 	PIP_REQUIRE_VIRTUALENV="" pip "$@"
 }
-
 
 # Uncomment this line if your terminal doesn't propagate 256 colors support.
 #TERM=xterm-256color
