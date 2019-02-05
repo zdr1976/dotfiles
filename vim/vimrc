@@ -62,8 +62,8 @@ set ttyscroll=3                 " Speedup scrolling
 set laststatus=2                " Show status line always
 set encoding=utf-8              " Set default encoding to UTF-8
 set autoread                    " Automatically read changed files
-set autoindent                  " Enabile Autoindent
-set backspace=indent,eol,start  " Makes backspace key more powerful.
+set autoindent                  " Enable Auto indentation
+set backspace=indent,eol,start  " Makes backspace key more powerful
 set incsearch                   " Shows the match while typing
 set hlsearch                    " Highlight found searches
 set noerrorbells                " No beeps
@@ -80,7 +80,7 @@ set noshowmatch                 " Do not show matching brackets by flickering
 set noshowmode                  " We show the mode with airline or lightline
 set ignorecase                  " Search case insensitive...
 set smartcase                   " ... but not it begins with upper case
-set completeopt=menu,menuone    " Show popup menu, even if there is one entry
+set completeopt=menu,menuone    " Show pop-up menu, even if there is one entry
 set pumheight=10                " Completion window max size
 set nocursorcolumn              " Do not highlight column (speeds up highlighting)
 set nocursorline                " Do not highlight cursor (speeds up highlighting)
@@ -110,7 +110,7 @@ if has('persistent_undo')
 	set undodir=~/.vim/undo/
 endif
 
-" Colorscheme
+" Color scheme
 syntax enable
 " for vim 7
 set t_Co=256
@@ -118,16 +118,27 @@ set t_Co=256
 if (has("termguicolors"))
 	set termguicolors
 endif
+"set cursor line
 let g:oceanic_next_terminal_bold = 1
 let g:oceanic_next_terminal_italic = 1
 colorscheme OceanicNext
+
+" Spell checking change highlighting to underline
+highlight clear SpellBad
+highlight SpellBad cterm=underline
+highlight clear SpellRare
+highlight SpellRare cterm=underline
+highlight clear SpellCap
+highlight SpellCap cterm=underline
+highlight clear SpellLocal
+highlight SpellLocal cterm=underline
 
 " Custom Invisibles
 "set list
 set listchars=tab:»·,nbsp:+,trail:·,extends:→,precedes:←
 
 """"""""""""""""""""""""""""""""""
-" Tamplates & Languages settings "
+" Templates & Languages settings "
 """"""""""""""""""""""""""""""""""
 function! LoadTemplate()
 	" load a template based on the file extension
