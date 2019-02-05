@@ -2,10 +2,11 @@
 # Use !/usr/bin/env bash
 
 BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-FILES_TO_LINK="bashrc screenrc gitconfig vim tmux.conf"
+FILES_LIST="bashrc screenrc gitconfig vim tmux.conf"
 NOW=$(date +"%Y%m%d")
 BACKUP="no"
 INSTALL="no"
+SYMLINK="no"
 
 # HELP Message.
 usage() {
@@ -13,6 +14,7 @@ usage() {
 Usage: $0 [-b] [-i] [-h]
 	-b Backup old file
 	-i Install dotfiles [Rewrite existing files]
+	-s Symlinking dotfiles [Rewrite existing files]
 	-h Print HELP message
 EOF
 	exit 1
@@ -29,6 +31,7 @@ while getopts 'bih' opt; do
 	case "${opt}" in
 		b) BACKUP=yes ;;
 		i) INSTALL=yes ;;
+		s) SYMLINK=yes ;;
 		h) usage ;;
 		*) echo "Unknown option $opt" 1>&2; usage ;;
 	esac
@@ -36,7 +39,7 @@ done
 shift $(( $OPTIND - 1 ))
 
 # Rename any existing dotfilesk.
-for FILE in $FILES_TO_LINK; do
+for FILE in $FILES_LIST; do
 	# backuping old files if requested.
 	if [ "$BACKUP" == "yes" ];
 	then
@@ -45,11 +48,17 @@ for FILE in $FILES_TO_LINK; do
 	fi
 
 	# Symlinking dot file to HOME directory.
-	if [ "$INSTALL" == "yes" ];
+	if [ "$SYMLINK" == "yes" ];
 	then
 		echo "Create symlink to $FILE in home directory"
 		rm -rf ~/.$FILE
 		ln -s $BASEDIR/$FILE ~/.$FILE
+	# Copy dot file in to the HOME directory.
+	elif [ "$INSTALL" == "yes" ];
+	then
+		echo "Copy $FILE in to the HOME directory"
+		rm -rf ~/.$FILE
+		cp $BASEDIR/$FILE ~/.$FILE
 	fi
 done
 
