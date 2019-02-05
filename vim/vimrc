@@ -1,5 +1,5 @@
 
-" A sensible vimrc for Python, Arduino and Go development
+" A sensible vimrc for Python and Go development with Ansible support.
 
 " VUNDLE
 set rtp+=~/.vim/bundle/Vundle.vim
@@ -19,6 +19,9 @@ Plugin 'majutsushi/tagbar'
 " Python
 Plugin 'klen/python-mode'
 
+" Go Lang
+Plugin 'fatih/vim-go'
+
 " Code completion
 Plugin 'davidhalter/jedi-vim'		" Python autocompletion
 
@@ -26,11 +29,11 @@ Plugin 'davidhalter/jedi-vim'		" Python autocompletion
 Plugin 'gabrielelana/vim-markdown'	" Markdown flavor implemented by Github
 "Plugin 'w0rp/ale'					" Asynchronous Lint Engine
 
-" Asible / Jinja2
+" Ansible / Jinja2
 Plugin 'pearofducks/ansible-vim'
 
 " Git wrapper
-Plugin 'tpope/vim-fugitive'
+"Plugin 'tpope/vim-fugitive'
 
 " SnipMate
 "Plugin 'MarcWeber/vim-addon-mw-utils'
@@ -81,7 +84,7 @@ set completeopt=menu,menuone    " Show popup menu, even if there is one entry
 set pumheight=10                " Completion window max size
 set nocursorcolumn              " Do not highlight column (speeds up highlighting)
 set nocursorline                " Do not highlight cursor (speeds up highlighting)
-set lazyredraw                  " Wait to redraw
+"set lazyredraw                  " Wait to redraw
 set undolevels=1000				" How many undos
 set undoreload=1000				" number of lines to save for undo
 set history=1000				" Remember more commands and search history
@@ -101,7 +104,7 @@ if has('unnamedplus')
 	set clipboard^=unnamedplus
 endif
 
-" This enables us to undo files even if you exit Vim.
+" This enables to undo files even if you exit Vim.
 if has('persistent_undo')
 	set undofile
 	set undodir=~/.vim/undo/
@@ -118,34 +121,29 @@ endif
 let g:oceanic_next_terminal_bold = 1
 let g:oceanic_next_terminal_italic = 1
 colorscheme OceanicNext
-"colorscheme wombat256mod
-"set cursorline			" Highlight current line
-"set colorcolumn=100		" Highlight 100th column
-"highlight ColorColumn ctermbg=233
 
 " Custom Invisibles
 "set list
 set listchars=tab:»·,nbsp:+,trail:·,extends:→,precedes:←
 
-" Functions
+""""""""""""""""""""""""""""""""""
+" Tamplates & Languages settings "
+""""""""""""""""""""""""""""""""""
 function! LoadTemplate()
 	" load a template based on the file extension
 	silent 0r ~/.vim/templates/tmpl.%:e
 endfunction
 
-""""""""""""""""""""""""""""""""""
-" Tamplates & Languages settings "
-""""""""""""""""""""""""""""""""""
-
 augroup templates
 	autocmd!
-	"Auto load wile creating new files
+	"Auto load while creating new files
 	autocmd BufNewFile *.py call LoadTemplate()
 	autocmd BufNewFile *.proto call LoadTemplate()
 augroup END
 
 autocmd Filetype gitcommit setlocal spell textwidth=72
 autocmd FileType python setlocal tabstop=4 softtabstop=4 shiftwidth=4 expandtab
+autocmd BufNewFile,BufRead *.go setlocal noexpandtab tabstop=4 shiftwidth=4 softtabstop=4
 autocmd ColorScheme * highlight ExtraWhitespace ctermbg=red guibg=red
 autocmd InsertLeave * set nopaste " Disable paste mode when leaving Insert Mode
 autocmd BufRead,BufNewFile */playbooks/*.yml set filetype=ansible
@@ -211,6 +209,7 @@ nnoremap <C-RIGHT> <C-W><C-L>
 nnoremap <silent> + :exe "resize " . (winheight(0) * 3/2)<CR>
 nnoremap <silent> - :exe "resize " . (winheight(0) * 2/3)<CR>
 
+" Tab navigation.
 map <Leader>n <esc>:tabprevious<CR>
 map <Leader>m <esc>:tabnext<CR>
 noremap <Leader>1 1gt
@@ -223,8 +222,10 @@ noremap <Leader>7 7gt
 noremap <Leader>8 8gt
 noremap <Leader>9 9gt
 noremap <Leader>0 :tablast<cr>
-"vnoremap <Leader>s :sort<CR>
-"vnoremap <Leader>n :sort n<CR>
+
+" Sorting
+vnoremap <Leader>s :sort<CR>
+vnoremap <Leader>n :sort n<CR>
 "noremap <Leader>c :noautocmd vimgrep /TODO\|FIXME\|BUG\|XXX/j ** <CR>:cw<CR>
 
 " Remove all whitespace
@@ -233,9 +234,9 @@ map <Leader>w :%s/\s\+$//
 " Enter automatically into the files directory
 autocmd BufEnter * silent! lcd %:p:h
 
-"""""""""""""""""""""
-"      Plugins      "
-"""""""""""""""""""""
+""""""""""""""""""""""
+"  Plugins settings  "
+""""""""""""""""""""""
 
 " Tasklist
 " Use <Leader>t
@@ -260,8 +261,7 @@ let g:airline#extensions#tabline#show_close_button = 0
 " Another nice themes (+ = nice, * = favorite)
 " +badwolf, *base16_bright, base16color, base16_monokai
 " base16_pop, *cool, *hybridline, jellybeans, murmur,
-" +papercolor, *powerlineish, *ravenpower
-"let g:airline_theme='ravenpower'
+" +papercolor, *powerlineish, *ravenpower, *oceanicnext
 let g:airline_theme='oceanicnext'
 
 if !exists('g:airline_symbols')
@@ -312,3 +312,16 @@ let g:pymode_syntax = 1
 let g:pymode_syntax_all = 1
 let g:pymode_syntax_indent_errors = g:pymode_syntax_all
 let g:pymode_syntax_space_errors = g:pymode_syntax_all
+
+" vim-go settings
+let g:go_highlight_build_constraints = 1
+let g:go_highlight_extra_types = 1
+let g:go_highlight_fields = 1
+let g:go_highlight_functions = 1
+let g:go_highlight_methods = 1
+let g:go_highlight_operators = 1
+let g:go_highlight_structs = 1
+let g:go_highlight_types = 1
+let g:go_auto_sameids = 1
+let g:go_auto_type_info = 1
+let g:go_fmt_command = "goimports"
