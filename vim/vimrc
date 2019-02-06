@@ -1,4 +1,3 @@
-
 " A sensible vimrc for Python and Go development with Ansible support.
 
 " VUNDLE
@@ -17,17 +16,17 @@ Plugin 'vim-scripts/TaskList.vim'
 Plugin 'majutsushi/tagbar'
 
 " Python
-Plugin 'klen/python-mode'
+Plugin 'vim-scripts/indentpython.vim'
+Plugin 'nvie/vim-flake8'
 
 " Go Lang
 Plugin 'fatih/vim-go'
 
 " Code completion
-Plugin 'davidhalter/jedi-vim'		" Python autocompletion
+Plugin 'Valloric/YouCompleteMe'
 
 " Syntax
 Plugin 'gabrielelana/vim-markdown'	" Markdown flavor implemented by Github
-"Plugin 'w0rp/ale'					" Asynchronous Lint Engine
 
 " Ansible / Jinja2
 Plugin 'pearofducks/ansible-vim'
@@ -43,6 +42,9 @@ Plugin 'pearofducks/ansible-vim'
 "Plugin 'honza/vim-snippets'
 " Bootsrap4 snppets
 "Plugin 'jvanja/vim-bootstrap4-snippets'
+
+" Plugin for transparent editing of gpg encrypted files
+Plugin 'jamessan/vim-gnupg'
 
 " Status line
 Plugin 'vim-airline/vim-airline'
@@ -118,6 +120,9 @@ set t_Co=256
 if (has("termguicolors"))
 	set termguicolors
 endif
+" 80 character's marker
+highlight ColorColumn ctermbg=gray
+set colorcolumn=80
 "set cursor line
 let g:oceanic_next_terminal_bold = 1
 let g:oceanic_next_terminal_italic = 1
@@ -177,6 +182,9 @@ nnoremap <silent> <F5> :NERDTreeToggle<CR>
 
 " F6: Show TagList.
 nnoremap <silent> <F6> :TagbarToggle<CR>
+
+" F7: Flake8 - static syntax and style checker for Python
+autocmd FileType python map <buffer> <F7> :call Flake8()<CR>
 
 " F12: Spell checking
 " Once the cursor is on the word, use z=, and Vim will suggest a list of
@@ -254,10 +262,6 @@ autocmd BufEnter * silent! lcd %:p:h
 let g:tlWindowPosition = 1
 let g:tlTokenList = ['TODO', 'FIXME', 'BUG', 'XXX']
 
-" Jedi
-let g:jedi#show_call_signatures = 2
-let g:jedi#force_py_version = 3
-
 " Airline
 let g:airline#extensions#branch#enabled = 1
 let g:airline#extensions#tabline#enabled = 1
@@ -290,39 +294,9 @@ let g:airline_symbols.readonly = 'RO'
 " let g:airline#extensions#whitespace#mixed_indent_algo = 1
 let g:airline#extensions#c_like_langs = ['c', 'cpp', 'go', 'javascript']
 
-"
-" python-mode
-"
-let g:pymode_python = 'python3'
-let g:pymode_rope = 0
-let g:pymode_doc = 0
-let g:pymode_folding = 0
-let g:pymode_virtualenv = 1
-let g:pymode_trim_whitespaces = 1
-let g:pymode_options_colorcolumn = 0
-let g:pymode_run_bind = '<leader>e'
-
-"Linting
-let g:pymode_lint = 1
-let g:pymode_lint_on_write = 1
-let g:pymode_lint_unmodified = 0
-" http://pep8.readthedocs.io/en/release-1.7.x/intro.html#error-codes
-" http://flake8.pycqa.org/en/latest/user/error-codes.html
-let g:pymode_lint_checkers = ['pyflakes', 'pep8',]
-" Ignore
-" - line too long (82 > 79 characters)
-" - module level import not at top of file,
-let g:pymode_lint_ignore = ['E501', 'E402', ]
-
-" Debugger breakpoint
-let g:pymode_breakpoint = 1
-let g:pymode_breakpoint_bind = '<leader>b'
-
-" syntax highlighting
-let g:pymode_syntax = 1
-let g:pymode_syntax_all = 1
-let g:pymode_syntax_indent_errors = g:pymode_syntax_all
-let g:pymode_syntax_space_errors = g:pymode_syntax_all
+" YouCompleteMe
+let g:ycm_autoclose_preview_window_after_completion=1
+nnoremap <leader>g :YcmCompleter GoToDefinitionElseDeclaration<CR>
 
 " vim-go settings
 let g:go_highlight_build_constraints = 1
