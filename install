@@ -58,7 +58,7 @@ for FILE in $FILES_LIST; do
 	then
 		echo "Copy $FILE in to the HOME directory"
 		rm -rf ~/.$FILE
-		cp $BASEDIR/$FILE ~/.$FILE
+		cp -r $BASEDIR/$FILE ~/.$FILE
 	fi
 done
 
