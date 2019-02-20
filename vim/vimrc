@@ -44,6 +44,9 @@ Plugin 'pearofducks/ansible-vim'
 " Bootsrap4 snppets
 "Plugin 'jvanja/vim-bootstrap4-snippets'
 
+" base64
+Plugin 'christianrondeau/vim-base64'
+
 " Plugin for transparent editing of gpg encrypted files
 Plugin 'jamessan/vim-gnupg'
 
@@ -93,6 +96,8 @@ set undoreload=1000				" number of lines to save for undo
 set history=1000				" Remember more commands and search history
 set nofoldenable				" Don't fold by default
 set tabstop=4					" Tabs will be displayed as 4 spaces
+set shiftwidth=4
+set expandtab
 set ttimeoutlen=10				" Key code delays
 set timeoutlen=1000				" Papping delays ms
 set t_RV=						" Get rid of termresponse
@@ -248,6 +253,12 @@ vnoremap <Leader>s :sort<CR>
 vnoremap <Leader>n :sort n<CR>
 "noremap <Leader>c :noautocmd vimgrep /TODO\|FIXME\|BUG\|XXX/j ** <CR>:cw<CR>
 
+
+" base64 - Fix for author reverse logic
+vnoremap <silent> <leader>b2a :call base64#v_atob()<cr>
+vnoremap <silent> <leader>a2b :call base64#v_btoa()<cr>
+
+
 " Remove all whitespace
 map <Leader>w :%s/\s\+$//
 
@@ -297,8 +308,8 @@ let g:airline#extensions#c_like_langs = ['c', 'cpp', 'go', 'javascript']
 
 " YouCompleteMe
 let g:ycm_autoclose_preview_window_after_completion=1
-nnoremap <leader>g :YcmCompleter GoToDefinitionElseDeclaration<CR>
-nnoremap <leader>d :YcmCompleter GetDoc<CR>
+"nnoremap <leader>g :YcmCompleter GoToDefinitionElseDeclaration<CR>
+"nnoremap <leader>d :YcmCompleter GetDoc<CR>
 
 " Jedi-vim
 let g:jedi#show_call_signatures = 2
