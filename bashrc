@@ -28,6 +28,9 @@ shopt -s histappend
 HISTSIZE=10000
 HISTFILESIZE=10000
 
+# Shorten the depth of directory
+PROMPT_DIRTRIM=1
+
 # Default editor.
 export EDITOR=vim
 
@@ -52,6 +55,11 @@ parse_git_branch() {
 	git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ ⎇  \1/'
 }
 
+# Set k8s context in BASH prompt
+parse_k8s_context() {
+	cat ~/.kube/config | grep "current-context:" | sed "s/current-context: //"
+}
+
 # Colors http://misc.flogisoft.com/bash/tip_colors_and_formatting
 BOLD_GREEN="\e[1;32m"
 BOLD_YELLOW="\e[1;33m"
@@ -63,6 +71,7 @@ BOLD_CYAN="\e[1;36m"
 RESET_TEXT="\e[1;0m"
 
 # Prompt with Git branch if available.
+# PS1="\[$BOLD_GREEN\]\h\[$BOLD_YELLOW\] \w\[$BOLD_BLUE\]\$(parse_git_branch) (k8s: $(parse_k8s_context))\[$BOLD_YELLOW\] $ \[$RESET_TEXT\]"
 PS1="\[$BOLD_GREEN\]\h\[$BOLD_YELLOW\] \w\[$BOLD_BLUE\]\$(parse_git_branch)\[$BOLD_YELLOW\] $ \[$RESET_TEXT\]"
 # Prompt without Git branch.
 #PS1="\[$BOLD_GREEN\]\h\[$BOLD_YELLOW\] \w $ \[$RESET_TEXT\]"
@@ -130,6 +139,12 @@ fi
 gpip(){
 	PIP_REQUIRE_VIRTUALENV="" pip "$@"
 }
+
+
+# k8s
+if [ -x "$(command -v kubectl)" ]; then
+    source <(kubectl completion bash)
+fi
 
 # Uncomment this line if your terminal doesn't propagate 256 colors support.
 #TERM=xterm-256color
