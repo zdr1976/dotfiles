@@ -135,6 +135,9 @@ elif [ "$OS" == "LINUX" ]; then
 	fi
 fi
 
+# Project DIR
+CDPATH=.:~:~/Projects/Work:~/Projects/Personal
+
 # Temporarily turn off restriction for pip
 gpip(){
 	PIP_REQUIRE_VIRTUALENV="" pip "$@"
