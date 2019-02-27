@@ -50,6 +50,9 @@ Plugin 'christianrondeau/vim-base64'
 " Plugin for transparent editing of gpg encrypted files
 Plugin 'jamessan/vim-gnupg'
 
+" Indentation level
+Plugin 'Yggdroot/indentLine'
+
 " Status line
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
@@ -171,6 +174,7 @@ autocmd InsertLeave * set nopaste " Disable paste mode when leaving Insert Mode
 autocmd BufRead,BufNewFile */playbooks/*.yml set filetype=ansible
 autocmd FileType yaml setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
 autocmd BufRead,BufNewFile *.proto set filetype=proto
+autocmd BufNewFile,BufRead *.kubeconfig setlocal filetype=yaml
 
 " F1-F12 key calls
 " F2: Disable formatting when pasting large chunks of code.
@@ -191,6 +195,9 @@ nnoremap <silent> <F6> :TagbarToggle<CR>
 
 " F7: Flake8 - static syntax and style checker for Python
 autocmd FileType python map <buffer> <F7> :call Flake8()<CR>
+
+" F8: Toggle indentation
+nnoremap <silent> <F8> :IndentLinesToggle<cr>
 
 " F12: Spell checking
 " Once the cursor is on the word, use z=, and Vim will suggest a list of
@@ -253,11 +260,15 @@ vnoremap <Leader>s :sort<CR>
 vnoremap <Leader>n :sort n<CR>
 "noremap <Leader>c :noautocmd vimgrep /TODO\|FIXME\|BUG\|XXX/j ** <CR>:cw<CR>
 
-
 " base64 - Fix for author reverse logic
 vnoremap <silent> <leader>b2a :call base64#v_atob()<cr>
 vnoremap <silent> <leader>a2b :call base64#v_btoa()<cr>
 
+" Open file in browser
+noremap <silent> <leader>p :exe ':silent !google-chrome %'<cr>:redraw!<CR>
+
+" JSON formating
+nmap =j :%!python -m json.tool<cr>
 
 " Remove all whitespace
 map <Leader>w :%s/\s\+$//
@@ -327,3 +338,8 @@ let g:go_highlight_types = 1
 let g:go_auto_sameids = 1
 let g:go_auto_type_info = 1
 let g:go_fmt_command = "goimports"
+
+" indentLine
+let g:indentLine_enabled = 0
+let g:indentLine_setColors = 0
+let g:indentLine_char = '│'
