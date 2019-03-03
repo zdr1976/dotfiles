@@ -12,11 +12,12 @@ Plugin 'mhartington/oceanic-next'
 
 " Utils
 Plugin 'scrooloose/nerdtree'
-Plugin 'vim-scripts/TaskList.vim'
 Plugin 'majutsushi/tagbar'
+Plugin 'vim-scripts/TaskList.vim'
+"Plugin 'Chiel92/vim-autoformat'
 
 " Python
-Plugin 'vim-scripts/indentpython.vim'
+"Plugin 'vim-scripts/indentpython.vim'
 Plugin 'nvie/vim-flake8'
 
 " Go Lang
@@ -26,14 +27,19 @@ Plugin 'fatih/vim-go'
 Plugin 'Valloric/YouCompleteMe'
 Plugin 'davidhalter/jedi-vim'
 
+" HTML
+"  https://medium.com/vim-drops/be-a-html-ninja-with-emmet-for-vim-feee15447ef1
+Plugin 'mattn/emmet-vim'
+
 " Syntax
 Plugin 'gabrielelana/vim-markdown'	" Markdown flavor implemented by Github
 
 " Ansible / Jinja2
 Plugin 'pearofducks/ansible-vim'
 
-" Git wrapper
-"Plugin 'tpope/vim-fugitive'
+" Git
+Plugin 'tpope/vim-fugitive'
+Plugin 'airblade/vim-gitgutter'
 
 " SnipMate
 "Plugin 'MarcWeber/vim-addon-mw-utils'
@@ -103,6 +109,7 @@ set shiftwidth=4
 set expandtab
 set ttimeoutlen=10				" Key code delays
 set timeoutlen=1000				" Papping delays ms
+set updatetime=100
 set t_RV=						" Get rid of termresponse
 set fo-=t						" Don't automatically wrap text when typing
 
@@ -123,18 +130,19 @@ endif
 
 " Color scheme
 syntax enable
+
 " for vim 7
 set t_Co=256
 " for vim 8
 if (has("termguicolors"))
 	set termguicolors
 endif
+
 " 80 character's marker
-highlight ColorColumn ctermbg=gray
-set colorcolumn=80
-"set cursor line
-let g:oceanic_next_terminal_bold = 1
-let g:oceanic_next_terminal_italic = 1
+"highlight ColorColumn ctermbg=gray
+"set colorcolumn=80
+
+"set cursorline
 colorscheme OceanicNext
 
 " Spell checking change highlighting to underline
@@ -209,16 +217,15 @@ let mapleader=","
 " Map ; to : and save a million keystrokes ;)
 nnoremap ; :
 
-" Use Q for formatting the current paragraph (or selection)
-vmap Q gq
-nmap Q gqap
-
 " Reselect visual block after indent/outdent
 vnoremap < <gv
 vnoremap > >gv
 
 " Select all text in current buffer
 map <Leader>a ggVG
+
+" Re-indent entire buffer
+map <leader>f gg=G
 
 " Bind nohl
 noremap <silent> <C-h> :nohl<CR>
@@ -258,7 +265,6 @@ noremap <Leader>0 :tablast<cr>
 " Sorting
 vnoremap <Leader>s :sort<CR>
 vnoremap <Leader>n :sort n<CR>
-"noremap <Leader>c :noautocmd vimgrep /TODO\|FIXME\|BUG\|XXX/j ** <CR>:cw<CR>
 
 " base64 - Fix for author reverse logic
 vnoremap <silent> <leader>b2a :call base64#v_atob()<cr>
@@ -291,40 +297,35 @@ let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#left_sep = ' '
 let g:airline#extensions#tabline#left_alt_sep = '|'
 let g:airline#extensions#tabline#tab_nr_type = 1
-let g:airline#extensions#tabline#show_buffers = 0 " Working with Tabs instead of buffers
-"let g:airline#extensions#tabline#buffer_idx_mode = 1
-let g:airline#extensions#tabline#show_tabs = 1
 let g:airline#extensions#tabline#show_close_button = 0
-
-" Another nice themes (+ = nice, * = favorite)
-" +badwolf, *base16_bright, base16color, base16_monokai
-" base16_pop, *cool, *hybridline, jellybeans, murmur,
-" +papercolor, *powerlineish, *ravenpower, *oceanicnext
 let g:airline_theme='oceanicnext'
-
 if !exists('g:airline_symbols')
 	let g:airline_symbols = {}
 endif
-
 let g:airline_left_sep=''
 let g:airline_right_sep=''
 "let g:airline_symbols.branch = 'git:'
 let g:airline_symbols.branch = '⎇ '
 let g:airline_symbols.linenr = 'LN:'
 let g:airline_symbols.readonly = 'RO'
-
 " Define which filetypes have special treatment of /* */ comments.
 " let g:airline#extensions#whitespace#mixed_indent_algo = 1
 let g:airline#extensions#c_like_langs = ['c', 'cpp', 'go', 'javascript']
 
+" Oceanic theme
+let g:oceanic_next_terminal_bold = 1
+let g:oceanic_next_terminal_italic = 1
+
+
 " YouCompleteMe
-let g:ycm_autoclose_preview_window_after_completion=1
-"nnoremap <leader>g :YcmCompleter GoToDefinitionElseDeclaration<CR>
-"nnoremap <leader>d :YcmCompleter GetDoc<CR>
+let g:ycm_autoclose_preview_window_after_completion = 1
+let g:ycm_key_list_stop_completion = ['<C-y>', '<CR>']
 
 " Jedi-vim
 let g:jedi#show_call_signatures = 2
-let g:jedi#force_py_version = 3
+let g:jedi#use_splits_not_buffers = "right"
+let g:jedi#usages_command = "<leader>u"
+"let g:jedi#force_py_version = 3
 
 " vim-go settings
 let g:go_highlight_build_constraints = 1
@@ -343,3 +344,6 @@ let g:go_fmt_command = "goimports"
 let g:indentLine_enabled = 0
 let g:indentLine_setColors = 0
 let g:indentLine_char = '│'
+
+" emmet-vim
+let g:user_emmet_leader_key=','
