@@ -181,6 +181,7 @@ autocmd ColorScheme * highlight ExtraWhitespace ctermbg=red guibg=red
 autocmd InsertLeave * set nopaste " Disable paste mode when leaving Insert Mode
 autocmd BufRead,BufNewFile */playbooks/*.yml set filetype=ansible
 autocmd FileType yaml setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
+autocmd FileType html setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
 autocmd BufRead,BufNewFile *.proto set filetype=proto
 autocmd BufNewFile,BufRead *.kubeconfig setlocal filetype=yaml
 
@@ -275,6 +276,9 @@ noremap <silent> <leader>p :exe ':silent !google-chrome %'<cr>:redraw!<CR>
 
 " JSON formating
 nmap =j :%!python -m json.tool<cr>
+
+" HTML sytax on file
+nmap =h :set syntax=html<cr>
 
 " Remove all whitespace
 map <Leader>w :%s/\s\+$//
