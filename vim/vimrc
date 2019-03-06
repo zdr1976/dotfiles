@@ -184,6 +184,8 @@ autocmd FileType yaml setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
 autocmd FileType html setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
 autocmd BufRead,BufNewFile *.proto set filetype=proto
 autocmd BufNewFile,BufRead *.kubeconfig setlocal filetype=yaml
+" call :GitGutter after committing using fugitive
+autocmd BufWritePost * GitGutter
 
 " F1-F12 key calls
 " F2: Disable formatting when pasting large chunks of code.
