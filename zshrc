@@ -25,20 +25,20 @@ SAVEHIST=10000
 
 # https://www.tummy.com/blogs/2006/01/19/my-first-few-days-with-zsh/
 # http://zsh.sourceforge.net/Doc/Release/Options.html#Description-of-Options
+# https://github.com/ricbra/zsh-config/blob/master/zshrc
 # Don't put duplicate lines or lines starting with space in the history.
-setopt HIST_IGNORE_DUPS
-setopt HIST_IGNORE_SPACE
+setopt histignorespace
+setopt histignorealldups
 
 # Append to the history file, don't overwrite it.
-setopt APPEND_HISTORY
+setopt appendhistory
 
 # Prompt expansion
-setopt PROMPT_SUBST
+setopt promptsubst
 
 # Enable autocompletation.
-setopt COMPLETE_ALIASES
-autoload -Uz compinit
-compinit
+setopt completealiases
+autoload -U compinit && compinit
 zstyle ':completion:*' menu select
 # small letters will match small and capital letters
 #zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
@@ -55,6 +55,9 @@ zle -N up-line-or-beginning-search
 zle -N down-line-or-beginning-search
 [[ -n "$key[Up]"   ]] && bindkey -- "$key[Up]"   up-line-or-beginning-search
 [[ -n "$key[Down]" ]] && bindkey -- "$key[Down]" down-line-or-beginning-search
+
+# Easy directory navigation. Don't need to type cd to change directories.
+setopt autocd autopushd pushdminus pushdsilent pushdtohome pushdignoredups
 
 # Default editor.
 export EDITOR=vim
@@ -81,8 +84,11 @@ parse_k8s_context() {
     cat ~/.kube/config | grep "current-context:" | sed "s/current-context: //"
 }
 
+# Load colors
+autoload -U colors && colors
 # Prompt with Git branch if available.
-PS1="%{%B%F{green}%}%m %{%F{yellow}%}%(5~|.../%3~|%~) %{%F{blue}%}%\$(parse_git_branch) %{%F{yellow}%}% %{$%f%}%b %"
+local git_branch='%{$fg_bold[blue]%}$(parse_git_branch)'
+PS1="%{$fg_bold[green]%}%m %{$fg_bold[yellow]%}%(4~|.../%3~|%~)${git_branch} %{$fg_bold[yellow]%}% \$ %{$reset_color%}%{$fg[white]%}"
 
 # Some nice aliases to have
 alias diff='colordiff'
@@ -90,6 +96,10 @@ alias git-cloc='git ls-files | xargs cloc'
 alias sup='sudo su -'
 alias ls='ls --color'
 alias ll='ls -lA'
+alias dh='dirs -v'
+alias ..="cd .."
+alias ...="cd ../.."
+alias ....="cd ../../.."
 
 # Source another Aliases from external file (if exists).
 if [ -f ~/.aliases ]; then
