@@ -149,5 +149,13 @@ if [ -x "$(command -v kubectl)" ]; then
     source <(kubectl completion bash)
 fi
 
+# Powerline
+#if [ -f /usr/share/powerline/bindings/bash/powerline.sh ]; then
+#  powerline-daemon -q
+#  POWERLINE_BASH_CONTINUATION=1
+#  POWERLINE_BASH_SELECT=1
+#  source /usr/share/powerline/bindings/bash/powerline.sh
+#fi
+
 # Uncomment this line if your terminal doesn't propagate 256 colors support.
 #TERM=xterm-256color
