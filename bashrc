@@ -29,7 +29,7 @@ HISTSIZE=10000
 HISTFILESIZE=10000
 
 # Shorten the depth of directory
-PROMPT_DIRTRIM=1
+PROMPT_DIRTRIM=3
 
 # Default editor.
 export EDITOR=vim
@@ -84,8 +84,8 @@ alias ls='ls --color'
 alias ll='ls -lA'
 
 # Source another Aliases from external file (if exists).
-if [ -f ~/.bash_aliases ]; then
-	. ~/.bash_aliases
+if [ -f ~/.aliases ]; then
+	. ~/.aliases
 fi
 
 # Enable programmable completion features (you don't need to enable
