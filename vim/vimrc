@@ -139,8 +139,9 @@ if (has("termguicolors"))
 endif
 
 " 80 character's marker
-"highlight ColorColumn ctermbg=gray
-"set colorcolumn=80
+highlight ColorColumn ctermbg=gray
+" let &colorcolumn=join(range(80,999),",")
+set colorcolumn=80
 
 "set cursorline
 colorscheme OceanicNext
@@ -181,11 +182,10 @@ autocmd ColorScheme * highlight ExtraWhitespace ctermbg=red guibg=red
 autocmd InsertLeave * set nopaste " Disable paste mode when leaving Insert Mode
 autocmd BufRead,BufNewFile */playbooks/*.yml set filetype=ansible
 autocmd FileType yaml setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
+autocmd FileType json setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
 autocmd FileType html setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
 autocmd BufRead,BufNewFile *.proto set filetype=proto
 autocmd BufNewFile,BufRead *.kubeconfig setlocal filetype=yaml
-" call :GitGutter after committing using fugitive
-autocmd BufWritePost * GitGutter
 
 " F1-F12 key calls
 " F2: Disable formatting when pasting large chunks of code.
@@ -281,6 +281,15 @@ nmap =j :%!python -m json.tool<cr>
 
 " HTML sytax on file
 nmap =h :set syntax=html<cr>
+
+" YAML sytax on file
+nmap =y :set syntax=yaml<cr>
+
+"vim-fugitive
+nmap <leader>gs :Gstatus<cr>
+nmap <leader>gc :Gcommit<cr>
+nmap <leader>gp :Gpush<cr>:GitGutter<cr>
+nmap <leader>gd :Gdiff<cr>
 
 " Remove all whitespace
 map <Leader>w :%s/\s\+$//
