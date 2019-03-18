@@ -145,7 +145,7 @@ gpip(){
 
 # k8s
 if [ -x "$(command -v kubectl)" ]; then
-    source <(kubectl completion bash)
+    source <(kubectl completion zsh)
 fi
 
 # Powerline
