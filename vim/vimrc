@@ -192,7 +192,7 @@ autocmd BufNewFile,BufRead *.kubeconfig setlocal filetype=yaml
 set pastetoggle=<F2>
 
 " F3: Toggle line numbers.
-nnoremap <silent> <F3> :set number! number?<CR>
+nnoremap <silent> <F3> :set number! number?<CR>:GitGutterToggle<cr>
 imap <silent> <F3> <C-o>:set number! number?<CR>
 
 " F4: Toggle list (display unprintable characters).
