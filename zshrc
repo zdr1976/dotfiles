@@ -59,6 +59,9 @@ zle -N down-line-or-beginning-search
 # Easy directory navigation. Don't need to type cd to change directories.
 setopt autocd autopushd pushdminus pushdsilent pushdtohome pushdignoredups
 
+# Disable paste highlighting.
+zle_highlight+=(paste:none)
+
 # Default editor.
 export EDITOR=vim
 
