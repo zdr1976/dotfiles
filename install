@@ -2,7 +2,7 @@
 # Use !/usr/bin/env bash
 
 BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-FILES_LIST="bashrc screenrc gitconfig vim tmux.conf"
+FILES_LIST="bashrc zshrc screenrc gitconfig vim tmux.conf"
 NOW=$(date +"%Y%m%d")
 BACKUP="no"
 INSTALL="no"

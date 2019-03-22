@@ -91,7 +91,7 @@ parse_k8s_context() {
 autoload -U colors && colors
 # Prompt with Git branch if available.
 local git_branch='%{$fg_bold[blue]%}$(parse_git_branch)'
-PS1="%{$fg_bold[green]%}%m %{$fg_bold[yellow]%}%(4~|.../%3~|%~)${git_branch} %{$fg_bold[yellow]%}% \$ %{$reset_color%}%{$fg[white]%}"
+PS1="%{$fg_bold[green]%}%m %{$fg_bold[yellow]%}%(3~|.../%2~|%~)${git_branch} %{$fg_bold[yellow]%}% \$ %{$reset_color%}%{$fg[white]%}"
 
 # Some nice aliases to have
 alias diff='colordiff'

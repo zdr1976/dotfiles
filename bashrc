@@ -29,7 +29,7 @@ HISTSIZE=10000
 HISTFILESIZE=10000
 
 # Shorten the depth of directory
-PROMPT_DIRTRIM=3
+PROMPT_DIRTRIM=2
 
 # Default editor.
 export EDITOR=vim
@@ -120,9 +120,10 @@ export PATH=~/bin:$PATH:$GOROOT/bin
 # pip should only run if there is a virtualenv currently activated
 export PIP_REQUIRE_VIRTUALENV=true
 export WORKON_HOME=$HOME/.virtualenvs
-export PROJECT_HOME=$HOME/Projects/Python
+export PROJECT_HOME=$HOME/Projects/Work
 export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
-export VIRTUALENVWRAPPER_VIRTUALENV=/usr/bin/virtualenv-3
+# export VIRTUALENVWRAPPER_VIRTUALENV=/usr/bin/virtualenv-3
+export VIRTUALENVWRAPPER_VIRTUALENV=/usr/bin/virtualenv
 if [ "$OS" == "OSX" ]; then
 	if [ -f $(/usr/local/bin/brew --prefix)/bin/virtualenvwrapper.sh ]; then
 		. $(/usr/local/bin/brew --prefix)/bin/virtualenvwrapper.sh
@@ -141,6 +142,10 @@ CDPATH=.:~:~/Projects/Work:~/Projects/Personal
 # Temporarily turn off restriction for pip
 gpip(){
 	PIP_REQUIRE_VIRTUALENV="" pip "$@"
+}
+
+gpip3(){
+    PIP_REQUIRE_VIRTUALENV="" pip3 "$@"
 }
 
 
