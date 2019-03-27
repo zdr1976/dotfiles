@@ -32,7 +32,8 @@ Plugin 'davidhalter/jedi-vim'
 Plugin 'mattn/emmet-vim'
 
 " Syntax
-Plugin 'gabrielelana/vim-markdown'	" Markdown flavor implemented by Github
+Plugin 'gabrielelana/vim-markdown' " Markdown flavor implemented by Github
+Plugin 'uarun/vim-protobuf' " highlighting for Google's Protocol Buffers
 
 " Ansible / Jinja2
 Plugin 'pearofducks/ansible-vim'
@@ -186,6 +187,7 @@ autocmd FileType json setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
 autocmd FileType html setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
 autocmd BufRead,BufNewFile *.proto set filetype=proto
 autocmd BufNewFile,BufRead *.kubeconfig setlocal filetype=yaml
+autocmd FileType c,go,python autocmd BufWritePre <buffer> :%s/\s\+$//e
 
 " F1-F12 key calls
 " F2: Disable formatting when pasting large chunks of code.

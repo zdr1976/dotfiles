@@ -27,7 +27,7 @@ then
 fi
 
 # Paprsing script parameters.
-while getopts 'bih' opt; do
+while getopts 'bish' opt; do
 	case "${opt}" in
 		b) BACKUP=yes ;;
 		i) INSTALL=yes ;;
@@ -37,6 +37,14 @@ while getopts 'bih' opt; do
 	esac
 done
 shift $(( $OPTIND - 1 ))
+
+# Check if git ins installed
+# if type -P git &>/dev/null; then
+if [ ! -x "$(command -v git)" ]; then
+    echo "Missing git binary !!!"
+    echo "Can't continue without it. Please install git before you continue."
+    exit 1
+fi
 
 # Rename any existing dotfilesk.
 for FILE in $FILES_LIST; do
@@ -62,9 +70,9 @@ for FILE in $FILES_LIST; do
 	fi
 done
 
-# Installing git submodules
-echo "Installing git submodules"
-git submodule update --init --recursive
+# Installing Vundle.vim
+echo "Installing Vundle.vim plugin"
+git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 
 # Installing vim plugins
 echo "Installing vim plugins."
