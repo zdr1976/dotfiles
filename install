@@ -10,31 +10,31 @@ SYMLINK="no"
 
 # HELP Message.
 usage() {
-	cat 1>&2 <<EOF
+    cat 1>&2 <<EOF
 Usage: $0 [-b] [-i] [-h]
-	-b Backup old file
-	-i Install dotfiles [Rewrite existing files]
-	-s Symlinking dotfiles [Rewrite existing files]
-	-h Print HELP message
+    -b Backup old file
+    -i Install dotfiles [Rewrite existing files]
+    -s Symlinking dotfiles [Rewrite existing files]
+    -h Print HELP message
 EOF
-	exit 1
+    exit 1
 }
 
 # Without any parameter print HELP message.
 if [ $# -eq 0 ];
 then
-	usage;
+    usage;
 fi
 
 # Paprsing script parameters.
 while getopts 'bish' opt; do
-	case "${opt}" in
-		b) BACKUP=yes ;;
-		i) INSTALL=yes ;;
-		s) SYMLINK=yes ;;
-		h) usage ;;
-		*) echo "Unknown option $opt" 1>&2; usage ;;
-	esac
+    case "${opt}" in
+        b) BACKUP=yes ;;
+        i) INSTALL=yes ;;
+        s) SYMLINK=yes ;;
+        h) usage ;;
+        *) echo "Unknown option $opt" 1>&2; usage ;;
+    esac
 done
 shift $(( $OPTIND - 1 ))
 
@@ -46,34 +46,45 @@ if [ ! -x "$(command -v git)" ]; then
     exit 1
 fi
 
+# Setup EMAIL and NAME for gitconfig.tmpl
+echo "Please provide your name and email address to be used in .gitconfig file"
+read -p "Enter your name: " name
+read -p "Enter your email: " email
+sed -e "s/{{NAME}}/$name/g" -e "s/{{EMAIL}}/$email/g" gitconfig.tmpl > gitconfig
+
 # Rename any existing dotfilesk.
 for FILE in $FILES_LIST; do
-	# backuping old files if requested.
-	if [ "$BACKUP" == "yes" ];
-	then
-		echo "Backuping ~/.$FILE to ~/.$FILE-$NOW"
-		mv ~/.$FILE ~/.$FILE-$NOW
-	fi
+    # backuping old files if requested.
+    if [ "$BACKUP" == "yes" ];
+    then
+        echo "Backuping ~/.$FILE to ~/.$FILE-$NOW"
+        mv ~/.$FILE ~/.$FILE-$NOW
+    fi
 
-	# Symlinking dot file to HOME directory.
-	if [ "$SYMLINK" == "yes" ];
-	then
-		echo "Create symlink to $FILE in home directory"
-		rm -rf ~/.$FILE
-		ln -s $BASEDIR/$FILE ~/.$FILE
-	# Copy dot file in to the HOME directory.
-	elif [ "$INSTALL" == "yes" ];
-	then
-		echo "Copy $FILE in to the HOME directory"
-		rm -rf ~/.$FILE
-		cp -r $BASEDIR/$FILE ~/.$FILE
-	fi
+    # Symlinking dot file to HOME directory.
+    if [ "$SYMLINK" == "yes" ];
+    then
+        echo "Create symlink to $FILE in home directory"
+        rm -rf ~/.$FILE
+        ln -s $BASEDIR/$FILE ~/.$FILE
+    # Copy dot file in to the HOME directory.
+    elif [ "$INSTALL" == "yes" ];
+    then
+        echo "Copy $FILE in to the HOME directory"
+        rm -rf ~/.$FILE
+        cp -r $BASEDIR/$FILE ~/.$FILE
+    fi
 done
 
 # Installing Vundle.vim
 echo "Installing Vundle.vim plugin"
+rm -rf ~/.vim/bundle/*
 git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 
 # Installing vim plugins
 echo "Installing vim plugins."
 vim +PluginInstall +qall
+
+# Configuring YouCompleteMe
+echo "Configuring YouCompleteMe plugin for C, GO and Python"
+~/.vim/bundle/YouCompleteMe/install.py --clang-completer --go-completer

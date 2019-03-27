@@ -145,7 +145,11 @@ highlight ColorColumn ctermbg=gray
 set colorcolumn=80
 
 "set cursorline
-colorscheme OceanicNext
+try
+    colorscheme OceanicNext
+catch /^Vim\%((\a\+)\)\=:E185/
+    colorscheme default
+endtry
 
 " Spell checking change highlighting to underline
 highlight clear SpellBad
