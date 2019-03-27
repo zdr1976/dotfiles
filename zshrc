@@ -65,6 +65,9 @@ zle_highlight+=(paste:none)
 # Default editor.
 export EDITOR=vim
 
+# Add local ~/bin and ~/.local/bin to PAT
+export PATH=~/bin:~/.local/bin:$PATH
+
 # Only apply for MacOS system.
 if [ "$OS" = "OSX" ]; then
     export CLICOLOR=1
@@ -116,7 +119,7 @@ if [ "$OS" = "LINUX" ]; then
 elif [ "$OS" = "OSX" ]; then
     export GOROOT=$(brew --prefix)/opt/go/libexec/go
 fi
-export PATH=~/bin:$PATH:$GOROOT/bin
+export PATH=$PATH:$GOROOT/bin
 
 # PYTHON
 # pip should only run if there is a virtualenv currently activated
@@ -124,7 +127,7 @@ export PIP_REQUIRE_VIRTUALENV=true
 export WORKON_HOME=$HOME/.virtualenvs
 export PROJECT_HOME=$HOME/Projects/Python
 export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
-export VIRTUALENVWRAPPER_VIRTUALENV=/usr/bin/virtualenv-3
+export VIRTUALENVWRAPPER_VIRTUALENV=~/.local/bin/virtualenv
 if [ "$OS" = "OSX" ]; then
     if [ -f $(/usr/local/bin/brew --prefix)/bin/virtualenvwrapper.sh ]; then
 	    . $(/usr/local/bin/brew --prefix)/bin/virtualenvwrapper.sh
@@ -134,6 +137,8 @@ elif [ "$OS" = "LINUX" ]; then
 	    . /etc/bash_completion.d/virtualenvwrapper
     elif [ -f /etc/profile.d/virtualenvwrapper.sh ]; then
 	    . /etc/profile.d/virtualenvwrapper.sh
+    elif [ -f ~/.local/bin/virtualenvwrapper.sh ]; then
+	    . ~/.local/bin/virtualenvwrapper.sh
     fi
 fi
 
@@ -145,6 +150,9 @@ gpip(){
     PIP_REQUIRE_VIRTUALENV="" pip "$@"
 }
 
+gpip3(){                                                                        
+    PIP_REQUIRE_VIRTUALENV="" pip3 "$@"                                         
+}
 
 # k8s
 if [ -x "$(command -v kubectl)" ]; then
