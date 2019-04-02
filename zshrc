@@ -36,6 +36,9 @@ setopt appendhistory
 # Prompt expansion
 setopt promptsubst
 
+# Globbing characters
+unsetopt nomatch
+
 # Enable autocompletation.
 setopt completealiases
 autoload -U compinit && compinit
