@@ -19,6 +19,8 @@ Plugin 'vim-scripts/TaskList.vim'
 " Python
 "Plugin 'vim-scripts/indentpython.vim'
 Plugin 'nvie/vim-flake8'
+"Plugin 'gryf/pylint-vim'
+"Plugin 'mindriot101/vim-yapf'
 
 " Go Lang
 Plugin 'fatih/vim-go'

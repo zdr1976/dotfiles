@@ -41,7 +41,11 @@ compatibility with a critical third-party extension. This is one of many use cas
 general-purpose Python packages in to the global `PATH`. Every other package is confined
 to virtual environments.
 ```bash
-pip install virtualenv virtualenvwrapper
+pip install --user virtualenv virtualenvwrapper
+
+or (see bellow)
+
+gpip3 install --user virtualenv virtualenvwrapper
 ```
 
 Then open your `.bashrc` or `.zshrc` file (which may be created but only
