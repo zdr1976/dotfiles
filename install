@@ -3,6 +3,7 @@
 
 BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 FILES_LIST="bashrc zshrc screenrc gitconfig vim tmux.conf"
+FILE_LIST_GIT_MULTI="bashrc zshrc screenrc gitconfig gitconfig-personal gitconfig-work vim tmux.conf"
 NOW=$(date +"%Y%m%d")
 BACKUP="no"
 INSTALL="no"
@@ -47,10 +48,27 @@ if [ ! -x "$(command -v git)" ]; then
 fi
 
 # Setup EMAIL and NAME for gitconfig.tmpl
-echo "Please provide your name and email address to be used in .gitconfig file"
-read -p "Enter your name: " name
-read -p "Enter your email: " email
-sed -e "s/{{NAME}}/$name/g" -e "s/{{EMAIL}}/$email/g" gitconfig.tmpl > gitconfig
+read -n 1 -p "Do you have personal and work git account? (Y/n) " more_accounts
+case $more_accounts in
+    Y|y)
+        FILES_LIST=$FILE_LIST_GIT_MULTI
+        cp gitconfig-multi gitconfig
+        echo "Please provide your name and email address to be used for personal account"
+        read -p "Enter your name: " name
+        read -p "Enter your email: " email
+        sed -e "s/{{NAME}}/$name/g" -e "s/{{EMAIL}}/$email/g" gitconfig-personal.tmpl > gitconfig-personal
+        echo "Please provide your name and email address to be used for work account"
+        read -p "Enter your name: " name
+        read -p "Enter your email: " email
+        sed -e "s/{{NAME}}/$name/g" -e "s/{{EMAIL}}/$email/g" gitconfig-work.tmpl > gitconfig-work
+        ;;
+    *)
+        echo "Please provide your name and email address to be used in .gitconfig file"
+        read -p "Enter your name: " name
+        read -p "Enter your email: " email
+        sed -e "s/{{NAME}}/$name/g" -e "s/{{EMAIL}}/$email/g" gitconfig.tmpl > gitconfig
+        ;;
+esac
 
 # Rename any existing dotfilesk.
 for FILE in $FILES_LIST; do
@@ -87,4 +105,4 @@ vim +PluginInstall +qall
 
 # Configuring YouCompleteMe
 echo "Configuring YouCompleteMe plugin for C, GO and Python"
-~/.vim/bundle/YouCompleteMe/install.py --clang-completer --go-completer
+python3 ~/.vim/bundle/YouCompleteMe/install.py --clang-completer --go-completer
