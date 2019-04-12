@@ -39,9 +39,12 @@ setopt promptsubst
 # Globbing characters
 unsetopt nomatch
 
+# Command-line completion (Docker)
+fpath=(~/.zsh/completion $fpath)
+
 # Enable autocompletation.
 setopt completealiases
-autoload -U compinit && compinit
+autoload -Uz compinit && compinit -i
 zstyle ':completion:*' menu select
 # small letters will match small and capital letters
 #zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
@@ -69,7 +72,7 @@ zle_highlight+=(paste:none)
 export EDITOR=vim
 
 # Add local ~/bin and ~/.local/bin to PAT
-export PATH=~/bin:~/.local/bin:$PATH
+#export PATH=~/bin:~/.local/bin:$PATH
 
 # Only apply for MacOS system.
 if [ "$OS" = "OSX" ]; then
@@ -122,7 +125,7 @@ if [ "$OS" = "LINUX" ]; then
 elif [ "$OS" = "OSX" ]; then
     export GOROOT=$(brew --prefix)/opt/go/libexec/go
 fi
-export PATH=$GOROOT/bin:$PATH
+#export PATH=$GOROOT/bin:$PATH
 
 # PYTHON
 # pip should only run if there is a virtualenv currently activated

@@ -35,7 +35,7 @@ PROMPT_DIRTRIM=2
 export EDITOR=vim
 
 # Add local ~/bin and ~/.local/bin to PATH
-export PATH=~/bin:~/.local/bin:$PATH
+#export PATH=~/bin:~/.local/bin:$PATH
 
 # Only apply for MacOS system.
 if [ "$OS" == "OSX" ]; then
@@ -117,7 +117,7 @@ if [ "$OS" == "LINUX" ]; then
 elif [ "$OS" == "OSX" ]; then
 	export GOROOT=$(brew --prefix)/opt/go/libexec/go
 fi
-export PATH=$GOROOT/bin:$PATH
+#export PATH=$GOROOT/bin:$PATH
 
 # PYTHON
 # pip should only run if there is a virtualenv currently activated
