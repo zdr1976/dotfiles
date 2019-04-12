@@ -158,9 +158,20 @@ gpip3(){
 }
 
 # k8s
-if [ -x "$(command -v kubectl)" ]; then
-    source <(kubectl completion zsh)
-fi
+#if [ -x "$(command -v kubectl)" ]; then
+#    source <(kubectl completion zsh)
+#fi
+
+# k8s - Lazy load
+# zsh completion takes a long time to load
+# https://github.com/kubernetes/kubernetes/issues/59078
+function kubectl() {
+    if ! type __start_kubectl >/dev/null 2>&1; then
+        source <(command kubectl completion zsh)
+    fi
+
+    command kubectl "$@"
+}
 
 # Powerline
 #if [ -f /usr/share/powerline/bindings/bash/powerline.sh ]; then
