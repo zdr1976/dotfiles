@@ -293,6 +293,9 @@ nmap =h :set syntax=html<cr>
 " YAML sytax on file
 nmap =y :set syntax=yaml<cr>
 
+" Docker sytax on file
+nmap =d :set syntax=dockerfile<cr>
+
 "vim-fugitive
 nmap <leader>gs :Gstatus<cr>
 nmap <leader>gc :Gcommit<cr>
