@@ -121,25 +121,25 @@ fi
 
 # PYTHON
 # pip should only run if there is a virtualenv currently activated
-export PIP_REQUIRE_VIRTUALENV=true
-export WORKON_HOME=$HOME/.virtualenvs
-export PROJECT_HOME=$HOME/Projects/Work
-export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
+#export PIP_REQUIRE_VIRTUALENV=true
+#export WORKON_HOME=$HOME/.virtualenvs
+#export PROJECT_HOME=$HOME/Projects/Work
+#export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
 # export VIRTUALENVWRAPPER_VIRTUALENV=/usr/bin/virtualenv-3
-export VIRTUALENVWRAPPER_VIRTUALENV=~/.local/bin/virtualenv
-if [ "$OS" == "OSX" ]; then
-	if [ -f $(/usr/local/bin/brew --prefix)/bin/virtualenvwrapper.sh ]; then
-		. $(/usr/local/bin/brew --prefix)/bin/virtualenvwrapper.sh
-	fi
-elif [ "$OS" == "LINUX" ]; then
-	if [ -f /etc/bash_completion.d/virtualenvwrapper ]; then
-		. /etc/bash_completion.d/virtualenvwrapper
-	elif [ -f /etc/profile.d/virtualenvwrapper.sh ]; then
-		. /etc/profile.d/virtualenvwrapper.sh
-	elif [ -f ~/.local/bin/virtualenvwrapper.sh ]; then
-		. ~/.local/bin/virtualenvwrapper.sh
-	fi
-fi
+#export VIRTUALENVWRAPPER_VIRTUALENV=~/.local/bin/virtualenv
+#if [ "$OS" == "OSX" ]; then
+#	if [ -f $(/usr/local/bin/brew --prefix)/bin/virtualenvwrapper.sh ]; then
+#		. $(/usr/local/bin/brew --prefix)/bin/virtualenvwrapper.sh
+#	fi
+#elif [ "$OS" == "LINUX" ]; then
+#	if [ -f /etc/bash_completion.d/virtualenvwrapper ]; then
+#		. /etc/bash_completion.d/virtualenvwrapper
+#	elif [ -f /etc/profile.d/virtualenvwrapper.sh ]; then
+#		. /etc/profile.d/virtualenvwrapper.sh
+#	elif [ -f ~/.local/bin/virtualenvwrapper.sh ]; then
+#		. ~/.local/bin/virtualenvwrapper.sh
+#	fi
+#fi
 
 # Project DIR
 CDPATH=.:~:~/Projects/Work:~/Projects/Personal

@@ -256,8 +256,10 @@ nnoremap <C-RIGHT> <C-W><C-L>
 "nnoremap <C-H> <C-W><C-H>
 
 " Use + and - to increase or decrease split windows by a sane amount.
-nnoremap <silent> + :exe "resize " . (winheight(0) * 3/2)<CR>
-nnoremap <silent> - :exe "resize " . (winheight(0) * 2/3)<CR>
+nnoremap <silent> + :exe "resize +10"<CR>
+nnoremap <silent> - :exe "resize -10"<CR>
+nnoremap <silent> <Leader>+ :exe "vertical resize +10"<CR>
+nnoremap <silent> <Leader>- :exe "vertical resize -10"<CR>
 
 " Tab navigation.
 map <Leader>n <esc>:tabprevious<CR>
@@ -376,3 +378,6 @@ let g:user_emmet_leader_key=','
 
 " vim-flake8
 let g:flake8_quickfix_height=12
+
+" NERDTree
+let NERDTreeShowHidden=1
