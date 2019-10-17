@@ -35,7 +35,7 @@ Plugin 'mattn/emmet-vim'
 
 " Syntax
 Plugin 'gabrielelana/vim-markdown' " Markdown flavor implemented by Github
-Plugin 'uarun/vim-protobuf' " highlighting for Google's Protocol Buffers
+"Plugin 'uarun/vim-protobuf' " highlighting for Google's Protocol Buffers
 
 " Ansible / Jinja2
 Plugin 'pearofducks/ansible-vim'
@@ -143,7 +143,7 @@ endif
 
 " 80 character's marker
 highlight ColorColumn ctermbg=gray
-" let &colorcolumn=join(range(80,999),",")
+"let &colorcolumn=join(range(80,999),",")
 set colorcolumn=80
 
 "set cursorline
@@ -167,33 +167,19 @@ highlight SpellLocal cterm=underline
 "set list
 set listchars=tab:»·,nbsp:+,trail:·,extends:→,precedes:←
 
-""""""""""""""""""""""""""""""""""
-" Templates & Languages settings "
-""""""""""""""""""""""""""""""""""
-function! LoadTemplate()
-	" load a template based on the file extension
-	silent 0r ~/.vim/templates/tmpl.%:e
-endfunction
-
-augroup templates
-	autocmd!
-	"Auto load while creating new files
-	autocmd BufNewFile *.py call LoadTemplate()
-	autocmd BufNewFile *.proto call LoadTemplate()
-augroup END
-
+" Languages settings
 autocmd Filetype gitcommit setlocal spell textwidth=72
 autocmd FileType python setlocal tabstop=4 softtabstop=4 shiftwidth=4 expandtab
 autocmd BufNewFile,BufRead *.go setlocal noexpandtab tabstop=4 shiftwidth=4 softtabstop=4
-autocmd ColorScheme * highlight ExtraWhitespace ctermbg=red guibg=red
-autocmd InsertLeave * set nopaste " Disable paste mode when leaving Insert Mode
 autocmd BufRead,BufNewFile */playbooks/*.yml set filetype=ansible
 autocmd FileType yaml setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
 autocmd FileType json setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
-autocmd FileType html setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
+autocmd FileType html,htmldjango setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
 autocmd BufRead,BufNewFile *.proto set filetype=proto
 autocmd BufNewFile,BufRead *.kubeconfig setlocal filetype=yaml
 autocmd FileType c,go,python autocmd BufWritePre <buffer> :%s/\s\+$//e
+autocmd ColorScheme * highlight ExtraWhitespace ctermbg=red guibg=red
+autocmd InsertLeave * set nopaste " Disable paste mode when leaving Insert Mode
 
 " F1-F12 key calls
 " F2: Disable formatting when pasting large chunks of code.
@@ -204,7 +190,7 @@ nnoremap <silent> <F3> :set number! number?<CR>:GitGutterToggle<cr>
 imap <silent> <F3> <C-o>:set number! number?<CR>
 
 " F4: Toggle list (display unprintable characters).
-nnoremap <silent> <F4> :set list! list?<CR>
+nnoremap <silent> <F4> :silent set list! list?<CR> 
 
 " F5: Show NERDTree.
 nnoremap <silent> <F5> :NERDTreeToggle<CR>
@@ -350,6 +336,7 @@ let g:ycm_autoclose_preview_window_after_completion = 1
 let g:ycm_key_list_stop_completion = ['<C-y>', '<CR>']
 
 " Jedi-vim
+let g:jedi#completions_enabled = 0
 let g:jedi#show_call_signatures = 2
 let g:jedi#use_splits_not_buffers = "right"
 let g:jedi#usages_command = "<leader>u"
