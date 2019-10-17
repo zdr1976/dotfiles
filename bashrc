@@ -35,7 +35,7 @@ PROMPT_DIRTRIM=2
 export EDITOR=vim
 
 # Add local ~/bin and ~/.local/bin to PATH
-#export PATH=~/bin:~/.local/bin:$PATH
+export PATH=~/bin:~/.local/bin:~/.npm-global/bin:$PATH
 
 # Only apply for MacOS system.
 if [ "$OS" == "OSX" ]; then
@@ -157,6 +157,11 @@ gpip3(){
 # k8s
 if [ -x "$(command -v kubectl)" ]; then
     source <(kubectl completion bash)
+fi
+
+# npm
+if [ -x "$(command -v npm)" ]; then
+    source <(npm completion)
 fi
 
 # Powerline
