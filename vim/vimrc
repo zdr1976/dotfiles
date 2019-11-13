@@ -288,6 +288,9 @@ nmap <leader>gc :Gcommit<cr>
 nmap <leader>gp :Gpush<cr>:GitGutter<cr>
 nmap <leader>gd :Gdiff<cr>
 
+" YouCompleteMe
+nmap <leader>u :YcmCompleter GoToReferences<cr>
+
 " Remove all whitespace
 map <Leader>w :%s/\s\+$//
 
