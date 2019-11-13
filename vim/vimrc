@@ -1,79 +1,81 @@
 " A sensible vimrc for Python and Go development with Ansible support.
 
-" VUNDLE
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
+" vim-plug installation if not exists 
+if empty(glob('~/.vim/autoload/plug.vim'))
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
 
-" Let Vundle manage Vundle
-Plugin 'gmarik/Vundle.vim'
+call plug#begin('~/.vim/plugged')
 
 " Themes
-Plugin 'mhartington/oceanic-next'
+Plug 'mhartington/oceanic-next'
 
 " Utils
-Plugin 'scrooloose/nerdtree'
-Plugin 'majutsushi/tagbar'
-Plugin 'vim-scripts/TaskList.vim'
-"Plugin 'Chiel92/vim-autoformat'
+Plug 'scrooloose/nerdtree'
+Plug 'majutsushi/tagbar'
+Plug 'vim-scripts/TaskList.vim'
+"Plug 'Chiel92/vim-autoformat'
+Plug 'ctrlpvim/ctrlp.vim'
 
 " Python
-"Plugin 'vim-scripts/indentpython.vim'
-Plugin 'nvie/vim-flake8'
-"Plugin 'gryf/pylint-vim'
-"Plugin 'mindriot101/vim-yapf'
+Plug 'nvie/vim-flake8'
 
 " Go Lang
-Plugin 'fatih/vim-go'
+Plug 'fatih/vim-go'
 
-" Code completion
-Plugin 'Valloric/YouCompleteMe'
-Plugin 'davidhalter/jedi-vim'
+" Autocompletion
+function! BuildYCM(info)
+  " info is a dictionary with 3 fields
+  " - name:   name of the plugin
+  " - status: 'installed', 'updated', or 'unchanged'
+  " - force:  set on PlugInstall! or PlugUpdate!
+  if a:info.status == 'installed' || a:info.force
+    !python3 ./install.py --clang-completer --go-completer --ts-completer
+  endif
+endfunction
+
+Plug 'ycm-core/YouCompleteMe', { 'do': function('BuildYCM') }
+Plug 'davidhalter/jedi-vim'
 
 " HTML
 "  https://medium.com/vim-drops/be-a-html-ninja-with-emmet-for-vim-feee15447ef1
-Plugin 'mattn/emmet-vim'
+Plug 'mattn/emmet-vim'
 
 " Syntax
-Plugin 'gabrielelana/vim-markdown' " Markdown flavor implemented by Github
-"Plugin 'uarun/vim-protobuf' " highlighting for Google's Protocol Buffers
+Plug 'gabrielelana/vim-markdown' " Markdown flavor implemented by Github
+"Plug 'uarun/vim-protobuf' " highlighting for Google's Protocol Buffers
 
 " Ansible / Jinja2
-Plugin 'pearofducks/ansible-vim'
+Plug 'pearofducks/ansible-vim'
 
 " Git
-Plugin 'tpope/vim-fugitive'
-Plugin 'airblade/vim-gitgutter'
-
-" SnipMate
-"Plugin 'MarcWeber/vim-addon-mw-utils'
-"Plugin 'tomtom/tlib_vim'
-"Plugin 'garbas/vim-snipmate'
-" Optional snippets
-"Plugin 'honza/vim-snippets'
-" Bootsrap4 snppets
-"Plugin 'jvanja/vim-bootstrap4-snippets'
+Plug 'tpope/vim-fugitive'
+Plug 'airblade/vim-gitgutter'
 
 " base64
-Plugin 'christianrondeau/vim-base64'
+Plug 'christianrondeau/vim-base64'
 
-" Plugin for transparent editing of gpg encrypted files
-Plugin 'jamessan/vim-gnupg'
+" Plug for transparent editing of gpg encrypted files
+Plug 'jamessan/vim-gnupg'
 
 " Indentation level
-Plugin 'Yggdroot/indentLine'
+Plug 'Yggdroot/indentLine'
 
 " Status line
-Plugin 'vim-airline/vim-airline'
-Plugin 'vim-airline/vim-airline-themes'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
 
-call vundle#end()
+"call vundle#end()
+call plug#end()
 
 """"""""""""""""""""""
 "      Settings      "
 """"""""""""""""""""""
 set nocompatible                " Enables us Vim specific features
-filetype off                    " Reset filetype detection first ...
-filetype plugin indent on       " ... and enable filetype detection
+"filetype off                    " Reset filetype detection first ...
+"filetype plugin indent on       " ... and enable filetype detection
 set ttyfast                     " Indicate fast terminal conn for faster redraw
 set ttymouse=xterm2             " Indicate terminal type for mouse codes
 set ttyscroll=3                 " Speedup scrolling
@@ -112,7 +114,7 @@ set shiftwidth=4
 set expandtab
 set ttimeoutlen=10				" Key code delays
 set timeoutlen=1000				" Papping delays ms
-set updatetime=100
+set updatetime=100              " Smaller updatetime for CursorHold & CursorHoldI
 set t_RV=						" Get rid of termresponse
 set fo-=t						" Don't automatically wrap text when typing
 
@@ -134,9 +136,6 @@ endif
 " Color scheme
 syntax enable
 
-" for vim 7
-set t_Co=256
-" for vim 8
 if (has("termguicolors"))
 	set termguicolors
 endif
@@ -164,7 +163,6 @@ highlight clear SpellLocal
 highlight SpellLocal cterm=underline
 
 " Custom Invisibles
-"set list
 set listchars=tab:»·,nbsp:+,trail:·,extends:→,precedes:←
 
 " Languages settings
@@ -186,11 +184,11 @@ autocmd InsertLeave * set nopaste " Disable paste mode when leaving Insert Mode
 set pastetoggle=<F2>
 
 " F3: Toggle line numbers.
-nnoremap <silent> <F3> :set number! number?<CR>:GitGutterToggle<cr>
+nnoremap <silent> <F3> :silent set number! number?<CR>:GitGutterToggle<cr>
 imap <silent> <F3> <C-o>:set number! number?<CR>
 
 " F4: Toggle list (display unprintable characters).
-nnoremap <silent> <F4> :silent set list! list?<CR> 
+nnoremap <silent> <F4> :silent set list! list?<CR>
 
 " F5: Show NERDTree.
 nnoremap <silent> <F5> :NERDTreeToggle<CR>
@@ -248,8 +246,8 @@ nnoremap <silent> <Leader>+ :exe "vertical resize +10"<CR>
 nnoremap <silent> <Leader>- :exe "vertical resize -10"<CR>
 
 " Tab navigation.
-map <Leader>n <esc>:tabprevious<CR>
-map <Leader>m <esc>:tabnext<CR>
+"map <Leader>n <esc>:tabprevious<CR>
+"map <Leader>m <esc>:tabnext<CR>
 noremap <Leader>1 1gt
 noremap <Leader>2 2gt
 noremap <Leader>3 3gt
@@ -337,9 +335,9 @@ let g:ycm_key_list_stop_completion = ['<C-y>', '<CR>']
 
 " Jedi-vim
 let g:jedi#completions_enabled = 0
-let g:jedi#show_call_signatures = 2
+let g:jedi#show_call_signatures = 0
 let g:jedi#use_splits_not_buffers = "right"
-let g:jedi#usages_command = "<leader>u"
+"let g:jedi#usages_command = "<leader>u"
 "let g:jedi#force_py_version = 3
 
 " vim-go settings

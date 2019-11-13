@@ -117,7 +117,7 @@ if [ "$OS" == "LINUX" ]; then
 elif [ "$OS" == "OSX" ]; then
 	export GOROOT=$(brew --prefix)/opt/go/libexec/go
 fi
-#export PATH=$GOROOT/bin:$PATH
+export PATH=$GOROOT/bin:$PATH
 
 # PYTHON
 # pip should only run if there is a virtualenv currently activated

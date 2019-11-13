@@ -1,4 +1,5 @@
-bundle/*
+autoload/*
+plugged/*
 undo/*
 *.bkp
 !*.gitkeep
