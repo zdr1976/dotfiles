@@ -53,7 +53,7 @@ case $more_accounts in
     Y|y)
         FILES_LIST=$FILE_LIST_GIT_MULTI
         cp gitconfig-multi gitconfig
-        echo "Please provide your name and email address to be used for personal account"
+        echo -e "\nPlease provide your name and email address to be used for personal account"
         read -p "Enter your name: " name
         read -p "Enter your email: " email
         sed -e "s/{{NAME}}/$name/g" -e "s/{{EMAIL}}/$email/g" gitconfig-personal.tmpl > gitconfig-personal
