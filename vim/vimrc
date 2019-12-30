@@ -1,6 +1,6 @@
 " A sensible vimrc for Python and Go development with Ansible support.
 
-" vim-plug installation if not exists 
+" vim-plug installation if not exists
 if empty(glob('~/.vim/autoload/plug.vim'))
   silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
     \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
@@ -35,9 +35,7 @@ function! BuildYCM(info)
     !python3 ./install.py --clang-completer --go-completer --ts-completer
   endif
 endfunction
-
 Plug 'ycm-core/YouCompleteMe', { 'do': function('BuildYCM') }
-Plug 'davidhalter/jedi-vim'
 
 " HTML
 "  https://medium.com/vim-drops/be-a-html-ninja-with-emmet-for-vim-feee15447ef1
@@ -117,30 +115,39 @@ set timeoutlen=1000				" Papping delays ms
 set updatetime=100              " Smaller updatetime for CursorHold & CursorHoldI
 set t_RV=						" Get rid of termresponse
 set fo-=t						" Don't automatically wrap text when typing
+set cursorline                  " Highlight current line
 
 " Auto reload vimrc when it's saved
 autocmd! bufwritepost vimrc source %
 
 " Enable to copy to clipboard for operations like yank, delete, change and put.
 if has('unnamedplus')
-	set clipboard^=unnamed
-	set clipboard^=unnamedplus
+    set clipboard^=unnamed
+    set clipboard^=unnamedplus
 endif
 
 " This enables to undo files even if you exit Vim.
 if has('persistent_undo')
-	set undofile
-	set undodir=~/.vim/undo/
+    set undofile
+    set undodir=~/.vim/undo/
 endif
+
+if executable('rg')
+    set grepprg=rg\ --color=never
+    let g:ctrlp_user_command = 'rg %s --files --color=never --glob ""'
+    let g:ctrlp_use_caching = 0
+endif
+set wildignore+=*/.git/*,*/tmp/*,*.swp
 
 " Color scheme
 syntax enable
 
 if (has("termguicolors"))
-	set termguicolors
+    set termguicolors
 endif
 
 " 80 character's marker
+highlight ColorLine ctermbg=gray
 highlight ColorColumn ctermbg=gray
 "let &colorcolumn=join(range(80,999),",")
 set colorcolumn=80
@@ -202,6 +209,9 @@ autocmd FileType python map <buffer> <F7> :call Flake8()<CR>
 " F8: Toggle indentation
 nnoremap <silent> <F8> :IndentLinesToggle<cr>
 
+" F9: Grep word under cursor
+map <F9> :execute "vimgrep /" . expand("<cword>") . "/j **" <Bar> cw<CR>
+
 " F12: Spell checking
 " Once the cursor is on the word, use z=, and Vim will suggest a list of
 " alternatives that it thinks may be correct.
@@ -246,8 +256,8 @@ nnoremap <silent> <Leader>+ :exe "vertical resize +10"<CR>
 nnoremap <silent> <Leader>- :exe "vertical resize -10"<CR>
 
 " Tab navigation.
-"map <Leader>n <esc>:tabprevious<CR>
-"map <Leader>m <esc>:tabnext<CR>
+map <Leader>n <esc>:tabprevious<CR>
+map <Leader>m <esc>:tabnext<CR>
 noremap <Leader>1 1gt
 noremap <Leader>2 2gt
 noremap <Leader>3 3gt
@@ -289,7 +299,10 @@ nmap <leader>gp :Gpush<cr>:GitGutter<cr>
 nmap <leader>gd :Gdiff<cr>
 
 " YouCompleteMe
-nmap <leader>u :YcmCompleter GoToReferences<cr>
+nmap <leader>gu :YcmCompleter GoToReferences<cr>
+nmap <leader>gt :vertical YcmCompleter GoTo<cr>
+nmap <leader>gy :YcmCompleter GetType<cr>
+nmap <leader>gd :YcmCompleter GetDoc<cr>
 
 " Remove all whitespace
 map <Leader>w :%s/\s\+$//
@@ -316,7 +329,7 @@ let g:airline#extensions#tabline#show_close_button = 0
 let g:airline#extensions#tabline#show_buffers = 0
 let g:airline_theme='oceanicnext'
 if !exists('g:airline_symbols')
-	let g:airline_symbols = {}
+let g:airline_symbols = {}
 endif
 let g:airline_left_sep=''
 let g:airline_right_sep=''
@@ -335,13 +348,8 @@ let g:oceanic_next_terminal_italic = 1
 " YouCompleteMe
 let g:ycm_autoclose_preview_window_after_completion = 1
 let g:ycm_key_list_stop_completion = ['<C-y>', '<CR>']
-
-" Jedi-vim
-let g:jedi#completions_enabled = 0
-let g:jedi#show_call_signatures = 0
-let g:jedi#use_splits_not_buffers = "right"
-"let g:jedi#usages_command = "<leader>u"
-"let g:jedi#force_py_version = 3
+let g:ycm_goto_buffer_command = "split"
+let g:ycm_confirm_extra_conf=0
 
 " vim-go settings
 let g:go_highlight_build_constraints = 1
@@ -369,3 +377,6 @@ let g:flake8_quickfix_height=12
 
 " NERDTree
 let NERDTreeShowHidden=1
+
+" FIX for Underlined cursor line number
+highlight CursorLineNr cterm=NONE
