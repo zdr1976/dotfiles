@@ -12,7 +12,9 @@
 	editor = vim
 [push]
 	default = simple
-[includeIf "gitdir:~/Projcts/"]
+[includeIf "gitdir:~/Projects/"]
     path = .gitconfig-personal
 [includeIf "gitdir:~/Projects/Work/"]
     path = .gitconfig-work
+[diff]
+    wsErrorHighlight = all

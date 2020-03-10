@@ -159,6 +159,11 @@ if [ -x "$(command -v kubectl)" ]; then
     source <(kubectl completion bash)
 fi
 
+# k8s-kx
+kx() {
+    eval $(k8s-kx)
+}
+
 # npm
 if [ -x "$(command -v npm)" ]; then
     source <(npm completion)
