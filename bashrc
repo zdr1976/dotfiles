@@ -18,6 +18,10 @@ case "$OSTYPE" in
 		;;
 esac
 
+# Dynamic bash prompt
+# - Call the function promter() before PS1 for dynamic update
+PROMPT_COMMAND=prompter
+
 # Don't put duplicate lines or lines starting with space in the history.
 HISTCONTROL=ignoreboth
 
@@ -50,19 +54,6 @@ fi
 # update the values of LINES and COLUMNS.
 shopt -s checkwinsize
 
-# Set Git branch in BASH prompt.
-parse_git_branch() {
-	# Uncoment this line if your system is not UTF-8 ready.
-	# git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ git:\1/'
-	# Uncomment this on UTF-8 compatible system.
-	git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ ⎇  \1/'
-}
-
-# Set k8s context in BASH prompt
-parse_k8s_context() {
-	cat ~/.kube/config | grep "current-context:" | sed "s/current-context: //"
-}
-
 # Colors http://misc.flogisoft.com/bash/tip_colors_and_formatting
 BOLD_GREEN="\e[1;32m"
 BOLD_YELLOW="\e[1;33m"
@@ -74,10 +65,32 @@ BOLD_CYAN="\e[1;36m"
 RESET_TEXT="\e[1;0m"
 
 # Prompt with Git branch if available.
-# PS1="\[$BOLD_GREEN\]\h\[$BOLD_YELLOW\] \w\[$BOLD_BLUE\]\$(parse_git_branch) (k8s: $(parse_k8s_context))\[$BOLD_YELLOW\] $ \[$RESET_TEXT\]"
-PS1="\[$BOLD_GREEN\]\h\[$BOLD_YELLOW\] \w\[$BOLD_BLUE\]\$(parse_git_branch)\[$BOLD_YELLOW\] $ \[$RESET_TEXT\]"
+#PS1="\[$BOLD_GREEN\]\h\[$BOLD_YELLOW\] \w\[$BOLD_BLUE\]\$(parse_git_branch)\[$BOLD_YELLOW\] $ \[$RESET_TEXT\]"
+# Prompt with Git branche and K8s curent-context and namespace if available
+#PS1="\[$BOLD_GREEN\]\h\[$BOLD_YELLOW\] \w\[$BOLD_BLUE\]\$(parse_git_branch)$(parse_k8s_context)\[$BOLD_YELLOW\] $ \[$RESET_TEXT\]"
 # Prompt without Git branch.
 #PS1="\[$BOLD_GREEN\]\h\[$BOLD_YELLOW\] \w $ \[$RESET_TEXT\]"
+function prompter() {
+    # Choice one from above examples
+    export PS1="\[$BOLD_GREEN\]\h\[$BOLD_YELLOW\] \w\[$BOLD_BLUE\]\$(parse_git_branch)$(parse_k8s_context)\[$BOLD_YELLOW\] $ \[$RESET_TEXT\]"
+}
+
+# Set Git branch in BASH prompt.
+parse_git_branch() {
+	# Uncoment this line if your system is not UTF-8 ready.
+	# git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ git:\1/'
+	# Uncomment this on UTF-8 compatible system.
+	git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ ⎇  \1/'
+}
+
+# Set k8s context in BASH prompt
+parse_k8s_context() {
+	context=`kubectl config view --output 'jsonpath={..current-context}'`
+    namespace=`kubectl config view --output 'jsonpath={..namespace}'`
+    if [[ -n $context ]] && [[ -n $namespace ]]; then 
+        echo -n " (k8s:$context/$namespace)"
+    fi
+}
 
 # Some nice aliases to have
 alias diff='colordiff'
