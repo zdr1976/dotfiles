@@ -87,7 +87,7 @@ parse_git_branch() {
 parse_k8s_context() {
 	context=`kubectl config view --output 'jsonpath={..current-context}'`
     namespace=`kubectl config view --output 'jsonpath={..namespace}'`
-    if [[ -n $context ]] && [[ -n $namespace ]]; then 
+    if [[ -n $context ]] && [[ -n $namespace ]]; then
         echo -n " (k8s:$context/$namespace)"
     fi
 }
