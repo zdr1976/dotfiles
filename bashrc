@@ -71,8 +71,15 @@ RESET_TEXT="\e[1;0m"
 # Prompt without Git branch.
 #PS1="\[$BOLD_GREEN\]\h\[$BOLD_YELLOW\] \w $ \[$RESET_TEXT\]"
 function prompter() {
-    # Choice one from above examples
-    export PS1="\[$BOLD_GREEN\]\h\[$BOLD_YELLOW\] \w\[$BOLD_BLUE\]\$(parse_git_branch)$(parse_k8s_context)\[$BOLD_YELLOW\] $ \[$RESET_TEXT\]"
+    # Choice one from examples above
+    PS1="\[$BOLD_GREEN\]\h\[$BOLD_YELLOW\] \w\[$BOLD_BLUE\]\$(parse_git_branch)$(parse_k8s_context)\[$BOLD_YELLOW\] $ \[$RESET_TEXT\]"
+
+    # Python venv
+    if [[ -n $VIRTUAL_ENV ]]; then
+        PS1="(`basename \"$VIRTUAL_ENV\"`) $PS1"
+    fi
+
+    export PS1
 }
 
 # Set Git branch in BASH prompt.
