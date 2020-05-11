@@ -96,6 +96,8 @@ parse_k8s_context() {
     namespace=`kubectl config view --output 'jsonpath={..namespace}'`
     if [[ -n $context ]] && [[ -n $namespace ]]; then
         echo -n " (k8s:$context/$namespace)"
+    # elif [[ -n $context ]] ; then
+    #     echo -n " (k8s:$context)"
     fi
 }
 
