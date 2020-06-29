@@ -192,11 +192,11 @@ if [ -x "$(command -v npm)" ]; then
 fi
 
 # Powerline
-#if [ -f /usr/share/powerline/bindings/bash/powerline.sh ]; then
-#  powerline-daemon -q
-#  POWERLINE_BASH_CONTINUATION=1
-#  POWERLINE_BASH_SELECT=1
-#  source /usr/share/powerline/bindings/bash/powerline.sh
+#if [ -f `which powerline-daemon` ]; then
+#    powerline-daemon -q
+#    POWERLINE_BASH_CONTINUATION=1
+#    POWERLINE_BASH_SELECT=1
+#    . /usr/share/powerline/bash/powerline.sh
 #fi
 
 # Uncomment this line if your terminal doesn't propagate 256 colors support.
