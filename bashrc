@@ -39,7 +39,7 @@ PROMPT_DIRTRIM=2
 export EDITOR=vim
 
 # Add local ~/bin and ~/.local/bin to PATH
-export PATH=~/bin:~/.local/bin:~/.npm-global/bin:$PATH
+export PATH=~/bin:~/.local/bin:$PATH
 
 # Only apply for MacOS system.
 if [ "$OS" == "OSX" ]; then
@@ -139,7 +139,7 @@ if [ "$OS" == "LINUX" ]; then
 elif [ "$OS" == "OSX" ]; then
 	export GOROOT=$(brew --prefix)/opt/go/libexec/go
 fi
-export PATH=$GOROOT/bin:$PATH
+export PATH=$PATH:$GOROOT/bin
 
 # PYTHON
 # pip should only run if there is a virtualenv currently activated
@@ -187,6 +187,14 @@ kx() {
 }
 
 # npm
+NPM_PACKAGES="${HOME}/.npm-packages"
+export PATH="$PATH:$NPM_PACKAGES/bin"
+# Preserve MANPATH if you already defined it somewhere in your config.
+# Otherwise, fall back to `manpath` so we can inherit from `/etc/manpath`.
+export MANPATH="${MANPATH-$(manpath)}:$NPM_PACKAGES/share/man"
+# Tell npm where to store globally installed packages
+# $ npm config set prefix "${HOME}/.npm-packages"
+
 if [ -x "$(command -v npm)" ]; then
     source <(npm completion)
 fi
@@ -200,4 +208,4 @@ fi
 #fi
 
 # Uncomment this line if your terminal doesn't propagate 256 colors support.
-#TERM=xterm-256color
+TERM=xterm-256color
