@@ -292,7 +292,8 @@ vnoremap <silent> <leader>a2b :call base64#v_btoa()<cr>
 noremap <silent> <leader>p :exe ':silent !google-chrome %'<cr>:redraw!<CR>
 
 " JSON formating
-nmap =j :%!python -m json.tool<cr>
+"nmap =j :%!python -m json.tool<cr>
+nmap =j :set syntax=json<cr>
 
 " HTML sytax on file
 nmap =h :set syntax=html<cr>
