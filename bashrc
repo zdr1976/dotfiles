@@ -29,8 +29,8 @@ HISTCONTROL=ignoreboth
 shopt -s histappend
 
 # For setting history length see HISTSIZE and HISTFILESIZE in bash(1) man page.
-HISTSIZE=10000
-HISTFILESIZE=10000
+HISTSIZE=1000
+HISTFILESIZE=100000
 
 # Shorten the depth of directory
 PROMPT_DIRTRIM=2
