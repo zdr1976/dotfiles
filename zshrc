@@ -40,6 +40,8 @@ setopt promptsubst
 unsetopt nomatch
 
 # Command-line completion (Docker)
+# - mkdir -p ~/.zsh/completion
+# - curl -L https://raw.githubusercontent.com/docker/compose/1.29.2/contrib/completion/zsh/_docker-compose -o ~/.zsh/completion/_docker-compose
 fpath=(~/.zsh/completion $fpath)
 
 # Enable autocompletation.
@@ -56,11 +58,14 @@ zstyle ':completion:*' matcher-list '' 'm:{a-zA-Z}={A-Za-z}'
 # Map Ctrl+r to search in history
 bindkey "^R" history-incremental-search-backward
 # History search
-autoload -Uz up-line-or-beginning-search down-line-or-beginning-search
+autoload -U up-line-or-beginning-search
+autoload -U down-line-or-beginning-search
 zle -N up-line-or-beginning-search
 zle -N down-line-or-beginning-search
-[[ -n "$key[Up]"   ]] && bindkey -- "$key[Up]"   up-line-or-beginning-search
+[[ -n "$key[Up]"   ]] && bindkey -- "$key[Up]" up-line-or-beginning-search
 [[ -n "$key[Down]" ]] && bindkey -- "$key[Down]" down-line-or-beginning-search
+# bindkey "${terminfo[kcuu1]}" up-line-or-beginning-search
+# bindkey "${terminfo[kcud1]}" down-line-or-beginning-search
 
 # Easy directory navigation. Don't need to type cd to change directories.
 setopt autocd autopushd pushdminus pushdsilent pushdtohome pushdignoredups
@@ -118,6 +123,9 @@ if [ -f ~/.aliases ]; then
     . ~/.aliases
 fi
 
+# Project DIR
+CDPATH=.:~:~/Projects/Work:~/Projects/Personal
+
 # GO LANG
 export GOPATH=$HOME/go
 if [ "$OS" = "LINUX" ]; then
@@ -128,29 +136,6 @@ fi
 #export PATH=$GOROOT/bin:$PATH
 
 # PYTHON
-# pip should only run if there is a virtualenv currently activated
-export PIP_REQUIRE_VIRTUALENV=true
-export WORKON_HOME=$HOME/.virtualenvs
-export PROJECT_HOME=$HOME/Projects/Python
-export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
-export VIRTUALENVWRAPPER_VIRTUALENV=~/.local/bin/virtualenv
-if [ "$OS" = "OSX" ]; then
-    if [ -f $(/usr/local/bin/brew --prefix)/bin/virtualenvwrapper.sh ]; then
-	    . $(/usr/local/bin/brew --prefix)/bin/virtualenvwrapper.sh
-    fi
-elif [ "$OS" = "LINUX" ]; then
-    if [ -f /etc/bash_completion.d/virtualenvwrapper ]; then
-	    . /etc/bash_completion.d/virtualenvwrapper
-    elif [ -f /etc/profile.d/virtualenvwrapper.sh ]; then
-	    . /etc/profile.d/virtualenvwrapper.sh
-    elif [ -f ~/.local/bin/virtualenvwrapper.sh ]; then
-	    . ~/.local/bin/virtualenvwrapper.sh
-    fi
-fi
-
-# Project DIR
-CDPATH=.:~:~/Projects/Work:~/Projects/Personal
-
 # Temporarily turn off restriction for pip
 gpip(){
     PIP_REQUIRE_VIRTUALENV="" pip "$@"
@@ -160,21 +145,44 @@ gpip3(){
     PIP_REQUIRE_VIRTUALENV="" pip3 "$@"                                         
 }
 
-# k8s
-#if [ -x "$(command -v kubectl)" ]; then
-#    source <(kubectl completion zsh)
-#fi
+# Kubernetes
+if [ -x "$(command -v kubectl)" ]; then
+    source <(kubectl completion zsh)
+fi
 
-# k8s - Lazy load
+# Lazy load
 # zsh completion takes a long time to load
 # https://github.com/kubernetes/kubernetes/issues/59078
-function kubectl() {
-    if ! type __start_kubectl >/dev/null 2>&1; then
-        source <(command kubectl completion zsh)
-    fi
+#function kubectl() {
+#    if ! type __start_kubectl >/dev/null 2>&1; then
+#        source <(command kubectl completion zsh)
+#    fi
+#
+#    command kubectl "$@"
+#}
 
-    command kubectl "$@"
+# k8s-kx
+kx() {
+    eval $(k8s-kx)
 }
+
+
+kexec() {
+    kubectl exec -it "$1" -- sh
+}
+
+# NPM
+NPM_PACKAGES="${HOME}/.npm-packages"
+export PATH="$PATH:$NPM_PACKAGES/bin"
+# Preserve MANPATH if you already defined it somewhere in your config.
+# Otherwise, fall back to `manpath` so we can inherit from `/etc/manpath`.
+export MANPATH="${MANPATH-$(manpath)}:$NPM_PACKAGES/share/man"
+# Tell npm where to store globally installed packages
+# $ npm config set prefix "${HOME}/.npm-packages"
+
+if [ -x "$(command -v npm)" ]; then
+    source <(npm completion)
+fi
 
 # Powerline
 #if [ -f /usr/share/powerline/bindings/bash/powerline.sh ]; then
