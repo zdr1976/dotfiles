@@ -70,7 +70,7 @@ RESET_TEXT="\e[1;0m"
 #PS1="\[$BOLD_GREEN\]\h\[$BOLD_YELLOW\] \w\[$BOLD_BLUE\]\$(parse_git_branch)$(parse_k8s_context)\[$BOLD_YELLOW\] $ \[$RESET_TEXT\]"
 # Prompt without Git branch.
 #PS1="\[$BOLD_GREEN\]\h\[$BOLD_YELLOW\] \w $ \[$RESET_TEXT\]"
-function prompter() {
+prompter() {
     # Choice one from examples above
     PS1="\[$BOLD_GREEN\]\h\[$BOLD_YELLOW\] \w\[$BOLD_BLUE\]\$(parse_git_branch)\[$BOLD_PURPLE\]\$(parse_k8s_context)\[$BOLD_YELLOW\] $ \[$RESET_TEXT\]"
 
@@ -90,7 +90,7 @@ parse_git_branch() {
 	git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ ⎇  \1/'
 }
 
-# Set k8s context in BASH prompt
+# Set kubernetes context in BASH prompt
 parse_k8s_context() {
 	context=`kubectl config view --output 'jsonpath={..current-context}'`
     namespace=`kubectl config view --output 'jsonpath={..namespace}'`
@@ -132,6 +132,9 @@ if ! shopt -oq posix; then
 	fi
 fi
 
+# Project DIR
+CDPATH=.:~:~/Projects/Work:~/Projects/Personal
+
 # GO LANG
 export GOPATH=$HOME/go
 if [ "$OS" == "LINUX" ]; then
@@ -142,31 +145,7 @@ fi
 export PATH=$PATH:$GOROOT/bin
 
 # PYTHON
-# pip should only run if there is a virtualenv currently activated
-#export PIP_REQUIRE_VIRTUALENV=true
-#export WORKON_HOME=$HOME/.virtualenvs
-#export PROJECT_HOME=$HOME/Projects/Work
-#export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
-# export VIRTUALENVWRAPPER_VIRTUALENV=/usr/bin/virtualenv-3
-#export VIRTUALENVWRAPPER_VIRTUALENV=~/.local/bin/virtualenv
-#if [ "$OS" == "OSX" ]; then
-#	if [ -f $(/usr/local/bin/brew --prefix)/bin/virtualenvwrapper.sh ]; then
-#		. $(/usr/local/bin/brew --prefix)/bin/virtualenvwrapper.sh
-#	fi
-#elif [ "$OS" == "LINUX" ]; then
-#	if [ -f /etc/bash_completion.d/virtualenvwrapper ]; then
-#		. /etc/bash_completion.d/virtualenvwrapper
-#	elif [ -f /etc/profile.d/virtualenvwrapper.sh ]; then
-#		. /etc/profile.d/virtualenvwrapper.sh
-#	elif [ -f ~/.local/bin/virtualenvwrapper.sh ]; then
-#		. ~/.local/bin/virtualenvwrapper.sh
-#	fi
-#fi
-
-# Project DIR
-CDPATH=.:~:~/Projects/Work:~/Projects/Personal
-
-# Temporarily turn off restriction for pip
+# - Temporarily turn off restriction for pip.
 gpip(){
 	PIP_REQUIRE_VIRTUALENV="" pip "$@"
 }
@@ -176,7 +155,7 @@ gpip3(){
 }
 
 
-# k8s
+# Kubernetes
 if [ -x "$(command -v kubectl)" ]; then
     source <(kubectl completion bash)
 fi
@@ -186,7 +165,12 @@ kx() {
     eval $(k8s-kx)
 }
 
-# npm
+
+kexec() {
+    kubectl exec -it "$1" -- sh
+}
+
+# NPM
 NPM_PACKAGES="${HOME}/.npm-packages"
 export PATH="$PATH:$NPM_PACKAGES/bin"
 # Preserve MANPATH if you already defined it somewhere in your config.
@@ -208,4 +192,4 @@ fi
 #fi
 
 # Uncomment this line if your terminal doesn't propagate 256 colors support.
-TERM=xterm-256color
+# TERM=xterm-256color
