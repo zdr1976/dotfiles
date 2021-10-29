@@ -1,3 +1,4 @@
+# zmodload zsh/zprof
 # If not running interactively, don't do anything.CDPATH
 case $- in
     *i*) ;;
@@ -34,7 +35,7 @@ setopt histignorealldups
 setopt appendhistory
 
 # Prompt expansion
-setopt promptsubst
+setopt prompt_subst
 
 # Globbing characters
 unsetopt nomatch
@@ -42,6 +43,7 @@ unsetopt nomatch
 # Command-line completion (Docker)
 # - mkdir -p ~/.zsh/completion
 # - curl -L https://raw.githubusercontent.com/docker/compose/1.29.2/contrib/completion/zsh/_docker-compose -o ~/.zsh/completion/_docker-compose
+# - curl -L https://git.kernel.org/pub/scm/git/git.git/plain/contrib/completion/git-completion.zsh -o ~/.zsh/completion/_git
 fpath=(~/.zsh/completion $fpath)
 
 # Enable autocompletation.
@@ -62,10 +64,12 @@ autoload -U up-line-or-beginning-search
 autoload -U down-line-or-beginning-search
 zle -N up-line-or-beginning-search
 zle -N down-line-or-beginning-search
-[[ -n "$key[Up]"   ]] && bindkey -- "$key[Up]" up-line-or-beginning-search
-[[ -n "$key[Down]" ]] && bindkey -- "$key[Down]" down-line-or-beginning-search
-# bindkey "${terminfo[kcuu1]}" up-line-or-beginning-search
-# bindkey "${terminfo[kcud1]}" down-line-or-beginning-search
+# [[ -n "$key[Up]"   ]] && bindkey -- "$key[Up]" up-line-or-beginning-search
+# [[ -n "$key[Down]" ]] && bindkey -- "$key[Down]" down-line-or-beginning-search
+# bindkey "${key[Up]}" up-line-or-beginning-search
+# bindkey "${key[Down]}" down-line-or-beginning-search
+bindkey "^[[A" up-line-or-beginning-search
+bindkey "^[[B" down-line-or-beginning-search
 
 # Easy directory navigation. Don't need to type cd to change directories.
 setopt autocd autopushd pushdminus pushdsilent pushdtohome pushdignoredups
@@ -98,14 +102,22 @@ parse_git_branch() {
 
 # Set k8s context in BASH prompt
 parse_k8s_context() {
-    cat ~/.kube/config | grep "current-context:" | sed "s/current-context: //"
+    context=`kubectl config view --output 'jsonpath={..current-context}'`
+    namespace=`kubectl config view --output 'jsonpath={..namespace}'`
+    if [[ -n $context ]] && [[ -n $namespace ]]; then
+        echo -n " (k8s:$context/$namespace)"
+    # elif [[ -n $context ]] ; then
+    #     echo -n " (k8s:$context)"
+    fi
 }
 
 # Load colors
 autoload -U colors && colors
 # Prompt with Git branch if available.
 local git_branch='%{$fg_bold[blue]%}$(parse_git_branch)'
-PS1="%{$fg_bold[green]%}%m %{$fg_bold[yellow]%}%(3~|.../%2~|%~)${git_branch} %{$fg_bold[yellow]%}% \$ %{$reset_color%}%{$fg[white]%}"
+local k8s_context='%{$fg_bold[magenta]%}$(parse_k8s_context)'
+# PS1="%{$fg_bold[green]%}%m %{$fg_bold[yellow]%}%(3~|.../%2~|%~)${git_branch} %{$fg_bold[yellow]%}% \$ %{$reset_color%}%{$fg[white]%}"
+PS1="%{$fg_bold[green]%}%m %{$fg_bold[yellow]%}%(3~|.../%2~|%~)${git_branch}${k8s_context} %{$fg_bold[yellow]%}% \$ %{$reset_color%}%{$fg[white]%}"
 
 # Some nice aliases to have
 alias diff='colordiff'
@@ -113,6 +125,7 @@ alias git-cloc='git ls-files | xargs cloc'
 alias sup='sudo su -'
 alias ls='ls --color'
 alias ll='ls -lA'
+# dh print history of visited directories. Use cd -number to go to selected folder.
 alias dh='dirs -v'
 alias ..="cd .."
 alias ...="cd ../.."
@@ -146,20 +159,19 @@ gpip3(){
 }
 
 # Kubernetes
-if [ -x "$(command -v kubectl)" ]; then
+# Check if 'kubectl' is a command in $PATH
+if [ $commands[kubectl] ]; then
+  # Placeholder 'kubectl' shell function:
+  # Will only be executed on the first call to 'kubectl'
+  kubectl() {
+    # Remove this function, subsequent calls will execute 'kubectl' directly
+    unfunction "$0"
+    # Load auto-completion
     source <(kubectl completion zsh)
+    # Execute 'kubectl' binary
+    $0 "$@"
+  }
 fi
-
-# Lazy load
-# zsh completion takes a long time to load
-# https://github.com/kubernetes/kubernetes/issues/59078
-#function kubectl() {
-#    if ! type __start_kubectl >/dev/null 2>&1; then
-#        source <(command kubectl completion zsh)
-#    fi
-#
-#    command kubectl "$@"
-#}
 
 # k8s-kx
 kx() {
@@ -180,8 +192,18 @@ export MANPATH="${MANPATH-$(manpath)}:$NPM_PACKAGES/share/man"
 # Tell npm where to store globally installed packages
 # $ npm config set prefix "${HOME}/.npm-packages"
 
-if [ -x "$(command -v npm)" ]; then
+# Check if 'npm' is a command in $PATH
+if [ $commands[npm] ]; then
+  # Placeholder 'npm' shell function:
+  # Will only be executed on the first call to 'npm'
+  npm() {
+    # Remove this function, subsequent calls will execute 'kubectl' directly
+    unfunction "$0"
+    # Load auto-completion
     source <(npm completion)
+    # Execute 'npm' binary
+    $0 "$@"
+  }
 fi
 
 # Powerline
@@ -194,3 +216,4 @@ fi
 
 # Uncomment this line if your terminal doesn't propagate 256 colors support.
 #TERM=xterm-256color
+# zprof
