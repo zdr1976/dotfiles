@@ -102,19 +102,19 @@ _old_parse_k8s_context() {
 }
 # NEW: Set kubernetes context in BASH prompot
 parse_k8s_context() {
-  if [ -z $KUBECONFIG ]; then
+    if [ -z $KUBECONFIG ]; then
     return
-  fi
+    fi
 
-  local context namespace
-  context=$(yq e '.current-context // ""' "$KUBECONFIG")
-  namespace=$(yq e "(.contexts[] | select(.name == \"$context\").context.namespace) // \"\"" "$KUBECONFIG")
+    local context namespace
+    context=$(yq e '.current-context // ""' "$KUBECONFIG")
+    namespace=$(yq e "(.contexts[] | select(.name == \"$context\").context.namespace) // \"\"" "$KUBECONFIG")
 
-  if [[ -n $context ]] && [[ -n $namespace ]]; then
+    if [[ -n $context ]] && [[ -n $namespace ]]; then
     echo -n " (k8s:$context/$namespace)"
-  # elif [[ -n $context ]] ; then
-  #   echo -n " (k8s:$context)"
-  fi
+    # elif [[ -n $context ]] ; then
+    #   echo -n " (k8s:$context)"
+    fi
 }
 
 # Some nice aliases to have
