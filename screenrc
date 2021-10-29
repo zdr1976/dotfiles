@@ -1,11 +1,16 @@
-termcapinfo xterm 'Co#256:AB=\E[48;5;%dm:AF=\E[38;5;%dm'
+#termcapinfo xterm 'Co#256:AB=\E[48;5;%dm:AF=\E[38;5;%dm'
+#term xterm-256color
+#attrcolor b ".I"
+#defbce on
 startup_message off
 autodetach on
 defscrollback 5000
-hardstatus on
+hardstatus off
 hardstatus alwayslastline
+#startup_message off
+# https://www.kilobitspersecond.com/2014/02/10/understanding-gnu-screens-hardstatus-strings/
 #hardstatus string "%{=kw} %-Lw%{= yk} %n%f* %t %{-}%+Lw %= | @%H | %l | %Y-%m-%d %c "
 #hardstatus string "%{= wk} %-w%{= KW} %n%f* %t %{-}%+Lw %= | @%H | %l | %Y-%m-%d %c "
 #hardstatus string "%{= kw} %-Lw%{= WK} %n%f* %t %{-}%+Lw %= | @%H | %l | %Y-%m-%d %c "
-hardstatus string "%{= kw} %-Lw%{= bW} %n%f* %t %{-}%+Lw %= | %c | %d.%m.%Y | @%H "
+hardstatus string "%{= kw} %-Lw%{= cW} %n%f* %t %{-}%+Lw %= | %c | %d.%m.%Y | @%H "
 #hardstatus string '%{= g}[ %{G}%H %{g}][ %=%{= w}%?%-Lw%?%{= R}%n%f* %t%?%{= R}(%u)%?%{= w}%+Lw%?%= %{= g} ][ %{y}Load: %l %{g}][ %{B}%Y-%m-%d %{W}%c %{g}]'
