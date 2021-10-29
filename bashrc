@@ -5,7 +5,7 @@ case $- in
 esac
 
 # Simple OS detection in Bash using $OSTYPE.
-OS=`uname -s`
+OS="UNKNOWN"
 case "$OSTYPE" in
 	darwin*)
 		OS="OSX"
@@ -13,6 +13,9 @@ case "$OSTYPE" in
 	linux*)
 		OS="LINUX"
 		;;
+    dragonfly*|freebsd*|netbsd*|openbsd*)
+        OS="BSD"
+        ;;
 	*)
 		OS="UNKNOWN"
 		;;
@@ -43,11 +46,11 @@ export PATH=~/bin:~/.local/bin:$PATH
 
 # Only apply for MacOS system.
 if [ "$OS" == "OSX" ]; then
-	export CLICOLOR=1
-	export LSCOLORS=GxFxCxDxBxegedabagaced
-	export PATH=$(/usr/local/bin/brew --prefix)/bin:$PATH
-	# Let brew know that we are running on full 64-bit system.
-	export ARCHFLAGS="-arch x86_64"
+    export CLICOLOR=1
+    export LSCOLORS="GxFxCxDxBxegedabagaced"
+    export PATH=$(/usr/local/bin/brew --prefix)/bin:$PATH
+    # Let brew know that we are running on full 64-bit system.
+    export ARCHFLAGS="-arch x86_64"
 fi
 
 # Check the window size after each command and, if necessary,

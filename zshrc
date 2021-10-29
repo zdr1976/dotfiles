@@ -1,18 +1,21 @@
 # zmodload zsh/zprof
-# If not running interactively, don't do anything.CDPATH
+# If not running interactively, don't do anything.
 case $- in
     *i*) ;;
     *) return;;
 esac
 
 # Simple OS detection in Bash using $OSTYPE.
-OS=`uname -s`
+OS="UNKNOWN"
 case "$OSTYPE" in
     darwin*)
 	    OS="OSX"
         ;;
     linux*)
         OS="LINUX"
+        ;;
+    dragonfly*|freebsd*|netbsd*|openbsd*)
+        OS="BSD"
         ;;
     *)
         OS="UNKNOWN"
@@ -23,19 +26,17 @@ esac
 HISTFILE=~/.zsh_history
 HISTSIZE=10000
 SAVEHIST=10000
-
-# https://www.tummy.com/blogs/2006/01/19/my-first-few-days-with-zsh/
-# http://zsh.sourceforge.net/Doc/Release/Options.html#Description-of-Options
-# https://github.com/ricbra/zsh-config/blob/master/zshrc
-# Don't put duplicate lines or lines starting with space in the history.
-setopt histignorespace
-setopt histignorealldups
+# history saving options
+setopt histignorespace # Ignore commands that start with space.
+setopt histignorealldups # Never add duplicate entries.
+setopt histreduceblanks # Remove unnecessary blank lines.
+setopt incappendhistory # Immediately append to the history file.
 
 # Append to the history file, don't overwrite it.
 setopt appendhistory
 
 # Prompt expansion
-setopt prompt_subst
+setopt promptsubst
 
 # Globbing characters
 unsetopt nomatch
@@ -46,9 +47,11 @@ unsetopt nomatch
 # - curl -L https://git.kernel.org/pub/scm/git/git.git/plain/contrib/completion/git-completion.zsh -o ~/.zsh/completion/_git
 fpath=(~/.zsh/completion $fpath)
 
-# Enable autocompletation.
+# Enable autocompletion.
 setopt completealiases
-autoload -Uz compinit && compinit -i
+autoload -Uz compinit
+compinit -i
+_comp_options+=(globdots)
 zstyle ':completion:*' menu select
 # small letters will match small and capital letters
 #zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
@@ -89,10 +92,13 @@ export EDITOR=vim
 # Only apply for MacOS system.
 if [ "$OS" = "OSX" ]; then
     export CLICOLOR=1
-    export LSCOLORS=GxFxCxDxBxegedabagaced
+    export LSCOLORS="GxFxCxDxBxegedabagaced"
     export PATH=$(/usr/local/bin/brew --prefix)/bin:$PATH
     # Let brew know that we are running on full 64-bit system.
     export ARCHFLAGS="-arch x86_64"
+    zstyle ':completion:*' list-colors $LSCOLORS
+elif [ "$OS" = "LINUX" ]; then
+    zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 fi
 
 # Set Git branch in BASH prompt.
