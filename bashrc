@@ -91,7 +91,7 @@ parse_git_branch() {
 }
 
 # Set kubernetes context in BASH prompt
-parse_k8s_context() {
+_old_parse_k8s_context() {
 	context=`kubectl config view --output 'jsonpath={..current-context}'`
     namespace=`kubectl config view --output 'jsonpath={..namespace}'`
     if [[ -n $context ]] && [[ -n $namespace ]]; then
@@ -99,6 +99,22 @@ parse_k8s_context() {
     # elif [[ -n $context ]] ; then
     #     echo -n " (k8s:$context)"
     fi
+}
+# NEW: Set kubernetes context in BASH prompot
+parse_k8s_context() {
+  if [ -z $KUBECONFIG ]; then
+    return
+  fi
+
+  local context namespace
+  context=$(yq e '.current-context // ""' "$KUBECONFIG")
+  namespace=$(yq e "(.contexts[] | select(.name == \"$context\").context.namespace) // \"\"" "$KUBECONFIG")
+
+  if [[ -n $context ]] && [[ -n $namespace ]]; then
+    echo -n " (k8s:$context/$namespace)"
+  # elif [[ -n $context ]] ; then
+  #   echo -n " (k8s:$context)"
+  fi
 }
 
 # Some nice aliases to have
