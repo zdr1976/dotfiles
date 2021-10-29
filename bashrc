@@ -126,6 +126,9 @@ alias git-cloc='git ls-files | xargs cloc'
 alias sup='sudo su -'
 alias ls='ls --color'
 alias ll='ls -lA'
+alias k='kubectl'
+alias g='git'
+complete -F __start_kubectl k
 
 # Source another Aliases from external file (if exists).
 if [ -f ~/.aliases ]; then

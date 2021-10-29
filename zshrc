@@ -42,16 +42,16 @@ setopt promptsubst
 unsetopt nomatch
 
 # Command-line completion (Docker)
-# - mkdir -p ~/.zsh/completion
-# - curl -L https://raw.githubusercontent.com/docker/compose/1.29.2/contrib/completion/zsh/_docker-compose -o ~/.zsh/completion/_docker-compose
-# - curl -L https://git.kernel.org/pub/scm/git/git.git/plain/contrib/completion/git-completion.zsh -o ~/.zsh/completion/_git
-fpath=(~/.zsh/completion $fpath)
+# - mkdir -p ~/.zsh/completions
+# - curl -L https://raw.githubusercontent.com/docker/compose/1.29.2/contrib/completion/zsh/_docker-compose -o ~/.zsh/completions/_docker-compose
+# - curl -L https://git.kernel.org/pub/scm/git/git.git/plain/contrib/completion/git-completion.zsh -o ~/.zsh/completions/_git
+fpath=(~/.zsh/completions $fpath)
 
 # Enable autocompletion.
-setopt completealiases
-autoload -Uz compinit
-compinit -i
+#setopt completealiases
+autoload -Uz compinit && compinit
 _comp_options+=(globdots)
+
 zstyle ':completion:*' menu select
 # small letters will match small and capital letters
 #zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
@@ -150,6 +150,8 @@ alias git-cloc='git ls-files | xargs cloc'
 alias sup='sudo su -'
 alias ls='ls --color'
 alias ll='ls -lA'
+alias k='kubectl'
+alias g='git'
 # dh print history of visited directories. Use cd -number to go to selected folder.
 alias dh='dirs -v'
 alias ..="cd .."
@@ -185,7 +187,7 @@ gpip3(){
 
 # Kubernetes
 # Check if 'kubectl' is a command in $PATH
-if [ $commands[kubectl] ]; then
+if [ $commands[kubectl-disabled] ]; then
   # Placeholder 'kubectl' shell function:
   # Will only be executed on the first call to 'kubectl'
   kubectl() {
@@ -218,7 +220,7 @@ export MANPATH="${MANPATH-$(manpath)}:$NPM_PACKAGES/share/man"
 # $ npm config set prefix "${HOME}/.npm-packages"
 
 # Check if 'npm' is a command in $PATH
-if [ $commands[npm] ]; then
+if [ $commands[npm-disabled] ]; then
   # Placeholder 'npm' shell function:
   # Will only be executed on the first call to 'npm'
   npm() {
