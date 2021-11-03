@@ -12,5 +12,5 @@ hardstatus alwayslastline
 #hardstatus string "%{=kw} %-Lw%{= yk} %n%f* %t %{-}%+Lw %= | @%H | %l | %Y-%m-%d %c "
 #hardstatus string "%{= wk} %-w%{= KW} %n%f* %t %{-}%+Lw %= | @%H | %l | %Y-%m-%d %c "
 #hardstatus string "%{= kw} %-Lw%{= WK} %n%f* %t %{-}%+Lw %= | @%H | %l | %Y-%m-%d %c "
-hardstatus string "%{= kw} %-Lw%{= cW} %n%f* %t %{-}%+Lw %= | %c | %d.%m.%Y | @%H "
+hardstatus string "%{= kw} %-Lw%{= cW} %n%f* %t %{-}%+Lw %= | %c | %d.%M.%Y | @%H "
 #hardstatus string '%{= g}[ %{G}%H %{g}][ %=%{= w}%?%-Lw%?%{= R}%n%f* %t%?%{= R}(%u)%?%{= w}%+Lw%?%= %{= g} ][ %{y}Load: %l %{g}][ %{B}%Y-%m-%d %{W}%c %{g}]'
