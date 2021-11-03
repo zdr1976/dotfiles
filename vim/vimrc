@@ -10,7 +10,7 @@ endif
 call plug#begin('~/.vim/plugged')
 
 " Themes
-Plug 'mhartington/oceanic-next'
+Plug 'sonph/onehalf', {'rtp': 'vim/'}
 
 " Utils
 Plug 'scrooloose/nerdtree'
@@ -141,21 +141,22 @@ set wildignore+=*/.git/*,*/tmp/*,*.swp
 
 " Color scheme
 syntax enable
+"set background=dark
 
 if (has("termguicolors"))
     set termguicolors
     " Fix color when running in tmux
-    let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
-    let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+    "let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+    "let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 endif
 
-if &term =~ '^screen'
+"if &term =~ '^screen'
     " tmux will send xterm-style keys when its xterm-keys option is on
-    execute "set <xUp>=\e[1;*A"
-    execute "set <xDown>=\e[1;*B"
-    execute "set <xRight>=\e[1;*C"
-    execute "set <xLeft>=\e[1;*D"
-endif
+"    execute "set <xUp>=\e[1;*A"
+"    execute "set <xDown>=\e[1;*B"
+"    execute "set <xRight>=\e[1;*C"
+"    execute "set <xLeft>=\e[1;*D"
+"endif
 
 " 80 character's marker
 highlight ColorLine ctermbg=gray
@@ -165,7 +166,7 @@ set colorcolumn=80
 
 "set cursorline
 try
-    colorscheme OceanicNext
+    colorscheme onehalfdark
 catch /^Vim\%((\a\+)\)\=:E185/
     colorscheme default
 endtry
@@ -339,23 +340,24 @@ let g:airline#extensions#tabline#left_alt_sep = '|'
 let g:airline#extensions#tabline#tab_nr_type = 1
 let g:airline#extensions#tabline#show_close_button = 0
 let g:airline#extensions#tabline#show_buffers = 0
-let g:airline_theme='oceanicnext'
+let g:airline_theme='onehalfdark'
+
 if !exists('g:airline_symbols')
 let g:airline_symbols = {}
 endif
+
 let g:airline_left_sep=''
 let g:airline_right_sep=''
-"let g:airline_symbols.branch = 'git:'
+" let g:airline_symbols.branch = 'git:'
 let g:airline_symbols.branch = '⎇ '
 let g:airline_symbols.linenr = 'LN:'
+"let g:airline_symbols.linenr = '¶'
 let g:airline_symbols.readonly = 'RO'
+let g:airline_symbols.whitespace = 'Ξ'
+let g:airline_symbols.maxlinenr= ''
 " Define which filetypes have special treatment of /* */ comments.
 " let g:airline#extensions#whitespace#mixed_indent_algo = 1
 let g:airline#extensions#c_like_langs = ['c', 'cpp', 'go', 'javascript']
-
-" Oceanic theme
-let g:oceanic_next_terminal_bold = 1
-let g:oceanic_next_terminal_italic = 1
 
 " YouCompleteMe
 let g:ycm_autoclose_preview_window_after_completion = 1
