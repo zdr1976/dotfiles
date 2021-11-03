@@ -14,9 +14,6 @@ Plug 'joshdick/onedark.vim'
 
 " Utils
 Plug 'scrooloose/nerdtree'
-Plug 'majutsushi/tagbar'
-Plug 'vim-scripts/TaskList.vim'
-"Plug 'Chiel92/vim-autoformat'
 Plug 'ctrlpvim/ctrlp.vim'
 
 " Syntax highlighting plugin for many languages.
@@ -31,7 +28,7 @@ Plug 'fatih/vim-go'
 " Autocompletion
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
-" HTML
+" Expanding abbreviations similar to emmet.
 "  https://medium.com/vim-drops/be-a-html-ninja-with-emmet-for-vim-feee15447ef1
 Plug 'mattn/emmet-vim'
 
@@ -132,26 +129,12 @@ set background=dark
 
 if (has("termguicolors"))
     set termguicolors
-    " Fix color when running in tmux
-    "let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
-    "let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 endif
-
-"if &term =~ '^screen'
-    " tmux will send xterm-style keys when its xterm-keys option is on
-"    execute "set <xUp>=\e[1;*A"
-"    execute "set <xDown>=\e[1;*B"
-"    execute "set <xRight>=\e[1;*C"
-"    execute "set <xLeft>=\e[1;*D"
-"endif
 
 " 80 character's marker
 "let &colorcolumn=join(range(80,999),",")
 set colorcolumn=80
-"highlight ColorLine ctermbg=gray
-"highlight ColorColumn ctermbg=gray
 
-"set cursorline
 try
     colorscheme onedark
 catch /^Vim\%((\a\+)\)\=:E185/
@@ -198,9 +181,6 @@ nnoremap <silent> <F4> :silent set list! list?<CR>
 
 " F5: Show NERDTree.
 nnoremap <silent> <F5> :NERDTreeToggle<CR>
-
-" F6: Show TagList.
-nnoremap <silent> <F6> :TagbarToggle<CR>
 
 " F7: Flake8 - static syntax and style checker for Python
 autocmd FileType python map <buffer> <F7> :call Flake8()<CR>
@@ -298,12 +278,6 @@ nmap <leader>gc :Gcommit<cr>
 nmap <leader>gp :Gpush<cr>:GitGutter<cr>
 nmap <leader>gd :Gdiff<cr>
 
-" YouCompleteMe
-nmap <leader>gu :YcmCompleter GoToReferences<cr>
-nmap <leader>gt :vertical YcmCompleter GoTo<cr>
-nmap <leader>gy :YcmCompleter GetType<cr>
-nmap <leader>gd :YcmCompleter GetDoc<cr>
-
 " Remove all whitespace
 map <Leader>w :%s/\s\+$//
 
@@ -313,11 +287,6 @@ autocmd BufEnter * silent! lcd %:p:h
 """"""""""""""""""""""
 "  Plugins settings  "
 """"""""""""""""""""""
-
-" Tasklist
-" Use <Leader>t
-let g:tlWindowPosition = 1
-let g:tlTokenList = ['TODO', 'FIXME', 'BUG', 'XXX']
 
 " Airline
 let g:airline#extensions#branch#enabled = 1
@@ -375,6 +344,3 @@ let NERDTreeShowHidden=1
 
 " coc.nvim
 let g:coc_global_extensions = ['coc-sh', 'coc-git', 'coc-tsserver', 'coc-json', 'coc-html', 'coc-css', 'coc-pyright', 'coc-go']
-
-" FIX for Underlined cursor line number
-"highlight CursorLineNr cterm=NONE
