@@ -10,7 +10,7 @@ endif
 call plug#begin('~/.vim/plugged')
 
 " Themes
-Plug 'sonph/onehalf', {'rtp': 'vim/'}
+Plug 'joshdick/onedark.vim'
 
 " Utils
 Plug 'scrooloose/nerdtree'
@@ -19,6 +19,9 @@ Plug 'vim-scripts/TaskList.vim'
 "Plug 'Chiel92/vim-autoformat'
 Plug 'ctrlpvim/ctrlp.vim'
 
+" Syntax highlighting plugin for many languages.
+Plug 'sheerun/vim-polyglot'
+
 " Python
 Plug 'nvie/vim-flake8'
 
@@ -26,27 +29,11 @@ Plug 'nvie/vim-flake8'
 Plug 'fatih/vim-go'
 
 " Autocompletion
-function! BuildYCM(info)
-  " info is a dictionary with 3 fields
-  " - name:   name of the plugin
-  " - status: 'installed', 'updated', or 'unchanged'
-  " - force:  set on PlugInstall! or PlugUpdate!
-  if a:info.status == 'installed' || a:info.force
-    !python3 ./install.py --clang-completer --go-completer --ts-completer
-  endif
-endfunction
-Plug 'ycm-core/YouCompleteMe', { 'do': function('BuildYCM') }
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 " HTML
 "  https://medium.com/vim-drops/be-a-html-ninja-with-emmet-for-vim-feee15447ef1
 Plug 'mattn/emmet-vim'
-
-" Syntax
-Plug 'gabrielelana/vim-markdown' " Markdown flavor implemented by Github
-"Plug 'uarun/vim-protobuf' " highlighting for Google's Protocol Buffers
-
-" Ansible / Jinja2
-Plug 'pearofducks/ansible-vim'
 
 " Git
 Plug 'tpope/vim-fugitive'
@@ -63,7 +50,7 @@ Plug 'Yggdroot/indentLine'
 
 " Status line
 Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
+"Plug 'vim-airline/vim-airline-themes'
 
 "call vundle#end()
 call plug#end()
@@ -141,7 +128,7 @@ set wildignore+=*/.git/*,*/tmp/*,*.swp
 
 " Color scheme
 syntax enable
-"set background=dark
+set background=dark
 
 if (has("termguicolors"))
     set termguicolors
@@ -159,14 +146,14 @@ endif
 "endif
 
 " 80 character's marker
-highlight ColorLine ctermbg=gray
-highlight ColorColumn ctermbg=gray
 "let &colorcolumn=join(range(80,999),",")
 set colorcolumn=80
+"highlight ColorLine ctermbg=gray
+"highlight ColorColumn ctermbg=gray
 
 "set cursorline
 try
-    colorscheme onehalfdark
+    colorscheme onedark
 catch /^Vim\%((\a\+)\)\=:E185/
     colorscheme default
 endtry
@@ -340,7 +327,7 @@ let g:airline#extensions#tabline#left_alt_sep = '|'
 let g:airline#extensions#tabline#tab_nr_type = 1
 let g:airline#extensions#tabline#show_close_button = 0
 let g:airline#extensions#tabline#show_buffers = 0
-let g:airline_theme='onehalfdark'
+let g:airline_theme='onedark'
 
 if !exists('g:airline_symbols')
 let g:airline_symbols = {}
@@ -358,13 +345,6 @@ let g:airline_symbols.maxlinenr= ''
 " Define which filetypes have special treatment of /* */ comments.
 " let g:airline#extensions#whitespace#mixed_indent_algo = 1
 let g:airline#extensions#c_like_langs = ['c', 'cpp', 'go', 'javascript']
-
-" YouCompleteMe
-let g:ycm_autoclose_preview_window_after_completion = 1
-let g:ycm_key_list_stop_completion = ['<C-y>', '<CR>']
-let g:ycm_goto_buffer_command = 'split'
-let g:ycm_confirm_extra_conf=0
-let g:ycm_python_binary_path = 'python'
 
 " vim-go settings
 let g:go_highlight_build_constraints = 1
@@ -393,5 +373,8 @@ let g:flake8_quickfix_height=12
 " NERDTree
 let NERDTreeShowHidden=1
 
+" coc.nvim
+let g:coc_global_extensions = ['coc-sh', 'coc-git', 'coc-tsserver', 'coc-json', 'coc-html', 'coc-css', 'coc-pyright', 'coc-go']
+
 " FIX for Underlined cursor line number
-highlight CursorLineNr cterm=NONE
+"highlight CursorLineNr cterm=NONE
