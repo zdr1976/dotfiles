@@ -1,7 +1,10 @@
-#termcapinfo xterm 'Co#256:AB=\E[48;5;%dm:AF=\E[38;5;%dm'
-#term xterm-256color
-#attrcolor b ".I"
-#defbce on
+# tell screen how to set colors. AB = background, AF=foreground
+termcapinfo xterm 'Co#256:AB=\E[48;5;%dm:AF=\E[38;5;%dm'
+term xterm-256color
+# allow bold colors
+attrcolor b ".I"
+# erase background with current bg color
+defbce "on"
 startup_message off
 autodetach on
 defscrollback 5000
