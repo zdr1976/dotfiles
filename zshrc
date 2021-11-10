@@ -241,6 +241,11 @@ fi
 #  source /usr/share/powerline/bindings/bash/powerline.sh
 #fi
 
+# Starship
+if [ $commands[starship] ]; then
+    eval "$(starship init zsh)"
+fi
+
 # Uncomment this line if your terminal doesn't propagate 256 colors support.
 #TERM=xterm-256color
 # zprof
