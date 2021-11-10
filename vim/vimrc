@@ -163,6 +163,7 @@ autocmd BufRead,BufNewFile */playbooks/*.yml set filetype=ansible
 autocmd FileType yaml setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
 autocmd FileType json setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
 autocmd FileType html,htmldjango setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
+autocmd FileType js,ts setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
 autocmd BufRead,BufNewFile *.proto set filetype=proto
 autocmd BufNewFile,BufRead *.kubeconfig setlocal filetype=yaml
 autocmd FileType c,go,python autocmd BufWritePre <buffer> :%s/\s\+$//e
@@ -307,12 +308,12 @@ let g:airline_left_sep=''
 let g:airline_right_sep=''
 " let g:airline_symbols.branch = 'git:'
 let g:airline_symbols.branch = '⎇ '
-let g:airline_symbols.linenr = ' LN:'
-let g:airline_symbols.colnr = ' CN:'
+let g:airline_symbols.linenr = ' Ln:'
+let g:airline_symbols.colnr = ' Col:'
 "let g:airline_symbols.linenr = '¶'
 let g:airline_symbols.readonly = 'RO'
 "let g:airline_symbols.whitespace = 'Ξ'
-"let g:airline_symbols.maxlinenr= ''
+let g:airline_symbols.maxlinenr= ''
 " Define which filetypes have special treatment of /* */ comments.
 " let g:airline#extensions#whitespace#mixed_indent_algo = 1
 let g:airline#extensions#c_like_langs = ['c', 'cpp', 'go', 'javascript']
@@ -345,4 +346,4 @@ let g:flake8_quickfix_height=12
 let NERDTreeShowHidden=1
 
 " coc.nvim
-let g:coc_global_extensions = ['coc-sh', 'coc-git', 'coc-tsserver', 'coc-json', 'coc-html', 'coc-css', 'coc-pyright', 'coc-go']
+let g:coc_global_extensions = ['coc-sh', 'coc-git', 'coc-tsserver', 'coc-json', 'coc-yaml', 'coc-html', 'coc-css', 'coc-pyright', 'coc-go']
