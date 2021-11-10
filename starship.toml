@@ -1,0 +1,69 @@
+# Inserts a blank line between shell prompts
+add_newline = false
+
+format = """
+$kubernetes\
+$username\
+$hostname\
+$directory\
+$git_branch\
+$git_status\
+$python\
+$nodejs\
+$line_break\
+$character"""
+
+[line_break]
+disabled = true
+
+[hostname]
+ssh_only = false
+style = "bold green"
+format =  "[@$hostname]($style) "
+
+[username]
+style_user = "green bold"
+format = "[$user@]($style)"
+disabled = true
+show_always = true
+
+
+[character]
+#success_symbol = "[➜](bold yellow) "
+#error_symbol = "[✗](bold red) "
+success_symbol = "[➜](bold yellow) "
+error_symbol = "[➜](bold red) "
+
+[directory]
+style = "bold yellow"
+#truncate_to_repo = false
+#truncation_length = 2
+truncation_symbol = "…/"
+
+[git_branch]
+symbol = "⎇  "
+style = "bold blue"
+format = "[$symbol$branch]($style) "
+
+[git_status]
+ahead = "⇡${count}"
+diverged = "⇕⇡${ahead_count}⇣${behind_count}"
+behind = "⇣${count}"
+
+[kubernetes]
+format = '[$symbol$context(/$namespace)]($style) '
+symbol = "k8s:"
+style = "purple bold"
+disabled = false
+
+[python]
+style = "bright-purple bold"
+version_format = "${raw}"
+symbol = "py:"
+format = '[$symbol(${version} )(ve:$virtualenv )]($style)'
+
+[nodejs]
+style = "bright-purple bold"
+version_format = "${raw}"
+symbol = "node:"
+format = "[$symbol($version )]($style)"
