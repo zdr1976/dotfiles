@@ -75,7 +75,7 @@ RESET_TEXT="\e[1;0m"
 #PS1="\[$BOLD_GREEN\]\h\[$BOLD_YELLOW\] \w $ \[$RESET_TEXT\]"
 prompter() {
     # Choice one from examples above
-    PS1="\[$BOLD_GREEN\]\h\[$BOLD_YELLOW\] \w\[$BOLD_BLUE\]\$(parse_git_branch)\[$BOLD_PURPLE\]\$(parse_k8s_context)\[$BOLD_YELLOW\] $ \[$RESET_TEXT\]"
+    PS1="\[$BOLD_GREEN\]\u@\h\[$BOLD_YELLOW\] \w\[$BOLD_BLUE\]\$(parse_git_branch)\[$BOLD_PURPLE\]\$(parse_k8s_context)\[$BOLD_YELLOW\] $ \[$RESET_TEXT\]"
 
     # Python venv
     if [[ -n $VIRTUAL_ENV ]]; then
@@ -193,13 +193,13 @@ kexec() {
 }
 
 # NPM
-NPM_PACKAGES="${HOME}/.npm-packages"
+# Tell npm where to store globally installed packages
+# $ npm config set prefix "~/.npm-global"
+NPM_PACKAGES="${HOME}/.npm-global"
 export PATH="$PATH:$NPM_PACKAGES/bin"
 # Preserve MANPATH if you already defined it somewhere in your config.
 # Otherwise, fall back to `manpath` so we can inherit from `/etc/manpath`.
 export MANPATH="${MANPATH-$(manpath)}:$NPM_PACKAGES/share/man"
-# Tell npm where to store globally installed packages
-# $ npm config set prefix "${HOME}/.npm-packages"
 
 if [ -x "$(command -v npm)" ]; then
     source <(npm completion)
@@ -212,6 +212,11 @@ fi
 #    POWERLINE_BASH_SELECT=1
 #    . /usr/share/powerline/bash/powerline.sh
 #fi
+
+# Starship
+if [ -x "$(command -v starship)" ]; then
+    eval "$(starship init bash)"
+fi
 
 # Uncomment this line if your terminal doesn't propagate 256 colors support.
 # TERM=xterm-256color
