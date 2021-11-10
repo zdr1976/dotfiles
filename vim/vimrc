@@ -170,6 +170,7 @@ autocmd BufNewFile,BufRead *.kubeconfig setlocal filetype=yaml
 autocmd FileType c,go,python autocmd BufWritePre <buffer> :%s/\s\+$//e
 autocmd ColorScheme * highlight ExtraWhitespace ctermbg=red guibg=red
 autocmd InsertLeave * set nopaste " Disable paste mode when leaving Insert Mode
+"autocmd FileType json syntax match Comment +\/\/.\+$+ " JSON with C-style line (//) and block (/* */) comments
 
 " F1-F12 key calls
 " F2: Disable formatting when pasting large chunks of code.
@@ -362,7 +363,8 @@ let g:user_emmet_leader_key=','
 let g:flake8_quickfix_height=12
 
 " NERDTree
-let NERDTreeShowHidden=1
+let g:NERDTreeShowHidden=1
+let g:NERDTreeQuitOnOpen = 1
 
 " coc.nvim
 let g:coc_global_extensions = ['coc-sh', 'coc-git', 'coc-tsserver', 'coc-json', 'coc-yaml', 'coc-html', 'coc-css', 'coc-pyright', 'coc-go']
