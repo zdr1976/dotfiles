@@ -14,7 +14,11 @@ Plug 'joshdick/onedark.vim'
 
 " Utils
 Plug 'scrooloose/nerdtree'
-Plug 'ctrlpvim/ctrlp.vim'
+
+" fzf
+" if binary is already installed this line is not needed.
+"Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
 
 " Syntax highlighting plugin for many languages.
 Plug 'sheerun/vim-polyglot'
@@ -34,16 +38,13 @@ Plug 'mattn/emmet-vim'
 
 " Git
 Plug 'tpope/vim-fugitive'
-Plug 'airblade/vim-gitgutter'
+"Plug 'airblade/vim-gitgutter'
 
 " base64
 Plug 'christianrondeau/vim-base64'
 
 " Plug for transparent editing of gpg encrypted files
 Plug 'jamessan/vim-gnupg'
-
-" Indentation level
-Plug 'Yggdroot/indentLine'
 
 " Status line
 Plug 'vim-airline/vim-airline'
@@ -69,8 +70,8 @@ set autoindent                  " Enable Auto indentation
 set incsearch                   " Shows the match while typing
 set hlsearch                    " Highlight found searches
 set noerrorbells                " No beeps
-"set number                      " Show line numbers
-set number relativenumber       " Show hibrid line number 
+set number                      " Show line numbers
+"set number relativenumber       " Show hibrid line number
 "set showcmd                     " Show me what I'm typing
 set noswapfile                  " Don't use swapfile
 set nobackup                    " Don't create annoying backup files
@@ -187,9 +188,6 @@ nnoremap <silent> <F5> :NERDTreeToggle<CR>
 " F7: Flake8 - static syntax and style checker for Python
 autocmd FileType python map <buffer> <F7> :call Flake8()<CR>
 
-" F8: Toggle indentation
-nnoremap <silent> <F8> :IndentLinesToggle<cr>
-
 " F9: Grep word under cursor
 map <F9> :execute "vimgrep /" . expand("<cword>") . "/j **" <Bar> cw<CR>
 
@@ -275,10 +273,31 @@ nmap =y :set syntax=yaml<cr>
 nmap =d :set syntax=dockerfile<cr>
 
 "vim-fugitive
-nmap <leader>gs :Gstatus<cr>
-nmap <leader>gc :Gcommit<cr>
+nmap <leader>gs :Git<cr>
+nmap <leader>gc :Git commit<cr>
 nmap <leader>gp :Gpush<cr>:GitGutter<cr>
 nmap <leader>gd :Gdiff<cr>
+
+" fzf
+"nmap <C-F> :FZF<CR>
+nmap <C-P> :Files<CR>
+nmap <C-G> :Rg<CR>
+" Customize fzf colors to match your color scheme
+" - fzf#wrap translates this to a set of `--color` options
+let g:fzf_colors =
+\ { 'fg':      ['fg', 'Normal'],
+  \ 'bg':      ['bg', 'Normal'],
+  \ 'hl':      ['fg', 'Comment'],
+  \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+  \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
+  \ 'hl+':     ['fg', 'Statement'],
+  \ 'info':    ['fg', 'PreProc'],
+  \ 'border':  ['fg', 'Ignore'],
+  \ 'prompt':  ['fg', 'Conditional'],
+  \ 'pointer': ['fg', 'Exception'],
+  \ 'marker':  ['fg', 'Keyword'],
+  \ 'spinner': ['fg', 'Label'],
+  \ 'header':  ['fg', 'Comment'] }
 
 " Remove all whitespace
 map <Leader>w :%s/\s\+$//
