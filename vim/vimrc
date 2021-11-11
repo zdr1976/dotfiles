@@ -398,4 +398,4 @@ let g:NERDTreeShowHidden=1
 let g:NERDTreeQuitOnOpen = 1
 
 " coc.nvim
-let g:coc_global_extensions = ['coc-sh', 'coc-git', 'coc-tsserver', 'coc-json', 'coc-yaml', 'coc-html', 'coc-css', 'coc-pyright', 'coc-go']
+let g:coc_global_extensions = ['coc-sh', 'coc-git', 'coc-tsserver', 'coc-json', 'coc-yaml', 'coc-html', 'coc-css', 'coc-pyright', 'coc-go', 'coc-spell-checker']

@@ -1,4 +1,5 @@
 {
   // Custom configuration go here.
-  "diagnostic.checkCurrentLine": true
+  "diagnostic.checkCurrentLine": true,
+  "cSpell.language": "en"
 }
