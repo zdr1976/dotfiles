@@ -2,12 +2,12 @@
 add_newline = false
 
 format = """
-$kubernetes\
 $username\
 $hostname\
 $directory\
 $git_branch\
 $git_status\
+$kubernetes\
 $python\
 $nodejs\
 $line_break\
@@ -51,8 +51,8 @@ diverged = "⇕⇡${ahead_count}⇣${behind_count}"
 behind = "⇣${count}"
 
 [kubernetes]
-format = '[$symbol$context(/$namespace)]($style) '
-symbol = "k8s:"
+format = '[\($context(/$namespace)\)]($style) '
+#symbol = "☸ "
 style = "purple bold"
 disabled = false
 
