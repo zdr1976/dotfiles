@@ -66,7 +66,7 @@ call plug#end()
 set nocompatible                " Enables us Vim specific features
 "filetype off                    " Reset filetype detection first ...
 "filetype plugin indent on       " ... and enable filetype detection
-"set ttyfast                     " Indicate fast terminal conn for faster redraw
+set ttyfast                     " Indicate fast terminal conn for faster redraw
 "set ttymouse=xterm2             " Indicate terminal type for mouse codes
 "set ttyscroll=3                 " Speedup scrolling
 set laststatus=2                " Show status line always
@@ -292,6 +292,7 @@ nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
+inoremap <silent><expr> <c-space> coc#refresh()
 
 " Use K to show documentation in preview window.
 nnoremap <silent> K :call <SID>show_documentation()<CR>
@@ -373,6 +374,7 @@ let g:airline_symbols.maxlinenr= ''
 " Define which filetypes have special treatment of /* */ comments.
 " let g:airline#extensions#whitespace#mixed_indent_algo = 1
 let g:airline#extensions#c_like_langs = ['c', 'cpp', 'go', 'javascript']
+let g:airline#extensions#tabline#fnamemod = ':t'
 
 " vim-go settings
 let g:go_highlight_build_constraints = 1
