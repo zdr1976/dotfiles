@@ -124,7 +124,7 @@ parse_k8s_context() {
 alias diff='colordiff'
 alias git-cloc='git ls-files | xargs cloc'
 alias sup='sudo su -'
-alias ls='ls --color'
+alias ls='ls --color --group-directories-first'
 alias ll='ls -lA'
 alias k='kubectl'
 alias g='git'
