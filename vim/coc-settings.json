@@ -2,5 +2,6 @@
   // Custom configuration go here.
   "diagnostic.checkCurrentLine": true,
   "cSpell.language": "en",
-  "coc.preferences.formatOnSaveFiletypes": ["json", "typescript"]
+  "python.linting.flake8Enabled": true,
+  "coc.preferences.formatOnSaveFiletypes": ["json", "typescript", "python"]
 }
