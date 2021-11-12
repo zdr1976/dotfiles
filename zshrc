@@ -148,7 +148,7 @@ PS1="%{$fg_bold[green]%}%m %{$fg_bold[yellow]%}%(3~|.../%2~|%~)${git_branch}${k8
 alias diff='colordiff'
 alias git-cloc='git ls-files | xargs cloc'
 alias sup='sudo su -'
-alias ls='ls --color'
+alias ls='ls --color --group-directories-first'
 alias ll='ls -lA'
 alias k='kubectl'
 alias g='git'
@@ -181,8 +181,8 @@ gpip(){
     PIP_REQUIRE_VIRTUALENV="" pip "$@"
 }
 
-gpip3(){                                                                        
-    PIP_REQUIRE_VIRTUALENV="" pip3 "$@"                                         
+gpip3(){
+    PIP_REQUIRE_VIRTUALENV="" pip3 "$@"
 }
 
 # Kubernetes
