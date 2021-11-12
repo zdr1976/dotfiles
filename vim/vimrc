@@ -40,6 +40,9 @@ Plug 'mattn/emmet-vim'
 " Line indentation
 Plug 'Yggdroot/indentLine'
 
+" Comment stuff
+Plug 'tpope/vim-commentary'
+
 " Git
 Plug 'tpope/vim-fugitive'
 "Plug 'airblade/vim-gitgutter'
@@ -169,7 +172,7 @@ autocmd BufRead,BufNewFile */playbooks/*.yml set filetype=ansible
 autocmd FileType yaml setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
 autocmd FileType json setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
 autocmd FileType html,htmldjango setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
-autocmd FileType js,ts setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
+autocmd FileType javascript,typescript  setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
 autocmd BufRead,BufNewFile *.proto set filetype=proto
 autocmd BufNewFile,BufRead *.kubeconfig setlocal filetype=yaml
 autocmd FileType c,go,python autocmd BufWritePre <buffer> :%s/\s\+$//e
@@ -309,10 +312,11 @@ nmap <leader>rn <Plug>(coc-rename)
 " Formatting selected code.
 nmap <leader>f  <Plug>(coc-format-selected)
 
-" fzf
 "nmap <C-F> :FZF<CR>
-nmap <C-P> :Files<CR>
+"nmap <C-P> :Files<CR>
+map <C-P> :GFiles<CR>
 nmap <C-G> :Rg<CR>
+
 " Customize fzf colors to match your color scheme
 " - fzf#wrap translates this to a set of `--color` options
 let g:fzf_colors =
@@ -329,6 +333,7 @@ let g:fzf_colors =
   \ 'marker':  ['fg', 'Keyword'],
   \ 'spinner': ['fg', 'Label'],
   \ 'header':  ['fg', 'Comment'] }
+
 
 " Remove all whitespace
 map <Leader>w :%s/\s\+$//
@@ -398,4 +403,4 @@ let g:NERDTreeShowHidden=1
 let g:NERDTreeQuitOnOpen = 1
 
 " coc.nvim
-let g:coc_global_extensions = ['coc-sh', 'coc-git', 'coc-tsserver', 'coc-json', 'coc-yaml', 'coc-html', 'coc-css', 'coc-pyright', 'coc-go', 'coc-spell-checker']
+let g:coc_global_extensions = ['coc-sh', 'coc-git', 'coc-tsserver', 'coc-json', 'coc-yaml', 'coc-html', 'coc-css', 'coc-pyright', 'coc-go', 'coc-spell-checker', 'coc-prettier']
