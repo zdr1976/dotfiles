@@ -1,4 +1,2 @@
-gitconfig
-gitconfig-personal
-gitconfig-work
+git/*
 vim/.netrwhist

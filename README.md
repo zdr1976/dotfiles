@@ -8,67 +8,53 @@ For power users, they are a core tool belt.
 
 ## Installation
 
-If you are running MacOS please install brew package management before. Homebrew
-is the missing package management for macOS. For more information about this
-package management please visit the project [homepage](http://brew.sh/).
+To install configuration files use `stow` command. [GNU Stow](https://www.gnu.org/software/stow/manual/stow.html) is
+a symlink farm manager.
 
-```bash
-/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+### MacOS
+
+If you are running `MacOS` please install brew package management before. Homebrew
+is the missing package management for `MacOS`. For more information about this
+package management and how to install it please visit the project [homepage](http://brew.sh/).
+
+So the first step after `brew` installation is `stow` installation.
+
+```console
+brew install stow
 ```
 
-Some useful packages worth to install.
-```bash
-brew install bash bash-completion mc vim colordiff sipcalc ipcalc htop ssh-copy-id wget python python3 cloc golang cmake
+### Linux
+
+If you are using `Linux` use your distribution package manager to install `stow`
+application.
+
+Debian base distributions can use `apt`.
+```console
+apt-get install stow
 ```
 
-Now we are ready to setup dotfiles locally.
-
-```bash
-git clone git@github.com:zdr1976/dotfiles.git
-cd dotfiles
-./install
+For `RedHat` base distribution use `yum` or `dnf`.
+```console
+dnf install stow
 ```
 
-## Postistall
-In this section I will continue to document specifics postinstall steps.
+### Stow dotfiles
 
-### Python
-We don't want to install all Python packages in to the global `PATH`. That can be convenient
-at times, but it can also create problems. For example, sometimes one project needs the
-latest version of `Django`, while another project needs an older `Django` version to retain
-compatibility with a critical third-party extension. This is one of many use cases that
-`virtualenv` was designed to solve. That's why we are installing only a handful of
-general-purpose Python packages in to the global `PATH`. Every other package is confined
-to virtual environments.
-```bash
-pip install --user virtualenv virtualenvwrapper
+You can `stow` all or selected configuration.
 
-or (see bellow)
-
-gpip3 install --user virtualenv virtualenvwrapper
+One
+```console
+stow -t ~ bash
 ```
 
-Then open your `.bashrc` or `.zshrc` file (which may be created but only
-in case you are not using mine) and ad some lines to it. What those lines do is
-restricting `pip` and `pip3` to install to virtual environments only.
-To overcome this restriction and allow `pip` and `pip3`
-to install package into the global PATH use `gpip/gpip3` command instead.
-```bash
-export PIP_REQUIRE_VIRTUALENV=true
-export WORKON_HOME=~/.virtualenvs
-
-# Temporarily turn off restriction for pip.
-gpip(){
-  PIP_REQUIRE_VIRTUALENV="" pip "$@"
-}
-
-gpip3(){
-  PIP_REQUIRE_VIRTUALENV="" pip3 "$@"
-}
+Or multiple
+```console
+stow -t ~ bash vim zsh
 ```
 
-Create some directories to store our projects and virtual environments, respectively:
-```bash
-mkdir -p ~/Projects ~/.virtualenvs
+Or all
+```console
+stow -t ~ *
 ```
 
+To check what the `stow` command will do add `-n` and `-v` options.

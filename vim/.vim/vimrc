@@ -146,6 +146,8 @@ set colorcolumn=80
 
 try
     "colorscheme onedark
+    " Enable italic fonts
+    let g:gruvbox_italic=1
     colorscheme gruvbox
 catch /^Vim\%((\a\+)\)\=:E185/
     colorscheme default
@@ -208,17 +210,17 @@ map <silent> <F12> :set spell!<cr>
 " Change the mapleader from \ to ,
 let mapleader=","
 " Map ; to : and save a million keystrokes ;)
-nnoremap ; :
+"nnoremap ; :
 
 " Reselect visual block after indent/outdent
 vnoremap < <gv
 vnoremap > >gv
 
 " Select all text in current buffer
-map <Leader>a ggVG
+"map <Leader>a ggVG
 
 " Re-indent entire buffer
-map <leader>f gg=G
+"map <leader>f gg=G
 
 " Bind nohl
 noremap <silent> <C-h> :nohl<CR>
@@ -335,12 +337,15 @@ let g:fzf_colors =
   \ 'spinner': ['fg', 'Label'],
   \ 'header':  ['fg', 'Comment'] }
 
+" Coc spell checker
+vmap <leader>a <Plug>(coc-codeaction-selected)
+nmap <leader>a <Plug>(coc-codeaction-selected)
 
 " Remove all whitespace
 map <Leader>w :%s/\s\+$//
 
 " Enter automatically into the files directory
-autocmd BufEnter * silent! lcd %:p:h
+"autocmd BufEnter * silent! lcd %:p:h
 
 """"""""""""""""""""""
 "  Plugins settings  "
@@ -403,6 +408,10 @@ let g:flake8_quickfix_height=12
 " NERDTree
 let g:NERDTreeShowHidden=1
 let g:NERDTreeQuitOnOpen = 1
+
+" Markdown
+let g:vim_markdown_conceal = 0
+let g:vim_markdown_conceal_code_blocks = 0
 
 " coc.nvim
 let g:coc_global_extensions = ['coc-sh', 'coc-git', 'coc-tsserver', 'coc-json', 'coc-yaml', 'coc-html', 'coc-css', 'coc-pyright', 'coc-go', 'coc-spell-checker', 'coc-prettier']

@@ -1,17 +1,23 @@
 [alias]
-	s = status
-	st = status
-	co = checkout
-	br = branch
-	up = rebase
-	ci = commit
-	df = diff
-	pu = push
-	pl = pull
+    st = status
+    co = checkout
+    br = branch
+    bra = branch -a
+    brm = branch --merged
+    brn = branch --no-merged
+    up = rebase
+    ci = commit
+    df = diff
+    pu = push
+    pl = pull
+    puo = "!git push origin $(git rev-parse --abbrev-ref HEAD)"
+    plo = "!git pull origin $(git rev-parse --abbrev-ref HEAD)"
+    hist = log --pretty=format:\"%Cgreen%h %Creset%cd %Cblue[%cn] %Creset%s%C(yellow)%d%C(reset)\" --graph --date=relative --decorate --all
+    llog = log --graph --name-status --pretty=format:\"%C(red)%h %C(reset)(%cd) %C(green)%an %Creset%s %C(yellow)%d%Creset\" --date=relative
 [core]
-	editor = vim
+    editor = vim
 [push]
-	default = simple
+    default = simple
 [includeIf "gitdir:~/Projects/"]
     path = .gitconfig-personal
 [includeIf "gitdir:~/Projects/Work/"]

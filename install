@@ -1,21 +1,17 @@
 #!/bin/bash
 # Use !/usr/bin/env bash
 
-BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-FILES_LIST="bashrc zshrc screenrc gitconfig vim tmux.conf"
-FILE_LIST_GIT_MULTI="bashrc zshrc screenrc gitconfig gitconfig-personal gitconfig-work vim tmux.conf"
-NOW=$(date +"%Y%m%d")
-BACKUP="no"
-INSTALL="no"
-SYMLINK="no"
+LOCATION=$(pwd)
+STOW_PACKAGE_LIST="bash zsh vim mc screen tmux starship git"
+STOW="no"
+UNSTOW="no"
 
 # HELP Message.
 usage() {
     cat 1>&2 <<EOF
-Usage: $0 [-b] [-i] [-h]
-    -b Backup old file
-    -i Install dotfiles [Rewrite existing files]
-    -s Symlinking dotfiles [Rewrite existing files]
+Usage: $0 [-s] [-u] [-h]
+    -s Stow the dotfiles
+    -u Unstow the dotfiles
     -h Print HELP message
 EOF
     exit 1
@@ -27,69 +23,59 @@ then
     usage;
 fi
 
-# Paprsing script parameters.
-while getopts 'bish' opt; do
+# Parsing script parameters.
+while getopts 'suh' opt; do
     case "${opt}" in
-        b) BACKUP=yes ;;
-        i) INSTALL=yes ;;
-        s) SYMLINK=yes ;;
+        s) STOW=yes ;;
+        u) UNSTOW=yes ;;
         h) usage ;;
         *) echo "Unknown option $opt" 1>&2; usage ;;
     esac
 done
 shift $(( $OPTIND - 1 ))
 
-# Check if git ins installed
-# if type -P git &>/dev/null; then
-if [ ! -x "$(command -v git)" ]; then
-    echo "Missing git binary !!!"
-    echo "Can't continue without it. Please install git before you continue."
+
+# Check if stow is installed
+if [ ! -x "$(command -v stow)" ]; then
+    echo "Missing 'stow' binary. Read README.md for instructions."
     exit 1
 fi
 
-# Setup EMAIL and NAME for gitconfig.tmpl
-read -n 1 -p "Do you have personal and work git account? (Y/n) " more_accounts
-case $more_accounts in
-    Y|y)
-        FILES_LIST=$FILE_LIST_GIT_MULTI
-        cp gitconfig-multi gitconfig
-        echo -e "\nPlease provide your name and email address to be used for personal account"
-        read -p "Enter your name: " name
-        read -p "Enter your email: " email
-        sed -e "s/{{NAME}}/$name/g" -e "s/{{EMAIL}}/$email/g" gitconfig-personal.tmpl > gitconfig-personal
-        echo "Please provide your name and email address to be used for work account"
-        read -p "Enter your name: " name
-        read -p "Enter your email: " email
-        sed -e "s/{{NAME}}/$name/g" -e "s/{{EMAIL}}/$email/g" gitconfig-work.tmpl > gitconfig-work
-        ;;
-    *)
-        echo "Please provide your name and email address to be used in .gitconfig file"
-        read -p "Enter your name: " name
-        read -p "Enter your email: " email
-        sed -e "s/{{NAME}}/$name/g" -e "s/{{EMAIL}}/$email/g" gitconfig.tmpl > gitconfig
-        ;;
-esac
+# Setup EMAIL and NAME for gitconfig templates
+git_config_templating() {
+    mkdir "${LOCATION}/git"
+    read -n 1 -p "Do you have personal and work git accounts? (Y/n) " more_accounts
+    case $more_accounts in
+        Y|y)
+            cp "${LOCATION}/gitconfig-multi" "${LOCATION}/git/.gitconfig"
+            echo -e "\nPlease provide your name and email address to be used for personal account"
+            read -p "Name: " name
+            read -p "Email: " email
+            sed -e "s/{{NAME}}/$name/g" -e "s/{{EMAIL}}/$email/g" "${LOCATION}/gitconfig-personal.tmpl" > "${LOCATION}/git/.gitconfig-personal"
+            echo "Please provide your name and email address to be used for work account"
+            read -p "Name: " name
+            read -p "Email: " email
+            sed -e "s/{{NAME}}/$name/g" -e "s/{{EMAIL}}/$email/g" "${LOCATION}/gitconfig-work.tmpl" > "${LOCATION}/git/.gitconfig-work"
+            ;;
+        *)
+            echo "Please provide your name and email address to be used in .gitconfig file"
+            read -p "Name: " name
+            read -p "Email: " email
+            sed -e "s/{{NAME}}/$name/g" -e "s/{{EMAIL}}/$email/g" gitconfig.tmpl > "${LOCATION}/git/gitconfig"
+            ;;
+    esac
+}
 
-# Rename any existing dotfilesk.
-for FILE in $FILES_LIST; do
-    # backuping old files if requested.
-    if [ "$BACKUP" == "yes" ];
-    then
-        echo "Backuping ~/.$FILE to ~/.$FILE-$NOW"
-        mv ~/.$FILE ~/.$FILE-$NOW
-    fi
-
-    # Symlinking dot file to HOME directory.
-    if [ "$SYMLINK" == "yes" ];
-    then
-        echo "Create symlink to $FILE in home directory"
-        rm -rf ~/.$FILE
-        ln -s $BASEDIR/$FILE ~/.$FILE
-    # Copy dot file in to the HOME directory.
-    elif [ "$INSTALL" == "yes" ];
-    then
-        echo "Copy $FILE in to the HOME directory"
-        rm -rf ~/.$FILE
-        cp -r $BASEDIR/$FILE ~/.$FILE
-    fi
-done
+# Stow the dotfiles to user HOME directory
+if [ "$STOW" == "yes" ];
+then
+    echo "Installing the dotfiles to HOME directory."
+    git_config_templating
+    stow -St ~ ${STOW_PACKAGE_LIST}
+# Unstow the dotfiles from user HOME directory
+elif [ "$UNSTOW" == "yes" ];
+then
+    echo "Uninstalling the dotfiles from the HOME directory."
+    stow -Dt ~ ${STOW_PACKAGE_LIST}
+    rm -rf "${LOCATION}/git"
+fi
