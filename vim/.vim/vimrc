@@ -187,7 +187,7 @@ autocmd InsertLeave * set nopaste " Disable paste mode when leaving Insert Mode
 set pastetoggle=<F2>
 
 " F3: Toggle line numbers.
-nnoremap <silent> <F3> :silent set number! number?<CR>:GitGutterToggle<cr>
+nnoremap <silent> <F3> :silent set number! number?<CR>
 imap <silent> <F3> <C-o>:set number! number?<CR>
 
 " F4: Toggle list (display unprintable characters).
