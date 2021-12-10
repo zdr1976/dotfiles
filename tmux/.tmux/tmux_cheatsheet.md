@@ -21,8 +21,8 @@ Default prefix: `<ctrl>b`
 * `<prefix>,0-9` - move to the window based on index
 * `<prefix>,,` - rename the current window
 * `<prefix>,w` - list windows
-* `<prefix>,"` - splits into two vertical panes
-* `<prefix>,%` - splits into two horizontal panes
+* `<prefix>,%` - splits into two vertical panes
+* `<prefix>,"` - splits into two horizontal panes
 
 ## Panes
 
