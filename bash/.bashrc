@@ -21,10 +21,6 @@ case "$OSTYPE" in
 		;;
 esac
 
-# Dynamic bash prompt
-# - Call the function promter() before PS1 for dynamic update
-PROMPT_COMMAND=prompter
-
 # Don't put duplicate lines or lines starting with space in the history.
 HISTCONTROL=ignoreboth
 
@@ -37,6 +33,9 @@ HISTFILESIZE=100000
 
 # Shorten the depth of directory
 PROMPT_DIRTRIM=2
+
+# Project DIR's
+CDPATH=.:~:~/Projects/Work:~/Projects/Personal
 
 # Default editor.
 export EDITOR=vim
@@ -57,23 +56,26 @@ fi
 # update the values of LINES and COLUMNS.
 shopt -s checkwinsize
 
-# Colors http://misc.flogisoft.com/bash/tip_colors_and_formatting
-BOLD_GREEN="\e[1;32m"
-BOLD_YELLOW="\e[1;33m"
-BOLD_RED="\e[1;31m"
-BOLD_WHITE="\e[1;37m"
-BOLD_BLUE="\e[1;34m"
-BOLD_PURPLE="\e[1;35m"
-BOLD_CYAN="\e[1;36m"
-RESET_TEXT="\e[1;0m"
+# Set shell prompt.
+if [ -x "$(command -v starship)" ]; then
+    eval "$(starship init bash)"
+else
+    # Dynamic bash prompt
+    # - Call the function promter() before PS1 for dynamic update
+    PROMPT_COMMAND=prompter
+fi
 
-# Prompt with Git branch if available.
-#PS1="\[$BOLD_GREEN\]\h\[$BOLD_YELLOW\] \w\[$BOLD_BLUE\]\$(parse_git_branch)\[$BOLD_YELLOW\] $ \[$RESET_TEXT\]"
-# Prompt with Git branche and K8s curent-context and namespace if available
-#PS1="\[$BOLD_GREEN\]\h\[$BOLD_YELLOW\] \w\[$BOLD_BLUE\]\$(parse_git_branch)$(parse_k8s_context)\[$BOLD_YELLOW\] $ \[$RESET_TEXT\]"
-# Prompt without Git branch.
-#PS1="\[$BOLD_GREEN\]\h\[$BOLD_YELLOW\] \w $ \[$RESET_TEXT\]"
 prompter() {
+    # Colors http://misc.flogisoft.com/bash/tip_colors_and_formatting
+    BOLD_GREEN="\e[1;32m"
+    BOLD_YELLOW="\e[1;33m"
+    BOLD_RED="\e[1;31m"
+    BOLD_WHITE="\e[1;37m"
+    BOLD_BLUE="\e[1;34m"
+    BOLD_PURPLE="\e[1;35m"
+    BOLD_CYAN="\e[1;36m"
+    RESET_TEXT="\e[1;0m"
+
     # Choice one from examples above
     PS1="\[$BOLD_GREEN\]\u@\h\[$BOLD_YELLOW\] \w\[$BOLD_BLUE\]\$(parse_git_branch)\[$BOLD_PURPLE\]\$(parse_k8s_context)\[$BOLD_YELLOW\] $ \[$RESET_TEXT\]"
 
@@ -85,7 +87,7 @@ prompter() {
     export PS1
 }
 
-# Set Git branch in BASH prompt.
+# Helper function to set Git branch in shell prompt.
 parse_git_branch() {
 	# Uncoment this line if your system is not UTF-8 ready.
 	# git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ git:\1/'
@@ -93,17 +95,7 @@ parse_git_branch() {
 	git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ ⎇  \1/'
 }
 
-# Set kubernetes context in BASH prompt
-_old_parse_k8s_context() {
-	context=`kubectl config view --output 'jsonpath={..current-context}'`
-    namespace=`kubectl config view --output 'jsonpath={..namespace}'`
-    if [[ -n $context ]] && [[ -n $namespace ]]; then
-        echo -n " (k8s:$context/$namespace)"
-    # elif [[ -n $context ]] ; then
-    #     echo -n " (k8s:$context)"
-    fi
-}
-# NEW: Set kubernetes context in BASH prompot
+# Helper function to set kubernetes context in shell prompt.
 parse_k8s_context() {
     if [ -z $KUBECONFIG ]; then
     return
@@ -129,71 +121,37 @@ alias ll='ls -lA'
 #alias ls='exa'
 #alias ll='exa -alh'
 #alias tree='exa --tree'
-alias k='kubectl'
-alias g='git'
-complete -F __start_kubectl k
 
 # Source another Aliases from external file (if exists).
 if [ -f ~/.aliases ]; then
 	. ~/.aliases
 fi
 
-# Enable programmable completion features (you don't need to enable
-# this, if it's already enabled in /etc/bash.bashrc or /etc/profile).
-# If not sources particular file.
-if ! shopt -oq posix; then
-	# Linux system.
-	if [ "$OS" == "LINUX" ]; then
-		if [ -f /usr/share/bash-completion/bash_completion ]; then
-			. /usr/share/bash-completion/bash_completion
-		elif [ -f /etc/bash_completion ]; then
-			. /etc/bash_completion
-		fi
-	# MacOS system.
-	elif [ "$OS" == "OSX" ]; then
-		if [ -f $(brew --prefix)/etc/bash_completion ]; then
-			. $(brew --prefix)/etc/bash_completion
-		fi
-	fi
-fi
-
-# Project DIR
-CDPATH=.:~:~/Projects/Work:~/Projects/Personal
-
-# GO LANG
-export GOPATH=$HOME/go
-if [ "$OS" == "LINUX" ]; then
-	export GOROOT=$HOME/bin/go
-elif [ "$OS" == "OSX" ]; then
-	export GOROOT=$(brew --prefix)/opt/go/libexec/go
-fi
-export PATH=$PATH:$GOROOT/bin
-
-# PYTHON
-# - Temporarily turn off restriction for pip.
-gpip(){
-	PIP_REQUIRE_VIRTUALENV="" pip "$@"
-}
-
-gpip3(){
-    PIP_REQUIRE_VIRTUALENV="" pip3 "$@"
-}
-
+# Create user bash completion directory if not already exists. This will
+# will be used for kubernetes and npm completion files.
+[ -d ~/.bash_completion ] || mkdir ~/.bash_completion
 
 # Kubernetes
-if [ -x "$(command -v kubectl)" ]; then
-    source <(kubectl completion bash)
-fi
+alias k='kubectl'
+complete -F __start_kubectl k
 
-# k8s-kx
+# alias for `k8s-kx`
 kx() {
     eval $(k8s-kx)
 }
 
-
+# alias for `kubectl exec`
 kexec() {
     kubectl exec -it "$1" -- sh
 }
+
+if [ -x "$(command -v kubectl)" ]; then
+    # source <(kubectl completion bash)
+    [ -s ~/.bash_completion/kubectl ] || kubectl completion bash > ~/.bash_completion/kubectl
+fi
+
+# Git
+alias g='git'
 
 gli () {
   git log --graph --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr"  | \
@@ -216,26 +174,55 @@ export PATH="$PATH:$NPM_PACKAGES/bin"
 export MANPATH="${MANPATH-$(manpath)}:$NPM_PACKAGES/share/man"
 
 if [ -x "$(command -v npm)" ]; then
-    source <(npm completion)
+    # source <(npm completion)
+    [ -s ~/.bash_completion/npm ] || npm completion > ~/.bash_completion/npm
 fi
 
-# NVM
+# Node version manager.
+# - install via curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
-# Powerline
-#if [ -f `which powerline-daemon` ]; then
-#    powerline-daemon -q
-#    POWERLINE_BASH_CONTINUATION=1
-#    POWERLINE_BASH_SELECT=1
-#    . /usr/share/powerline/bash/powerline.sh
-#fi
-
-# Starship
-if [ -x "$(command -v starship)" ]; then
-    eval "$(starship init bash)"
+# Enable programmable completion features (you don't need to enable
+# this, if it's already enabled in /etc/bash.bashrc or /etc/profile).
+# If not sources particular file.
+if ! shopt -oq posix; then
+	# Linux system.
+	if [ "$OS" == "LINUX" ]; then
+		if [ -f /usr/share/bash-completion/bash_completion ]; then
+			. /usr/share/bash-completion/bash_completion
+		elif [ -f /etc/bash_completion ]; then
+			. /etc/bash_completion
+		fi
+	# MacOS system.
+	elif [ "$OS" == "OSX" ]; then
+		if [ -f $(brew --prefix)/etc/bash_completion ]; then
+			. $(brew --prefix)/etc/bash_completion
+		fi
+	fi
+    # Load local bash autocompletion files.
+    [ -d ~/.bash_completion ] && source ~/.bash_completion/*
 fi
+
+# GO LANG
+export GOPATH=$HOME/go
+if [ "$OS" == "LINUX" ]; then
+	export GOROOT=$HOME/bin/go
+elif [ "$OS" == "OSX" ]; then
+	export GOROOT=$(brew --prefix)/opt/go/libexec/go
+fi
+export PATH=$PATH:$GOROOT/bin
+
+# PYTHON
+# - Temporarily turn off restriction for pip.
+gpip(){
+	PIP_REQUIRE_VIRTUALENV="" pip "$@"
+}
+
+gpip3(){
+    PIP_REQUIRE_VIRTUALENV="" pip3 "$@"
+}
 
 # Uncomment this line if your terminal doesn't propagate 256 colors support.
 # TERM=xterm-256color
