@@ -83,6 +83,9 @@ setopt autocd autopushd pushdminus pushdsilent pushdtohome pushdignoredups
 # Disable paste highlighting.
 zle_highlight+=(paste:none)
 
+# Project DIR
+CDPATH=.:~:~/Projects/Work:~/Projects/Personal
+
 # Default editor.
 export EDITOR=vim
 
@@ -101,7 +104,7 @@ elif [ "$OS" = "LINUX" ]; then
     zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 fi
 
-# Set Git branch in BASH prompt.
+# Helper function to set Git branch in shell prompt.
 parse_git_branch() {
     # Uncoment this line if your system is not UTF-8 ready.
     # git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ git:\1/'
@@ -109,17 +112,7 @@ parse_git_branch() {
     git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ ⎇  \1/'
 }
 
-# Set k8s context in BASH prompt
-_old_parse_k8s_context() {
-    context=`kubectl config view --output 'jsonpath={..current-context}'`
-    namespace=`kubectl config view --output 'jsonpath={..namespace}'`
-    if [[ -n $context ]] && [[ -n $namespace ]]; then
-        echo -n " (k8s:$context/$namespace)"
-    # elif [[ -n $context ]] ; then
-    #     echo -n " (k8s:$context)"
-    fi
-}
-# NEW: Set kubernetes context in BASH prompot
+# Helper function to set kubernetes context in shell prompt.
 parse_k8s_context() {
   if [ -z $KUBECONFIG ]; then
     return
@@ -138,11 +131,17 @@ parse_k8s_context() {
 
 # Load colors
 autoload -U colors && colors
-# Prompt with Git branch if available.
-local git_branch='%{$fg_bold[blue]%}$(parse_git_branch)'
-local k8s_context='%{$fg_bold[magenta]%}$(parse_k8s_context)'
-# PS1="%{$fg_bold[green]%}%m %{$fg_bold[yellow]%}%(3~|.../%2~|%~)${git_branch} %{$fg_bold[yellow]%}% \$ %{$reset_color%}%{$fg[white]%}"
-PS1="%{$fg_bold[green]%}%m %{$fg_bold[yellow]%}%(3~|.../%2~|%~)${git_branch}${k8s_context} %{$fg_bold[yellow]%}% \$ %{$reset_color%}%{$fg[white]%}"
+
+# Set shell prompt.
+if [ $commands[starship] ]; then
+    eval "$(starship init zsh)"
+else
+    # Prompt with Git branch if available.
+    local git_branch='%{$fg_bold[blue]%}$(parse_git_branch)'
+    local k8s_context='%{$fg_bold[magenta]%}$(parse_k8s_context)'
+    # PS1="%{$fg_bold[green]%}%m %{$fg_bold[yellow]%}%(3~|.../%2~|%~)${git_branch} %{$fg_bold[yellow]%}% \$ %{$reset_color%}%{$fg[white]%}"
+    PS1="%{$fg_bold[green]%}%m %{$fg_bold[yellow]%}%(3~|.../%2~|%~)${git_branch}${k8s_context} %{$fg_bold[yellow]%}% \$ %{$reset_color%}%{$fg[white]%}"
+fi
 
 # Some nice aliases to have
 alias diff='colordiff'
@@ -165,9 +164,6 @@ alias ....="cd ../../.."
 if [ -f ~/.aliases ]; then
     . ~/.aliases
 fi
-
-# Project DIR
-CDPATH=.:~:~/Projects/Work:~/Projects/Personal
 
 # GO LANG
 export GOPATH=$HOME/go
@@ -234,19 +230,6 @@ if [ $commands[npm-disabled] ]; then
     # Execute 'npm' binary
     $0 "$@"
   }
-fi
-
-# Powerline
-#if [ -f /usr/share/powerline/bindings/bash/powerline.sh ]; then
-#  powerline-daemon -q
-#  POWERLINE_BASH_CONTINUATION=1
-#  POWERLINE_BASH_SELECT=1
-#  source /usr/share/powerline/bindings/bash/powerline.sh
-#fi
-
-# Starship
-if [ $commands[starship] ]; then
-    eval "$(starship init zsh)"
 fi
 
 # Uncomment this line if your terminal doesn't propagate 256 colors support.
