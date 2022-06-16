@@ -1,4 +1,6 @@
+# https://xebia.com/blog/profiling-zsh-shell-scripts/
 # zmodload zsh/zprof
+
 # If not running interactively, don't do anything.
 case $- in
     *i*) ;;
@@ -41,11 +43,12 @@ setopt promptsubst
 # Globbing characters
 unsetopt nomatch
 
-# Command-line completion (Docker)
-# - mkdir -p ~/.zsh/completions
-# - curl -L https://raw.githubusercontent.com/docker/compose/1.29.2/contrib/completion/zsh/_docker-compose -o ~/.zsh/completions/_docker-compose
-# - curl -L https://git.kernel.org/pub/scm/git/git.git/plain/contrib/completion/git-completion.zsh -o ~/.zsh/completions/_git
-fpath=(~/.zsh/completions $fpath)
+# Command-line completion
+# Create global directory
+[ -d ~/.zsh_completions ] || mkdir ~/.zsh_completions
+# - curl -L https://raw.githubusercontent.com/docker/compose/1.29.2/contrib/completion/zsh/_docker-compose -o ~/.zsh_completions/_docker-compose
+# - curl -L https://git.kernel.org/pub/scm/git/git.git/plain/contrib/completion/git-completion.zsh -o ~/.zsh_completions/_git
+fpath=(~/.zsh_completions $fpath)
 
 # Enable autocompletion.
 #setopt completealiases
@@ -62,23 +65,27 @@ zstyle ':completion:*' matcher-list '' 'm:{a-zA-Z}={A-Za-z}'
 
 # Map Ctrl+r to search in history
 bindkey "^R" history-incremental-search-backward
-# History search
+# Cycle through history based on characters already typed on the line
 autoload -U up-line-or-beginning-search
 autoload -U down-line-or-beginning-search
 zle -N up-line-or-beginning-search
 zle -N down-line-or-beginning-search
+# Set vi/vim binding
+#bindkey -v
 # setup key accordingly
-bindkey "^[[H" beginning-of-line
-bindkey "^[[F" end-of-line
-bindkey "^[[2~" overwrite-mode
-bindkey "^[[3~" delete-char
-bindkey "^[[A" up-line-or-beginning-search
-bindkey "^[[B" down-line-or-beginning-search
-bindkey "^[[C" forward-char
-bindkey "^[[D" backward-char
+bindkey "^[[H" beginning-of-line # Home
+bindkey "^[[F" end-of-line # End
+bindkey "^[[2~" overwrite-mode # Insert
+bindkey "^[[3~" delete-char # Del
+bindkey "^[[A" up-line-or-beginning-search # Up
+bindkey "^[[B" down-line-or-beginning-search # Down
+bindkey "^[[C" forward-char # Left
+bindkey "^[[D" backward-char # Right
 
-# Easy directory navigation. Don't need to type cd to change directories.
-setopt autocd autopushd pushdminus pushdsilent pushdtohome pushdignoredups
+# Switching directories for lazy people
+setopt autocd
+# See: http://zsh.sourceforge.net/Intro/intro_6.html
+setopt autopushd pushdminus pushdsilent pushdtohome pushdignoredups
 
 # Disable paste highlighting.
 zle_highlight+=(paste:none)
@@ -186,17 +193,18 @@ gpip3(){
 
 # Kubernetes
 # Check if 'kubectl' is a command in $PATH
-if [ $commands[kubectl-disabled] ]; then
+if [ $commands[kubectl] ]; then
+    [ -s ~/.zsh_completions/_kubectl ] || kubectl completion zsh > ~/.zsh_completions/_kubectl
   # Placeholder 'kubectl' shell function:
   # Will only be executed on the first call to 'kubectl'
-  kubectl() {
+  # kubectl() {
     # Remove this function, subsequent calls will execute 'kubectl' directly
-    unfunction "$0"
+  #  unfunction "$0"
     # Load auto-completion
-    source <(kubectl completion zsh)
+  #  source <(kubectl completion zsh)
     # Execute 'kubectl' binary
-    $0 "$@"
-  }
+  #  $0 "$@"
+  #}
 fi
 
 # k8s-kx
@@ -219,17 +227,18 @@ export MANPATH="${MANPATH-$(manpath)}:$NPM_PACKAGES/share/man"
 # $ npm config set prefix "${HOME}/.npm-packages"
 
 # Check if 'npm' is a command in $PATH
-if [ $commands[npm-disabled] ]; then
+if [ $commands[npm] ]; then
+    [ -s ~/.zsh_completions/_npm ] || npm completion > ~/.zsh_completions/_npm
   # Placeholder 'npm' shell function:
   # Will only be executed on the first call to 'npm'
-  npm() {
+  # npm() {
     # Remove this function, subsequent calls will execute 'kubectl' directly
-    unfunction "$0"
+  #  unfunction "$0"
     # Load auto-completion
-    source <(npm completion)
+  #  source <(npm completion)
     # Execute 'npm' binary
-    $0 "$@"
-  }
+  #  $0 "$@"
+  #}
 fi
 
 # Uncomment this line if your terminal doesn't propagate 256 colors support.
