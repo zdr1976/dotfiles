@@ -97,7 +97,7 @@ parse_git_branch() {
 
 # Helper function to set kubernetes context in shell prompt.
 parse_k8s_context() {
-    if [ -z $KUBECONFIG ]; then
+    if [ -z "$KUBECONFIG" ]; then
     return
     fi
 
@@ -137,7 +137,7 @@ complete -F __start_kubectl k
 
 # alias for `k8s-kx`
 kx() {
-    eval $(k8s-kx)
+    eval "$(k8s-kx)"
 }
 
 # alias for `kubectl exec`
@@ -147,7 +147,7 @@ kexec() {
 
 if [ -x "$(command -v kubectl)" ]; then
     # source <(kubectl completion bash)
-    [ -s ~/.bash_completions/kubectl ] || kubectl completion bash > ~/.bash_completions/kubectl
+    [ -s ~/.bash_completions/kubectl.sh ] || kubectl completion bash > ~/.bash_completions/kubectl.sh
 fi
 
 # Git
@@ -175,7 +175,7 @@ export MANPATH="${MANPATH-$(manpath)}:$NPM_PACKAGES/share/man"
 
 if [ -x "$(command -v npm)" ]; then
     # source <(npm completion)
-    [ -s ~/.bash_completions/npm ] || npm completion > ~/.bash_completions/npm
+    [ -s ~/.bash_completions/npm.sh ] || npm completion > ~/.bash_completions/npm.sh
 fi
 
 # Node version manager.
@@ -202,7 +202,11 @@ if ! shopt -oq posix; then
 		fi
 	fi
     # Load local bash autocompletion files.
-    [ -d ~/.bash_completions ] && source ~/.bash_completions/*
+    if [ -d ~/.bash_completions ]; then
+        for f in ~/.bash_completions/*.sh; do
+            . "${f}";
+        done
+    fi
 fi
 
 # GO LANG
