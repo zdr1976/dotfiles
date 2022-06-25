@@ -32,7 +32,7 @@ while getopts 'suh' opt; do
         *) echo "Unknown option $opt" 1>&2; usage ;;
     esac
 done
-shift $(( $OPTIND - 1 ))
+shift "$(( OPTIND - 1 ))"
 
 
 # Check if stow is installed
@@ -44,23 +44,23 @@ fi
 # Setup EMAIL and NAME for gitconfig templates
 git_config_templating() {
     mkdir "${LOCATION}/git"
-    read -n 1 -p "Do you have personal and work git accounts? (Y/n) " more_accounts
+    read -r -n 1 -p "Do you have personal and work git accounts? (Y/n) " more_accounts
     case $more_accounts in
         Y|y)
             cp "${LOCATION}/gitconfig-multi" "${LOCATION}/git/.gitconfig"
             echo -e "\nPlease provide your name and email address to be used for personal account"
-            read -p "Name: " name
-            read -p "Email: " email
+            read -r -p "Name: " name
+            read -r -p "Email: " email
             sed -e "s/{{NAME}}/$name/g" -e "s/{{EMAIL}}/$email/g" "${LOCATION}/gitconfig-personal.tmpl" > "${LOCATION}/git/.gitconfig-personal"
             echo "Please provide your name and email address to be used for work account"
-            read -p "Name: " name
-            read -p "Email: " email
+            read -r -p "Name: " name
+            read -r -p "Email: " email
             sed -e "s/{{NAME}}/$name/g" -e "s/{{EMAIL}}/$email/g" "${LOCATION}/gitconfig-work.tmpl" > "${LOCATION}/git/.gitconfig-work"
             ;;
         *)
             echo "Please provide your name and email address to be used in .gitconfig file"
-            read -p "Name: " name
-            read -p "Email: " email
+            read -r -p "Name: " name
+            read -r -p "Email: " email
             sed -e "s/{{NAME}}/$name/g" -e "s/{{EMAIL}}/$email/g" gitconfig.tmpl > "${LOCATION}/git/gitconfig"
             ;;
     esac
@@ -71,11 +71,11 @@ if [ "$STOW" == "yes" ];
 then
     echo "Installing the dotfiles to HOME directory."
     git_config_templating
-    stow -St ~ ${STOW_PACKAGE_LIST}
+    stow -St ~ "${STOW_PACKAGE_LIST}"
 # Unstow the dotfiles from user HOME directory
 elif [ "$UNSTOW" == "yes" ];
 then
     echo "Uninstalling the dotfiles from the HOME directory."
-    stow -Dt ~ ${STOW_PACKAGE_LIST}
+    stow -Dt ~ "${STOW_PACKAGE_LIST}"
     rm -rf "${LOCATION}/git"
 fi
