@@ -97,7 +97,7 @@ parse_git_branch() {
 
 # Helper function to set kubernetes context in shell prompt.
 parse_k8s_context() {
-    if [ -z $KUBECONFIG ]; then
+    if [ -z "$KUBECONFIG" ]; then
     return
     fi
 
@@ -129,7 +129,7 @@ fi
 
 # Create user bash completion directory if not already exists. This will
 # will be used for kubernetes and npm completion files.
-[ -d ~/.bash_completion ] || mkdir ~/.bash_completion
+[ -d ~/.bash_completions ] || mkdir ~/.bash_completions
 
 # Kubernetes
 alias k='kubectl'
@@ -137,7 +137,7 @@ complete -F __start_kubectl k
 
 # alias for `k8s-kx`
 kx() {
-    eval $(k8s-kx)
+    eval "$(k8s-kx)"
 }
 
 # alias for `kubectl exec`
@@ -147,7 +147,7 @@ kexec() {
 
 if [ -x "$(command -v kubectl)" ]; then
     # source <(kubectl completion bash)
-    [ -s ~/.bash_completion/kubectl ] || kubectl completion bash > ~/.bash_completion/kubectl
+    [ -s ~/.bash_completions/kubectl.sh ] || kubectl completion bash > ~/.bash_completions/kubectl.sh
 fi
 
 # Git
@@ -175,14 +175,14 @@ export MANPATH="${MANPATH-$(manpath)}:$NPM_PACKAGES/share/man"
 
 if [ -x "$(command -v npm)" ]; then
     # source <(npm completion)
-    [ -s ~/.bash_completion/npm ] || npm completion > ~/.bash_completion/npm
+    [ -s ~/.bash_completions/npm.sh ] || npm completion > ~/.bash_completions/npm.sh
 fi
 
 # Node version manager.
 # - install via curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+[ -s "$NVM_DIR/bash_completions" ] && \. "$NVM_DIR/bash_completions"  # This loads nvm bash_completions
 
 # Enable programmable completion features (you don't need to enable
 # this, if it's already enabled in /etc/bash.bashrc or /etc/profile).
@@ -190,19 +190,23 @@ export NVM_DIR="$HOME/.nvm"
 if ! shopt -oq posix; then
 	# Linux system.
 	if [ "$OS" == "LINUX" ]; then
-		if [ -f /usr/share/bash-completion/bash_completion ]; then
-			. /usr/share/bash-completion/bash_completion
-		elif [ -f /etc/bash_completion ]; then
-			. /etc/bash_completion
+		if [ -f /usr/share/bash-completion/bash_completions ]; then
+			. /usr/share/bash-completion/bash_completions
+		elif [ -f /etc/bash_completions ]; then
+			. /etc/bash_completions
 		fi
 	# MacOS system.
 	elif [ "$OS" == "OSX" ]; then
-		if [ -f $(brew --prefix)/etc/bash_completion ]; then
-			. $(brew --prefix)/etc/bash_completion
+		if [ -f $(brew --prefix)/etc/bash_completions ]; then
+			. $(brew --prefix)/etc/bash_completions
 		fi
 	fi
     # Load local bash autocompletion files.
-    [ -d ~/.bash_completion ] && source ~/.bash_completion/*
+    if [ -d ~/.bash_completions ]; then
+        for f in ~/.bash_completions/*.sh; do
+            . "${f}";
+        done
+    fi
 fi
 
 # GO LANG

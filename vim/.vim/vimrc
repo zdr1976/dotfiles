@@ -35,6 +35,7 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 " Expanding abbreviations similar to emmet.
 "  https://medium.com/vim-drops/be-a-html-ninja-with-emmet-for-vim-feee15447ef1
+"  https://alldrops.info/posts/vim-drops/2018-08-21_become-a-html-ninja-with-emmet-for-vim/
 Plug 'mattn/emmet-vim'
 
 " Line indentation
@@ -78,7 +79,7 @@ set incsearch                   " Shows the match while typing
 set hlsearch                    " Highlight found searches
 set noerrorbells                " No beeps
 set number                      " Show line numbers
-"set number relativenumber       " Show hibrid line number
+"set number relativenumber       " Show hybrid line number
 "set showcmd                     " Show me what I'm typing
 set noswapfile                  " Don't use swapfile
 set nobackup                    " Don't create annoying backup files
@@ -112,6 +113,35 @@ set fo-=t						" Don't automatically wrap text when typing
 
 " Auto reload vimrc when it's saved
 autocmd! bufwritepost vimrc source %
+
+" Automatic toggling between line number modes
+" - Relative line numbers are helpful when moving around in normal mode, but
+"   absolute line numbers are more suited for insert mode. When the buffer
+"   doesn’t have focus, it’d also be more useful to show absolute line numbers.
+augroup numbertoggle
+    autocmd!
+    autocmd BufEnter,FocusGained,InsertLeave,WinEnter * if &nu && mode() != "i" | set rnu | endif
+    autocmd BufLeave,FocusLost,InsertEnter,WinLeave * if &nu | set nornu | endif
+augroup end
+
+" Languages settings
+augroup launguages
+    autocmd!
+    autocmd Filetype gitcommit setlocal spell textwidth=72
+    autocmd FileType python setlocal tabstop=4 softtabstop=4 shiftwidth=4 expandtab
+    autocmd BufNewFile,BufRead *.go setlocal noexpandtab tabstop=4 shiftwidth=4 softtabstop=4
+    autocmd BufRead,BufNewFile */playbooks/*.yml set filetype=ansible
+    autocmd FileType yaml setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
+    autocmd FileType json setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
+    autocmd FileType html,htmldjango setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
+    autocmd FileType javascript,typescript  setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
+    autocmd BufRead,BufNewFile *.proto set filetype=proto
+    autocmd BufNewFile,BufRead *.kubeconfig setlocal filetype=yaml
+    autocmd FileType c,go,python autocmd BufWritePre <buffer> :%s/\s\+$//e
+    autocmd ColorScheme * highlight ExtraWhitespace ctermbg=red guibg=red
+    autocmd InsertLeave * set nopaste " Disable paste mode when leaving Insert Mode
+    "autocmd FileType json syntax match Comment +\/\/.\+$+ " JSON with C-style line (//) and block (/* */) comments
+augroup end
 
 " Enable to copy to clipboard for operations like yank, delete, change and put.
 if has('unnamedplus')
@@ -165,22 +195,6 @@ highlight SpellLocal cterm=underline
 
 " Custom Invisibles
 set listchars=tab:»·,nbsp:+,trail:·,extends:→,precedes:←
-
-" Languages settings
-autocmd Filetype gitcommit setlocal spell textwidth=72
-autocmd FileType python setlocal tabstop=4 softtabstop=4 shiftwidth=4 expandtab
-autocmd BufNewFile,BufRead *.go setlocal noexpandtab tabstop=4 shiftwidth=4 softtabstop=4
-autocmd BufRead,BufNewFile */playbooks/*.yml set filetype=ansible
-autocmd FileType yaml setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
-autocmd FileType json setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
-autocmd FileType html,htmldjango setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
-autocmd FileType javascript,typescript  setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
-autocmd BufRead,BufNewFile *.proto set filetype=proto
-autocmd BufNewFile,BufRead *.kubeconfig setlocal filetype=yaml
-autocmd FileType c,go,python autocmd BufWritePre <buffer> :%s/\s\+$//e
-autocmd ColorScheme * highlight ExtraWhitespace ctermbg=red guibg=red
-autocmd InsertLeave * set nopaste " Disable paste mode when leaving Insert Mode
-"autocmd FileType json syntax match Comment +\/\/.\+$+ " JSON with C-style line (//) and block (/* */) comments
 
 " F1-F12 key calls
 " F2: Disable formatting when pasting large chunks of code.
@@ -400,7 +414,7 @@ let g:go_fmt_command = "goimports"
 let g:indentLine_char = '¦'
 
 " emmet-vim
-"let g:user_emmet_leader_key=','
+let g:user_emmet_leader_key=','
 
 " vim-flake8
 let g:flake8_quickfix_height=12
