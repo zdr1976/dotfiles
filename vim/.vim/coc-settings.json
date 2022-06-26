@@ -3,5 +3,15 @@
   "diagnostic.checkCurrentLine": true,
   "cSpell.language": "en",
   "python.linting.flake8Enabled": true,
-  "coc.preferences.formatOnSaveFiletypes": ["json", "typescript", "python"]
+  "coc.preferences.formatOnSaveFiletypes": [
+    "c",
+    "go",
+    "python",
+    "markdown",
+    "javascript",
+    "typescript",
+    "json"
+  ],
+  "tsserver.formatOnType": true,
+  "coc.preferences.formatOnType": true
 }
