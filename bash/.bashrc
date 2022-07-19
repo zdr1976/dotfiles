@@ -48,6 +48,7 @@ if [ "$OS" == "OSX" ]; then
     export CLICOLOR=1
     export LSCOLORS="GxFxCxDxBxegedabagaced"
     eval "$(/opt/homebrew/bin/brew shellenv)"
+    # coreutils need to be installed via brew first.
     export PATH="/opt/homebrew/opt/coreutils/libexec/gnubin:$PATH"
 fi
 
