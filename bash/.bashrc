@@ -47,9 +47,8 @@ export PATH=~/bin:~/.local/bin:$PATH
 if [ "$OS" == "OSX" ]; then
     export CLICOLOR=1
     export LSCOLORS="GxFxCxDxBxegedabagaced"
-    export PATH=$(/usr/local/bin/brew --prefix)/bin:$PATH
-    # Let brew know that we are running on full 64-bit system.
-    export ARCHFLAGS="-arch x86_64"
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+    export PATH="/opt/homebrew/opt/coreutils/libexec/gnubin:$PATH"
 fi
 
 # Check the window size after each command and, if necessary,
