@@ -2,7 +2,7 @@
 # Use !/usr/bin/env bash
 
 LOCATION=$(pwd)
-STOW_PACKAGE_LIST="bash zsh vim mc screen tmux starship git"
+STOW_PACKAGE_LIST="bash zsh vim screen tmux starship git"
 STOW="no"
 UNSTOW="no"
 

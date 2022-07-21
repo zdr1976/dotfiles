@@ -13,9 +13,6 @@ call plug#begin('~/.vim/plugged')
 Plug 'joshdick/onedark.vim'
 Plug 'morhetz/gruvbox'
 
-" Utils
-Plug 'scrooloose/nerdtree'
-
 " fzf
 " if binary is already installed this line is not needed.
 "Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
@@ -207,8 +204,12 @@ imap <silent> <F3> <C-o>:set number! number?<CR>
 " F4: Toggle list (display unprintable characters).
 nnoremap <silent> <F4> :silent set list! list?<CR>
 
-" F5: Show NERDTree.
-nnoremap <silent> <F5> :NERDTreeToggle<CR>
+" F5: Show netrw.
+nnoremap <silent> <F5> :Ex<CR>
+" Custom settings fror netrw
+"let g:netrw_liststyle = 3
+let g:netrw_banner = 0
+let g:netrw_winsize = 25
 
 " F7: Flake8 - static syntax and style checker for Python
 autocmd FileType python map <buffer> <F7> :call Flake8()<CR>
