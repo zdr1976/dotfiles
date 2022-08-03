@@ -190,7 +190,9 @@ export NVM_DIR="$HOME/.nvm"
 if ! shopt -oq posix; then
 	# Linux system.
 	if [ "$OS" == "LINUX" ]; then
-		if [ -f /usr/share/bash-completion/bash_completions ]; then
+        if [ -f /etc/profile.d/bash_completion.sh ]; then
+            . /etc/profile.d/bash_completion.sh
+		elif [ -f /usr/share/bash-completion/bash_completions ]; then
 			. /usr/share/bash-completion/bash_completions
 		elif [ -f /etc/bash_completions ]; then
 			. /etc/bash_completions
@@ -229,4 +231,4 @@ gpip3(){
 }
 
 # Uncomment this line if your terminal doesn't propagate 256 colors support.
-# TERM=xterm-256color
+TERM=xterm-256color
