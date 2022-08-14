@@ -1,3 +1,4 @@
+#!/bin/bash
 # If not running interactively, don't do anything.
 case $- in
 	*i*) ;;
@@ -165,14 +166,6 @@ FZF-EOF" --preview-window=right:60%
 }
 
 # NPM
-# Tell npm where to store globally installed packages
-# $ npm config set prefix "~/.npm-global"
-NPM_PACKAGES="${HOME}/.npm-global"
-export PATH="$PATH:$NPM_PACKAGES/bin"
-# Preserve MANPATH if you already defined it somewhere in your config.
-# Otherwise, fall back to `manpath` so we can inherit from `/etc/manpath`.
-export MANPATH="${MANPATH-$(manpath)}:$NPM_PACKAGES/share/man"
-
 if [ -x "$(command -v npm)" ]; then
     # source <(npm completion)
     [ -s ~/.bash_completions/npm.sh ] || npm completion > ~/.bash_completions/npm.sh
@@ -213,11 +206,7 @@ fi
 
 # GO LANG
 export GOPATH=$HOME/go
-if [ "$OS" == "LINUX" ]; then
-	export GOROOT=$HOME/bin/go
-elif [ "$OS" == "OSX" ]; then
-	export GOROOT=$(brew --prefix)/opt/go/libexec/go
-fi
+export GOROOT=$HOME/bin/go
 export PATH=$PATH:$GOROOT/bin
 
 # PYTHON

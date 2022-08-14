@@ -25,7 +25,8 @@ Plug 'sheerun/vim-polyglot'
 Plug 'nvie/vim-flake8'
 
 " Go Lang
-Plug 'fatih/vim-go'
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+"Plug 'govim/govim'
 
 " Autocompletion
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -138,6 +139,7 @@ augroup launguages
     autocmd ColorScheme * highlight ExtraWhitespace ctermbg=red guibg=red
     autocmd InsertLeave * set nopaste " Disable paste mode when leaving Insert Mode
     "autocmd FileType json syntax match Comment +\/\/.\+$+ " JSON with C-style line (//) and block (/* */) comments
+    "au filetype go inoremap <buffer> . .<C-x><C-o>
 augroup end
 
 " Enable to copy to clipboard for operations like yank, delete, change and put.
@@ -353,6 +355,10 @@ let g:fzf_colors =
   \ 'header':  ['fg', 'Comment'] }
 
 " Coc spell checker
+" Then positioning the cursor in the word, any of the following should display
+" the list of suggestions:
+" - <leader>aap for current paragraph
+" - <leader>aw for current word
 vmap <leader>a <Plug>(coc-codeaction-selected)
 nmap <leader>a <Plug>(coc-codeaction-selected)
 
@@ -408,6 +414,7 @@ let g:go_highlight_types = 1
 let g:go_auto_sameids = 1
 let g:go_auto_type_info = 1
 let g:go_fmt_command = "goimports"
+let g:go_bin_path = $HOME."/go/bin"
 
 " indentLine
 "let g:indentLine_enabled = 0
