@@ -49,7 +49,7 @@ if [ "$OS" == "OSX" ]; then
     export CLICOLOR=1
     export LSCOLORS="GxFxCxDxBxegedabagaced"
     eval "$(/opt/homebrew/bin/brew shellenv)"
-    # coreutils need to be installed via brew first.
+    # coreutils (command like GNU ls) need to be installed via brew first.
     export PATH="/opt/homebrew/opt/coreutils/libexec/gnubin:$PATH"
 fi
 
@@ -165,21 +165,29 @@ gli () {
 FZF-EOF" --preview-window=right:60%
 }
 
-# NPM
+########
+# Node #
+########
 if [ -x "$(command -v npm)" ]; then
     # source <(npm completion)
     [ -s ~/.bash_completions/npm.sh ] || npm completion > ~/.bash_completions/npm.sh
 fi
 
-# Node version manager.
-# - install via curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+########################
+# Node version manager #
+########################
+# Install
+# - Linux install via curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+# - Mac install via brew install nvm
+mkdir -p ~/.nvm
 export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completions" ] && \. "$NVM_DIR/bash_completions"  # This loads nvm bash_completions
-# mkdir ~/.nvm
-# export NVM_DIR="$HOME/.nvm"
-# [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
-# [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+if [ "$OS" == "OSX" ]; then
+    [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
+    [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+else
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+    [ -s "$NVM_DIR/bash_completions" ] && \. "$NVM_DIR/bash_completions"  # This loads nvm bash_completions
+fi
 
 # Enable programmable completion features (you don't need to enable
 # this, if it's already enabled in /etc/bash.bashrc or /etc/profile).
