@@ -213,7 +213,8 @@ if ! shopt -oq posix; then
     # Load local bash autocompletion files.
     if [ -d ~/.bash_completions ]; then
         for f in ~/.bash_completions/*.sh; do
-            . "${f}";
+            [[ -e "$f" ]] || break  # handle the case of no *.sh files
+            . "$f"
         done
     fi
 fi
