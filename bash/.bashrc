@@ -207,7 +207,7 @@ fi
 # GO LANG
 export GOPATH=$HOME/go
 export GOROOT=$HOME/bin/go
-export PATH=$PATH:$GOROOT/bin
+export PATH=$GOROOT/bin:$GOPATH:bin:$PATH
 
 # PYTHON
 # - Temporarily turn off restriction for pip.
