@@ -206,8 +206,8 @@ if ! shopt -oq posix; then
 		fi
 	# MacOS system.
 	elif [ "$OS" == "OSX" ]; then
-		if [ -f $(brew --prefix)/etc/bash_completions ]; then
-			. $(brew --prefix)/etc/bash_completions
+		if [ -f /opt/homebrew/etc/profile.d/bash_completion.sh ]; then
+			. /opt/homebrew/etc/profile.d/bash_completion.sh
 		fi
 	fi
     # Load local bash autocompletion files.
