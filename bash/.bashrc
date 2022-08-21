@@ -51,6 +51,8 @@ if [ "$OS" == "OSX" ]; then
     eval "$(/opt/homebrew/bin/brew shellenv)"
     # coreutils (command like GNU ls) need to be installed via brew first.
     export PATH="/opt/homebrew/opt/coreutils/libexec/gnubin:$PATH"
+    # Some cmd aplication store config in .config directory.
+    mkdir -p .config
 fi
 
 # Check the window size after each command and, if necessary,
