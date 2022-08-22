@@ -210,7 +210,7 @@ zstyle ':completion:*' matcher-list '' 'm:{a-zA-Z}={A-Za-z}'
 # GO LANG
 export GOPATH=$HOME/go
 if [ "$OS" = "OSX" ]; then
-    export GOROOT=$HOMEBREW_PREFIX/opt/go/libexec/go
+    export GOROOT=$HOMEBREW_PREFIX/opt/go/libexec
 else
     export GOROOT=$HOME/bin/go
 fi
