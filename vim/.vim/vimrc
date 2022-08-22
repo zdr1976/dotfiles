@@ -10,7 +10,6 @@ endif
 call plug#begin('~/.vim/plugged')
 
 " Themes
-Plug 'joshdick/onedark.vim'
 Plug 'morhetz/gruvbox'
 
 " fzf
@@ -21,12 +20,9 @@ Plug 'junegunn/fzf.vim'
 " Syntax highlighting plugin for many languages.
 Plug 'sheerun/vim-polyglot'
 
-" Python
-Plug 'nvie/vim-flake8'
-
 " Go Lang
-Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
-"Plug 'govim/govim'
+"Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+Plug 'govim/govim'
 
 " Autocompletion
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -36,21 +32,12 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
 "  https://alldrops.info/posts/vim-drops/2018-08-21_become-a-html-ninja-with-emmet-for-vim/
 Plug 'mattn/emmet-vim'
 
-" Line indentation
-Plug 'Yggdroot/indentLine'
-
 " Comment stuff
 Plug 'tpope/vim-commentary'
 
 " Git
 Plug 'tpope/vim-fugitive'
 "Plug 'airblade/vim-gitgutter'
-
-" base64
-Plug 'christianrondeau/vim-base64'
-
-" Plug for transparent editing of gpg encrypted files
-Plug 'jamessan/vim-gnupg'
 
 " Status line
 Plug 'vim-airline/vim-airline'
@@ -96,18 +83,18 @@ set nocursorcolumn              " Do not highlight column (speeds up highlightin
 "set nocursorline                " Do not highlight cursor (speeds up highlighting)
 set cursorline                  " Highlight current line
 "set lazyredraw                  " Wait to redraw
-set undolevels=1000				" How many undos
-set undoreload=1000				" number of lines to save for undo
-set history=1000				" Remember more commands and search history
-set nofoldenable				" Don't fold by default
-set tabstop=4					" Tabs will be displayed as 4 spaces
+set undolevels=1000             " How many undos
+set undoreload=1000             " number of lines to save for undo
+set history=1000                " Remember more commands and search history
+set nofoldenable                " Don't fold by default
+set tabstop=4                   " Tabs will be displayed as 4 spaces
 set shiftwidth=4                " Number of space characters inserted for indentation
 set expandtab                   " Insert space characters whenever the tab key is pressed
-set ttimeoutlen=10				" Key code delays
-set timeoutlen=1000				" Papping delays ms
+set ttimeoutlen=10              " Key code delays
+set timeoutlen=1000             " Papping delays ms
 set updatetime=100              " Smaller updatetime for CursorHold & CursorHoldI
-set t_RV=						" Get rid of termresponse
-set fo-=t						" Don't automatically wrap text when typing
+set t_RV=                       " Get rid of termresponse
+set fo-=t                       " Don't automatically wrap text when typing
 
 " Auto reload vimrc when it's saved
 autocmd! bufwritepost vimrc source %
@@ -126,23 +113,25 @@ augroup end
 augroup launguages
     autocmd!
     autocmd Filetype gitcommit setlocal spell textwidth=72
-    autocmd FileType python setlocal tabstop=4 softtabstop=4 shiftwidth=4 expandtab
-    autocmd BufNewFile,BufRead *.go setlocal noexpandtab tabstop=4 shiftwidth=4 softtabstop=4
+    "autocmd FileType python setlocal tabstop=4 softtabstop=4 shiftwidth=4 expandtab
+    "autocmd BufNewFile,BufRead *.go setlocal noexpandtab tabstop=4 shiftwidth=4 softtabstop=4
     autocmd BufRead,BufNewFile */playbooks/*.yml set filetype=ansible
     autocmd FileType yaml setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
     autocmd FileType json setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
-    autocmd FileType html,htmldjango setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
+    autocmd FileType html setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
     autocmd FileType javascript,typescript  setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
-    autocmd BufRead,BufNewFile *.proto set filetype=proto
-    autocmd BufNewFile,BufRead *.kubeconfig setlocal filetype=yaml
-    autocmd FileType c,go,python autocmd BufWritePre <buffer> :%s/\s\+$//e
-    autocmd ColorScheme * highlight ExtraWhitespace ctermbg=red guibg=red
+    "autocmd BufRead,BufNewFile *.proto set filetype=proto
+    "autocmd BufNewFile,BufRead *.kubeconfig setlocal filetype=yaml
+    "autocmd FileType c,go,python autocmd BufWritePre <buffer> :%s/\s\+$//e
+    "autocmd ColorScheme * highlight ExtraWhitespace ctermbg=red guibg=red
     autocmd InsertLeave * set nopaste " Disable paste mode when leaving Insert Mode
     "autocmd FileType json syntax match Comment +\/\/.\+$+ " JSON with C-style line (//) and block (/* */) comments
     "au filetype go inoremap <buffer> . .<C-x><C-o>
 augroup end
 
 " Enable to copy to clipboard for operations like yank, delete, change and put.
+" set clipboard=unnamedplus
+" set clipboard^=unnamed,unnamedplus
 if has('unnamedplus')
     set clipboard^=unnamed
     set clipboard^=unnamedplus
@@ -154,12 +143,11 @@ if has('persistent_undo')
     set undodir=~/.vim/undo/
 endif
 
-if executable('rg')
-    set grepprg=rg\ --color=never
-    let g:ctrlp_user_command = 'rg %s --files --color=never --glob ""'
-    let g:ctrlp_use_caching = 0
+" Suggestion: show info for completion candidates in a popup menu
+if has("patch-8.1.1904")
+  set completeopt+=popup
+  set completepopup=align:menu,border:off,highlight:Pmenu
 endif
-set wildignore+=*/.git/*,*/tmp/*,*.swp
 
 " Color scheme
 syntax enable
@@ -174,7 +162,6 @@ endif
 set colorcolumn=80
 
 try
-    "colorscheme onedark
     " Enable italic fonts
     let g:gruvbox_italic=1
     colorscheme gruvbox
@@ -194,6 +181,7 @@ highlight SpellLocal cterm=underline
 
 " Custom Invisibles
 set listchars=tab:»·,nbsp:+,trail:·,extends:→,precedes:←
+set showbreak=↳
 
 " F1-F12 key calls
 " F2: Disable formatting when pasting large chunks of code.
@@ -212,12 +200,6 @@ nnoremap <silent> <F5> :Ex<CR>
 "let g:netrw_liststyle = 3
 let g:netrw_banner = 0
 let g:netrw_winsize = 25
-
-" F7: Flake8 - static syntax and style checker for Python
-autocmd FileType python map <buffer> <F7> :call Flake8()<CR>
-
-" F9: Grep word under cursor
-map <F9> :execute "vimgrep /" . expand("<cword>") . "/j **" <Bar> cw<CR>
 
 " F12: Spell checking
 " Once the cursor is on the word, use z=, and Vim will suggest a list of
@@ -275,30 +257,6 @@ noremap <Leader>7 7gt
 noremap <Leader>8 8gt
 noremap <Leader>9 9gt
 noremap <Leader>0 :tablast<cr>
-
-" Sorting
-vnoremap <Leader>s :sort<CR>
-vnoremap <Leader>n :sort n<CR>
-
-" base64 - Fix for author reverse logic
-vnoremap <silent> <leader>b2a :call base64#v_atob()<cr>
-vnoremap <silent> <leader>a2b :call base64#v_btoa()<cr>
-
-" Open file in browser
-noremap <silent> <leader>p :exe ':silent !google-chrome %'<cr>:redraw!<CR>
-
-" JSON formating
-"nmap =j :%!python -m json.tool<cr>
-nmap =j :set syntax=json<cr>
-
-" HTML sytax on file
-nmap =h :set syntax=html<cr>
-
-" YAML sytax on file
-nmap =y :set syntax=yaml<cr>
-
-" Docker sytax on file
-nmap =d :set syntax=dockerfile<cr>
 
 "vim-fugitive
 nmap <leader>gs :Git<cr>
@@ -360,13 +318,22 @@ let g:fzf_colors =
 " - <leader>aap for current paragraph
 " - <leader>aw for current word
 vmap <leader>a <Plug>(coc-codeaction-selected)
-nmap <leader>a <Plug>(coc-codeaction-selected)
+nmap <leader>a <Plug>(coc-codeaction-selected)w
+
+" Make <CR> to accept selected completion item or notify coc.nvim to format
+" <C-g>u breaks current undo, please make your own choice.
+inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
+                              \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+
+" Use <c-space> to trigger completion.
+if has('nvim')
+  inoremap <silent><expr> <c-space> coc#refresh()
+else
+  inoremap <silent><expr> <c-@> coc#refresh()
+endif
 
 " Remove all whitespace
 map <Leader>w :%s/\s\+$//
-
-" Enter automatically into the files directory
-"autocmd BufEnter * silent! lcd %:p:h
 
 """"""""""""""""""""""
 "  Plugins settings  "
@@ -380,7 +347,6 @@ let g:airline#extensions#tabline#left_alt_sep = '|'
 let g:airline#extensions#tabline#tab_nr_type = 1
 let g:airline#extensions#tabline#show_close_button = 0
 let g:airline#extensions#tabline#show_buffers = 0
-"let g:airline_theme='onedark'
 let g:airline_theme='gruvbox'
 
 if !exists('g:airline_symbols')
@@ -402,38 +368,8 @@ let g:airline_symbols.maxlinenr= ''
 let g:airline#extensions#c_like_langs = ['c', 'cpp', 'go', 'javascript']
 let g:airline#extensions#tabline#fnamemod = ':t'
 
-" vim-go settings
-let g:go_highlight_build_constraints = 1
-let g:go_highlight_extra_types = 1
-let g:go_highlight_fields = 1
-let g:go_highlight_functions = 1
-let g:go_highlight_methods = 1
-let g:go_highlight_operators = 1
-let g:go_highlight_structs = 1
-let g:go_highlight_types = 1
-let g:go_auto_sameids = 1
-let g:go_auto_type_info = 1
-let g:go_fmt_command = "goimports"
-let g:go_bin_path = $HOME."/go/bin"
-
-" indentLine
-"let g:indentLine_enabled = 0
-"let g:indentLine_setColors = 0
-let g:indentLine_char = '¦'
-
 " emmet-vim
 let g:user_emmet_leader_key=','
-
-" vim-flake8
-let g:flake8_quickfix_height=12
-
-" NERDTree
-let g:NERDTreeShowHidden=1
-let g:NERDTreeQuitOnOpen = 1
-
-" Markdown
-let g:vim_markdown_conceal = 0
-let g:vim_markdown_conceal_code_blocks = 0
 
 " coc.nvim
 let g:coc_global_extensions = ['coc-sh', 'coc-git', 'coc-tsserver', 'coc-json', 'coc-yaml', 'coc-html', 'coc-css', 'coc-pyright', 'coc-go', 'coc-spell-checker', 'coc-prettier']
