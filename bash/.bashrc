@@ -1,9 +1,4 @@
 #!/bin/bash
-# If not running interactively, don't do anything.
-case $- in
-	*i*) ;;
-	*) return;;
-esac
 
 # Simple OS detection in Bash using $OSTYPE.
 OS="UNKNOWN"
@@ -29,13 +24,13 @@ HISTCONTROL=ignoreboth
 shopt -s histappend
 
 # For setting history length see HISTSIZE and HISTFILESIZE in bash(1) man page.
-HISTSIZE=1000
+HISTSIZE=2000
 HISTFILESIZE=100000
 
 # Shorten the depth of directory
 PROMPT_DIRTRIM=2
 
-# Project DIR's
+# A colon-separated list of directories used as a search path for the cd builtin command.
 CDPATH=.:~:~/Projects/Work:~/Projects/Personal
 
 # Default editor.
@@ -59,7 +54,7 @@ fi
 # update the values of LINES and COLUMNS.
 shopt -s checkwinsize
 
-# Set shell prompt.
+# Set shell prompt to `starship` if installed.
 if [ -x "$(command -v starship)" ]; then
     eval "$(starship init bash)"
 else
@@ -68,23 +63,26 @@ else
     PROMPT_COMMAND=prompter
 fi
 
+# Dynamic updater for PS1.
 prompter() {
     # Colors http://misc.flogisoft.com/bash/tip_colors_and_formatting
     BOLD_GREEN="\e[1;32m"
     BOLD_YELLOW="\e[1;33m"
-    BOLD_RED="\e[1;31m"
-    BOLD_WHITE="\e[1;37m"
+    # BOLD_RED="\e[1;31m"
+    # BOLD_WHITE="\e[1;37m"
     BOLD_BLUE="\e[1;34m"
     BOLD_PURPLE="\e[1;35m"
-    BOLD_CYAN="\e[1;36m"
+    # BOLD_CYAN="\e[1;36m"
     RESET_TEXT="\e[1;0m"
 
-    # Choice one from examples above
-    PS1="\[$BOLD_GREEN\]\u@\h\[$BOLD_YELLOW\] \w\[$BOLD_BLUE\]\$(parse_git_branch)\[$BOLD_PURPLE\]\$(parse_k8s_context)\[$BOLD_YELLOW\] $ \[$RESET_TEXT\]"
+	# Uncoment this line if your system is not UTF-8 ready.
+    # PS1="\[$BOLD_GREEN\]@\h\[$BOLD_YELLOW\] \w\[$BOLD_BLUE\]\$(parse_git_branch)\[$BOLD_PURPLE\]\$(parse_k8s_context)\[$BOLD_YELLOW\] $ \[$RESET_TEXT\]"
+    # Uncomment this on UTF-8 compatible system.
+    PS1="\[$BOLD_GREEN\]@\h\[$BOLD_YELLOW\] \w\[$BOLD_BLUE\]\$(parse_git_branch)\[$BOLD_PURPLE\]\$(parse_k8s_context)\[$BOLD_YELLOW\] → \[$RESET_TEXT\]"
 
     # Python venv
     if [[ -n $VIRTUAL_ENV ]]; then
-        PS1="(`basename \"$VIRTUAL_ENV\"`) $PS1"
+        PS1="$(basename "$VIRTUAL_ENV") $PS1"
     fi
 
     export PS1
@@ -127,7 +125,7 @@ alias ll='ls -lA'
 
 # Source another Aliases from external file (if exists).
 if [ -f ~/.aliases ]; then
-	. ~/.aliases
+	. "$HOME"/.aliases
 fi
 
 # Create user bash completion directory if not already exists. This will
@@ -151,11 +149,6 @@ kexec() {
     kubectl exec -it "$1" -- sh
 }
 
-if [ -x "$(command -v kubectl)" ]; then
-    # source <(kubectl completion bash)
-    [ -s ~/.bash_completions/kubectl.sh ] || kubectl completion bash > ~/.bash_completions/kubectl.sh
-fi
-
 # Git
 alias g='git'
 
@@ -170,18 +163,8 @@ gli () {
 FZF-EOF" --preview-window=right:60%
 }
 
-########
-# Node #
-########
-if [ -x "$(command -v npm)" ]; then
-    # source <(npm completion)
-    [ -s ~/.bash_completions/npm.sh ] || npm completion > ~/.bash_completions/npm.sh
-fi
-
-########################
-# Node version manager #
-########################
-# Install
+# Node version manager
+# Install:
 # - Linux install via curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
 # - Mac install via brew install nvm
 mkdir -p ~/.nvm
@@ -192,6 +175,18 @@ if [ "$OS" == "OSX" ]; then
 else
     [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
     [ -s "$NVM_DIR/bash_completions" ] && \. "$NVM_DIR/bash_completions"  # This loads nvm bash_completions
+fi
+
+# Generate npm completetion.
+if [ -x "$(command -v npm)" ]; then
+    # source <(npm completion)
+    [ -s ~/.bash_completions/npm.sh ] || npm completion > ~/.bash_completions/npm.sh
+fi
+
+# Generate kubectl completetion.
+if [ -x "$(command -v kubectl)" ]; then
+    # source <(kubectl completion bash)
+    [ -s ~/.bash_completions/kubectl.sh ] || kubectl completion bash > ~/.bash_completions/kubectl.sh
 fi
 
 # Enable programmable completion features (you don't need to enable
@@ -226,16 +221,6 @@ fi
 export GOPATH=$HOME/go
 export GOROOT=$HOME/bin/go
 export PATH=$GOROOT/bin:$GOPATH:bin:$PATH
-
-# PYTHON
-# - Temporarily turn off restriction for pip.
-gpip(){
-	PIP_REQUIRE_VIRTUALENV="" pip "$@"
-}
-
-gpip3(){
-    PIP_REQUIRE_VIRTUALENV="" pip3 "$@"
-}
 
 # Uncomment this line if your terminal doesn't propagate 256 colors support.
 TERM=xterm-256color
