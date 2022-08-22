@@ -48,8 +48,6 @@ if [ "$OS" == "OSX" ]; then
     export PATH="$HOMEBREW_PREFIX/opt/coreutils/libexec/gnubin:$PATH"
     # Some cmd aplication store config in .config directory.
     mkdir -p .config
-    # Load SSH keys from keychain
-    ssh-add --apple-load-keychain
 fi
 
 # Check the window size after each command and, if necessary,

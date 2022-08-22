@@ -85,8 +85,6 @@ if [ "$OS" = "OSX" ]; then
     # Some cmd aplication store config in .config directory.
     mkdir -p .config
     zstyle ':completion:*' list-colors $LSCOLORS
-    # Load ssh keys from keychain
-    ssh-add --apple-load-keychain
 elif [ "$OS" = "LINUX" ]; then
     zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 fi
