@@ -45,7 +45,7 @@ if [ "$OS" == "OSX" ]; then
     export LSCOLORS="GxFxCxDxBxegedabagaced"
     eval "$(/opt/homebrew/bin/brew shellenv)"
     # coreutils (command like GNU ls) need to be installed via brew first.
-    export PATH="/opt/homebrew/opt/coreutils/libexec/gnubin:$PATH"
+    export PATH="$HOMEBREW_PREFIX/opt/coreutils/libexec/gnubin:$PATH"
     # Some cmd aplication store config in .config directory.
     mkdir -p .config
 fi
@@ -170,8 +170,8 @@ FZF-EOF" --preview-window=right:60%
 mkdir -p ~/.nvm
 export NVM_DIR="$HOME/.nvm"
 if [ "$OS" == "OSX" ]; then
-    [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
-    [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+    [ -s "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" ] && \. "$HOMEBREW_PREFIX/opt/nvm/nvm.sh"  # This loads nvm
+    [ -s "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" ] && \. "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
 else
     [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
     [ -s "$NVM_DIR/bash_completions" ] && \. "$NVM_DIR/bash_completions"  # This loads nvm bash_completions
@@ -219,7 +219,11 @@ fi
 
 # GO LANG
 export GOPATH=$HOME/go
-export GOROOT=$HOME/bin/go
+if [ "$OS" = "OSX" ]; then
+    export GOROOT=$HOMEBREW_PREFIX/opt/go/libexec/go
+else
+    export GOROOT=$HOME/bin/go
+fi
 export PATH=$GOROOT/bin:$GOPATH:bin:$PATH
 
 # Uncomment this line if your terminal doesn't propagate 256 colors support.
