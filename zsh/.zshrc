@@ -84,6 +84,9 @@ if [ "$OS" = "OSX" ]; then
     export PATH="$HOMEBREW_PREFIX/opt/coreutils/libexec/gnubin:$PATH"
     # Some cmd aplication store config in .config directory.
     mkdir -p .config
+    if [[ -z "$LC_ALL" ]]; then
+        export LC_ALL='en_IE.UTF-8'
+    fi
     zstyle ':completion:*' list-colors $LSCOLORS
 elif [ "$OS" = "LINUX" ]; then
     zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}

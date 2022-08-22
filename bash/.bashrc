@@ -48,6 +48,10 @@ if [ "$OS" == "OSX" ]; then
     export PATH="$HOMEBREW_PREFIX/opt/coreutils/libexec/gnubin:$PATH"
     # Some cmd aplication store config in .config directory.
     mkdir -p .config
+    # Fix locales
+    if [[ -z "$LC_ALL" ]]; then
+        export LC_ALL='en_IE.UTF-8'
+    fi
 fi
 
 # Check the window size after each command and, if necessary,
