@@ -138,10 +138,13 @@ fi
 alias k='kubectl'
 complete -F __start_kubectl k
 
-# alias for `k8s-kx`
-kx() {
-    eval "$(k8s-kx)"
+# Select from multiple k8s clusters configurations.
+kc() {
+    local k8s_config
+    k8s_config=$(find "$HOME"/.kube/ -type f -not -path "$HOME/.kube/old-config/*" \( -iname '*.yaml' -o -iname '*.yml' -o -iname '*.conf' -o -iname 'config' \) | fzf)
+    export KUBECONFIG="$k8s_config"
 }
+
 
 # alias for `kubectl exec`
 kexec() {
