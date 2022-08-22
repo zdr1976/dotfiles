@@ -14,11 +14,14 @@ Plug 'morhetz/gruvbox'
 
 " fzf
 " if binary is already installed this line is not needed.
-"Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 
 " Syntax highlighting plugin for many languages.
 Plug 'sheerun/vim-polyglot'
+
+" File manager
+Plug 'preservim/nerdtree'
 
 " Go Lang
 "Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
@@ -194,6 +197,9 @@ imap <silent> <F3> <C-o>:set number! number?<CR>
 " F4: Toggle list (display unprintable characters).
 nnoremap <silent> <F4> :silent set list! list?<CR>
 
+" F5: Show NERDTree.
+nnoremap <silent> <F5> :NERDTreeToggle<CR>
+
 " F5: Show netrw.
 nnoremap <silent> <F5> :Ex<CR>
 " Custom settings fror netrw
@@ -233,10 +239,10 @@ nnoremap <C-DOWN> <C-W><C-J>
 nnoremap <C-LEFT> <C-W><C-H>
 nnoremap <C-RIGHT> <C-W><C-L>
 " Navigating requires you to press Ctrl first, then h,j,k,l
-"nnoremap <C-J> <C-W><C-J>
-"nnoremap <C-K> <C-W><C-K>
-"nnoremap <C-L> <C-W><C-L>
-"nnoremap <C-H> <C-W><C-H>
+nnoremap <C-J> <C-W><C-J>
+nnoremap <C-K> <C-W><C-K>
+nnoremap <C-L> <C-W><C-L>
+nnoremap <C-H> <C-W><C-H>
 
 " Use + and - to increase or decrease split windows by a sane amount.
 nnoremap <silent> + :exe "resize +10"<CR>
@@ -370,6 +376,10 @@ let g:airline#extensions#tabline#fnamemod = ':t'
 
 " emmet-vim
 let g:user_emmet_leader_key=','
+
+" NERDTree
+let g:NERDTreeShowHidden = 1
+let g:NERDTreeQuitOnOpen = 1
 
 " coc.nvim
 let g:coc_global_extensions = ['coc-sh', 'coc-git', 'coc-tsserver', 'coc-json', 'coc-yaml', 'coc-html', 'coc-css', 'coc-pyright', 'coc-go', 'coc-spell-checker', 'coc-prettier']
