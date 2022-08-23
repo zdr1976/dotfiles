@@ -14,7 +14,7 @@ Plug 'morhetz/gruvbox'
 
 " fzf
 " if binary is already installed this line is not needed.
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+" Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 
 " Syntax highlighting plugin for many languages.
@@ -199,13 +199,6 @@ nnoremap <silent> <F4> :silent set list! list?<CR>
 
 " F5: Show NERDTree.
 nnoremap <silent> <F5> :NERDTreeToggle<CR>
-
-" F5: Show netrw.
-nnoremap <silent> <F5> :Ex<CR>
-" Custom settings fror netrw
-"let g:netrw_liststyle = 3
-let g:netrw_banner = 0
-let g:netrw_winsize = 25
 
 " F12: Spell checking
 " Once the cursor is on the word, use z=, and Vim will suggest a list of
