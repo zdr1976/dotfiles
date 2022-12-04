@@ -14,7 +14,7 @@ Plug 'morhetz/gruvbox'
 
 " fzf
 " if binary is already installed this line is not needed.
-" Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 
 " Syntax highlighting plugin for many languages.
