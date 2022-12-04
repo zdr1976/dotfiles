@@ -26,6 +26,10 @@ shopt -s histappend
 # For setting history length see HISTSIZE and HISTFILESIZE in bash(1) man page.
 HISTSIZE=2000
 HISTFILESIZE=100000
+# Remap terminal freeze/XOFF to allow forward search in bash history.
+# By default Ctrl+s is mappeed to XOFF with this remap Ctrl+p (pause) will
+# freeze termional and Ctrl+q still unfreeeze it.
+stty stop '^P'
 
 # Shorten the depth of directory
 PROMPT_DIRTRIM=2
