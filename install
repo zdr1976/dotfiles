@@ -71,11 +71,11 @@ if [ "$STOW" == "yes" ];
 then
     echo "Installing the dotfiles to HOME directory."
     git_config_templating
-    stow -St ~ "${STOW_PACKAGE_LIST}"
+    stow -S -t "$HOME" -d "$(pwd)" "${STOW_PACKAGE_LIST}"
 # Unstow the dotfiles from user HOME directory
 elif [ "$UNSTOW" == "yes" ];
 then
     echo "Uninstalling the dotfiles from the HOME directory."
-    stow -Dt ~ "${STOW_PACKAGE_LIST}"
+    stow -D -t "$HOME" -d "$(pwd)" "${STOW_PACKAGE_LIST}"
     rm -rf "${LOCATION}/git"
 fi
