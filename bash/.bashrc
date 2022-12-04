@@ -1,22 +1,5 @@
 #!/bin/bash
 
-# Simple OS detection in Bash using $OSTYPE.
-OS="UNKNOWN"
-case "$OSTYPE" in
-	darwin*)
-		OS="OSX"
-		;;
-	linux*)
-		OS="LINUX"
-		;;
-    dragonfly*|freebsd*|netbsd*|openbsd*)
-        OS="BSD"
-        ;;
-	*)
-		OS="UNKNOWN"
-		;;
-esac
-
 # Don't put duplicate lines or lines starting with space in the history.
 HISTCONTROL=ignoreboth
 
@@ -24,8 +7,9 @@ HISTCONTROL=ignoreboth
 shopt -s histappend
 
 # For setting history length see HISTSIZE and HISTFILESIZE in bash(1) man page.
-HISTSIZE=2000
+HISTSIZE=10000
 HISTFILESIZE=100000
+
 # Remap terminal freeze/XOFF to allow forward search in bash history.
 # By default Ctrl+s is mappeed to XOFF with this remap Ctrl+p (pause) will
 # freeze termional and Ctrl+q still unfreeeze it.
@@ -40,22 +24,28 @@ CDPATH=.:~:~/Projects/Work:~/Projects/Personal
 # Default editor.
 export EDITOR=vim
 
-# Add local ~/bin and ~/.local/bin to PATH
-export PATH=~/bin:~/.local/bin:$PATH
+# Add local ~/bin to PATH
+export PATH=~/bin:$PATH
 
-# Only apply for MacOS system.
-if [ "$OS" == "OSX" ]; then
-    export CLICOLOR=1
-    export LSCOLORS="GxFxCxDxBxegedabagaced"
-    eval "$(/opt/homebrew/bin/brew shellenv)"
-    # coreutils (command like GNU ls) need to be installed via brew first.
-    export PATH="$HOMEBREW_PREFIX/opt/coreutils/libexec/gnubin:$PATH"
-    # Some cmd aplication store config in .config directory.
-    mkdir -p .config
-    # Fix locales
-    if [[ -z "$LC_ALL" ]]; then
-        export LC_ALL='en_IE.UTF-8'
-    fi
+# MacOS ls show colors only if the CLICOLOR environment variable is set or if -G is passed on the command line.
+export CLICOLOR=1
+# The actual colors are configured through the LSCOLORS environment variable (built-in defaults are used if this variable is not set).
+export LSCOLORS="GxFxCxDxBxegedabagaced"
+
+# Set PATH, MANPATH, etc., for Homebrew.
+eval "$(/opt/homebrew/bin/brew shellenv)"
+# Prefer GNU command (like ls) instead of MacOS. Coreutils package need to be installed via brew first (brew install coreutils).
+BREW_PREFIX="$(brew --prefix)"
+export PATH="$BREW_PREFIX/opt/coreutils/libexec/gnubin:$PATH"
+
+# Some application store configuration in ~/.config directory.
+mkdir -p ~/.config
+# Create local bash completion directory if not already exists. This is used for kubernetes and npm completion files here.
+[ -d ~/.bash_completions ] || mkdir ~/.bash_completions
+
+# Fix locales
+if [[ -z "$LC_ALL" ]]; then
+    export LC_ALL='en_IE.UTF-8'
 fi
 
 # Check the window size after each command and, if necessary,
@@ -98,7 +88,7 @@ prompter() {
 
 # Helper function to set Git branch in shell prompt.
 parse_git_branch() {
-	# Uncoment this line if your system is not UTF-8 ready.
+	# Uncomment this line if your system is not UTF-8 ready.
 	# git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ git:\1/'
 	# Uncomment this on UTF-8 compatible system.
 	git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ ⎇  \1/'
@@ -107,42 +97,48 @@ parse_git_branch() {
 # Helper function to set kubernetes context in shell prompt.
 parse_k8s_context() {
     if [ -z "$KUBECONFIG" ]; then
-    return
+        return
     fi
 
     local context namespace
-    context=$(yq e '.current-context // ""' "$KUBECONFIG")
-    namespace=$(yq e "(.contexts[] | select(.name == \"$context\").context.namespace) // \"\"" "$KUBECONFIG")
+    if [ -x "$(command -v yq)" ]; then
+        context=$(yq e '.current-context // ""' "$KUBECONFIG")
+        namespace=$(yq e "(.contexts[] | select(.name == \"$context\").context.namespace) // \"\"" "$KUBECONFIG")
+    fi
 
     if [[ -n $context ]] && [[ -n $namespace ]]; then
-    echo -n " (k8s:$context/$namespace)"
-    # elif [[ -n $context ]] ; then
-    #   echo -n " (k8s:$context)"
+        echo -n " (k8s:$context/$namespace)"
+    elif [[ -n $context ]] ; then
+        echo -n " (k8s:$context)"
     fi
 }
 
 # Some nice aliases to have
-alias diff='colordiff'
+alias diff='diff --color'
 alias git-cloc='git ls-files | xargs cloc'
 alias sup='sudo -i'
 alias ls='ls --color --group-directories-first'
 alias ll='ls -lA'
+# Some new age command replacement (like axa, zoxide, etc.)
 #alias ls='exa'
 #alias ll='exa -alh'
 #alias tree='exa --tree'
+# Kubernetes
+alias k='kubectl'
+alias kgp='kubectl get pods'
+#alias kgj='kubectl get jobs'
+#alias kga='kubectl get all'
+#alias kgpv='kubectl get pvc'
+#alias kgsv='kubectl get svc'
+#alias kgl='kubectl logs'
+complete -F __start_kubectl k
+# Git
+alias g='git'
 
 # Source another Aliases from external file (if exists).
 if [ -f ~/.aliases ]; then
 	. "$HOME"/.aliases
 fi
-
-# Create user bash completion directory if not already exists. This will
-# will be used for kubernetes and npm completion files.
-[ -d ~/.bash_completions ] || mkdir ~/.bash_completions
-
-# Kubernetes
-alias k='kubectl'
-complete -F __start_kubectl k
 
 # Select from multiple k8s clusters configurations.
 kc() {
@@ -151,14 +147,10 @@ kc() {
     export KUBECONFIG="$k8s_config"
 }
 
-
 # alias for `kubectl exec`
 kexec() {
     kubectl exec -it "$1" -- sh
 }
-
-# Git
-alias g='git'
 
 gli () {
   git log --graph --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr"  | \
@@ -173,17 +165,13 @@ FZF-EOF" --preview-window=right:60%
 
 # Node version manager
 # Install:
-# - Linux install via curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
 # - Mac install via brew install nvm
 mkdir -p ~/.nvm
 export NVM_DIR="$HOME/.nvm"
-if [ "$OS" == "OSX" ]; then
-    [ -s "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" ] && \. "$HOMEBREW_PREFIX/opt/nvm/nvm.sh"  # This loads nvm
-    [ -s "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" ] && \. "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
-else
-    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-    [ -s "$NVM_DIR/bash_completions" ] && \. "$NVM_DIR/bash_completions"  # This loads nvm bash_completions
-fi
+# This loads nvm
+[ -s "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" ] && \. "$HOMEBREW_PREFIX/opt/nvm/nvm.sh"
+# This loads nvm bash_completion
+[ -s "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" ] && \. "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm"
 
 # Generate npm completetion.
 if [ -x "$(command -v npm)" ]; then
@@ -201,21 +189,10 @@ fi
 # this, if it's already enabled in /etc/bash.bashrc or /etc/profile).
 # If not sources particular file.
 if ! shopt -oq posix; then
-	# Linux system.
-	if [ "$OS" == "LINUX" ]; then
-        if [ -f /etc/profile.d/bash_completion.sh ]; then
-            . /etc/profile.d/bash_completion.sh
-		elif [ -f /usr/share/bash-completion/bash_completions ]; then
-			. /usr/share/bash-completion/bash_completions
-		elif [ -f /etc/bash_completions ]; then
-			. /etc/bash_completions
-		fi
-	# MacOS system.
-	elif [ "$OS" == "OSX" ]; then
-		if [ -f /opt/homebrew/etc/profile.d/bash_completion.sh ]; then
-			. /opt/homebrew/etc/profile.d/bash_completion.sh
-		fi
-	fi
+	# MacOS system with Homebrew.
+    if [ -f "$HOMEBREW_PREFIX/etc/profile.d/bash_completion.sh" ]; then
+        . "$HOMEBREW_PREFIX/etc/profile.d/bash_completion.sh"
+    fi
     # Load local bash autocompletion files.
     if [ -d ~/.bash_completions ]; then
         for f in ~/.bash_completions/*.sh; do
@@ -224,15 +201,3 @@ if ! shopt -oq posix; then
         done
     fi
 fi
-
-# GO LANG
-export GOPATH=$HOME/go
-if [ "$OS" = "OSX" ]; then
-    export GOROOT=$HOMEBREW_PREFIX/opt/go/libexec
-else
-    export GOROOT=$HOME/bin/go
-fi
-export PATH=$GOROOT/bin:$GOPATH:bin:$PATH
-
-# Uncomment this line if your terminal doesn't propagate 256 colors support.
-TERM=xterm-256color
