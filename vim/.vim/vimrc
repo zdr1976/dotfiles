@@ -115,7 +115,7 @@ augroup numbertoggle
 augroup end
 
 " Languages settings
-augroup launguages
+augroup languages
     autocmd!
     autocmd Filetype gitcommit setlocal spell textwidth=72
     "autocmd FileType python setlocal tabstop=4 softtabstop=4 shiftwidth=4 expandtab
@@ -167,7 +167,7 @@ endif
 set colorcolumn=80
 
 try
-    " Enable italic fonts
+    " Enable italic font
     let g:gruvbox_italic=1
     colorscheme gruvbox
 catch /^Vim\%((\a\+)\)\=:E185/
@@ -176,15 +176,15 @@ endtry
 
 " Spell checking change highlighting to underline
 highlight clear SpellBad
-highlight SpellBad cterm=underline
+highlight SpellBad cterm=underline ctermbg=66 ctermfg=235
 highlight clear SpellRare
-highlight SpellRare cterm=underline
+highlight SpellRare cterm=underline ctermbg=66 ctermfg=235
 highlight clear SpellCap
-highlight SpellCap cterm=underline
+highlight SpellCap cterm=underline ctermbg=66 ctermfg=235
 highlight clear SpellLocal
-highlight SpellLocal cterm=underline
+highlight SpellLocal cterm=underline ctermbg=66 ctermfg=235
 
-" Custom Invisibles
+" Custom Invisible
 set listchars=tab:»·,nbsp:+,trail:·,extends:→,precedes:←
 set showbreak=↳
 
@@ -223,9 +223,9 @@ vnoremap > >gv
 "map <leader>f gg=G
 
 " Bind nohl
-noremap <silent> <C-h> :nohl<CR>
-vnoremap <silent> <C-h> :nohl<CR>
-inoremap <silent> <C-h> :nohl<CR>
+noremap <silent> <C-n> :nohl<CR>
+vnoremap <silent> <C-n> :nohl<CR>
+inoremap <silent> <C-n> :nohl<CR>
 
 " Easy window navigation
 " Navigating requires you to press Ctrl first, then a navigation keys
