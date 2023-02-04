@@ -1,22 +1,5 @@
 #!/bin/bash
 
-# Simple OS detection in Bash using $OSTYPE.
-OS="UNKNOWN"
-case "$OSTYPE" in
-	darwin*)
-		OS="OSX"
-		;;
-	linux*)
-		OS="LINUX"
-		;;
-    dragonfly*|freebsd*|netbsd*|openbsd*)
-        OS="BSD"
-        ;;
-	*)
-		OS="UNKNOWN"
-		;;
-esac
-
 # Don't put duplicate lines or lines starting with space in the history.
 HISTCONTROL=ignoreboth
 
@@ -24,7 +7,7 @@ HISTCONTROL=ignoreboth
 shopt -s histappend
 
 # For setting history length see HISTSIZE and HISTFILESIZE in bash(1) man page.
-HISTSIZE=2000
+HISTSIZE=10000
 HISTFILESIZE=100000
 # Remap terminal freeze/XOFF to allow forward search in bash history.
 # By default Ctrl+s is mappeed to XOFF with this remap Ctrl+p (pause) will
@@ -42,21 +25,6 @@ export EDITOR=vim
 
 # Add local ~/bin and ~/.local/bin to PATH
 export PATH=~/bin:~/.local/bin:$PATH
-
-# Only apply for MacOS system.
-if [ "$OS" == "OSX" ]; then
-    export CLICOLOR=1
-    export LSCOLORS="GxFxCxDxBxegedabagaced"
-    eval "$(/opt/homebrew/bin/brew shellenv)"
-    # coreutils (command like GNU ls) need to be installed via brew first.
-    export PATH="$HOMEBREW_PREFIX/opt/coreutils/libexec/gnubin:$PATH"
-    # Some cmd aplication store config in .config directory.
-    mkdir -p .config
-    # Fix locales
-    if [[ -z "$LC_ALL" ]]; then
-        export LC_ALL='en_IE.UTF-8'
-    fi
-fi
 
 # Check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
@@ -122,7 +90,7 @@ parse_k8s_context() {
 }
 
 # Some nice aliases to have
-alias diff='colordiff'
+alias diff='diff --color'
 alias git-cloc='git ls-files | xargs cloc'
 alias sup='sudo -i'
 alias ls='ls --color --group-directories-first'
@@ -147,7 +115,7 @@ complete -F __start_kubectl k
 # Select from multiple k8s clusters configurations.
 kc() {
     local k8s_config
-    k8s_config=$(find "$HOME"/.kube/ -type f -not -path "$HOME/.kube/old-config/*" \( -iname '*.yaml' -o -iname '*.yml' -o -iname '*.conf' -o -iname 'config' \) | fzf)
+    k8s_config=$(find "$HOME"/.kube/ -type f -not -path "$HOME/.kube/old-config/*" \( -iname '*.yaml' -o -iname '*.yml' -o -iname '*.conf' -o -iname '*.kube' -o -iname 'config' \) | fzf)
     export KUBECONFIG="$k8s_config"
 }
 
@@ -177,13 +145,10 @@ FZF-EOF" --preview-window=right:60%
 # - Mac install via brew install nvm
 mkdir -p ~/.nvm
 export NVM_DIR="$HOME/.nvm"
-if [ "$OS" == "OSX" ]; then
-    [ -s "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" ] && \. "$HOMEBREW_PREFIX/opt/nvm/nvm.sh"  # This loads nvm
-    [ -s "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" ] && \. "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
-else
-    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-    [ -s "$NVM_DIR/bash_completions" ] && \. "$NVM_DIR/bash_completions"  # This loads nvm bash_completions
-fi
+# This loads nvm
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+# This loads nvm bash_completions
+[ -s "$NVM_DIR/bash_completions" ] && \. "$NVM_DIR/bash_completions"
 
 # Generate npm completetion.
 if [ -x "$(command -v npm)" ]; then
@@ -202,20 +167,13 @@ fi
 # If not sources particular file.
 if ! shopt -oq posix; then
 	# Linux system.
-	if [ "$OS" == "LINUX" ]; then
-        if [ -f /etc/profile.d/bash_completion.sh ]; then
-            . /etc/profile.d/bash_completion.sh
-		elif [ -f /usr/share/bash-completion/bash_completions ]; then
-			. /usr/share/bash-completion/bash_completions
-		elif [ -f /etc/bash_completions ]; then
-			. /etc/bash_completions
-		fi
-	# MacOS system.
-	elif [ "$OS" == "OSX" ]; then
-		if [ -f /opt/homebrew/etc/profile.d/bash_completion.sh ]; then
-			. /opt/homebrew/etc/profile.d/bash_completion.sh
-		fi
-	fi
+    if [ -f /etc/profile.d/bash_completion.sh ]; then
+        . /etc/profile.d/bash_completion.sh
+    elif [ -f /usr/share/bash-completion/bash_completions ]; then
+        . /usr/share/bash-completion/bash_completions
+    elif [ -f /etc/bash_completions ]; then
+        . /etc/bash_completions
+    fi
     # Load local bash autocompletion files.
     if [ -d ~/.bash_completions ]; then
         for f in ~/.bash_completions/*.sh; do
@@ -225,14 +183,5 @@ if ! shopt -oq posix; then
     fi
 fi
 
-# GO LANG
-export GOPATH=$HOME/go
-if [ "$OS" = "OSX" ]; then
-    export GOROOT=$HOMEBREW_PREFIX/opt/go/libexec
-else
-    export GOROOT=$HOME/bin/go
-fi
-export PATH=$GOROOT/bin:$GOPATH:bin:$PATH
-
 # Uncomment this line if your terminal doesn't propagate 256 colors support.
-TERM=xterm-256color
+# TERM=xterm-256color
