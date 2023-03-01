@@ -37,6 +37,8 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 # Prefer GNU command (like ls) instead of MacOS. Coreutils package need to be installed via brew first (brew install coreutils).
 BREW_PREFIX="$(brew --prefix)"
 export PATH="$BREW_PREFIX/opt/coreutils/libexec/gnubin:$PATH"
+export PATH="$BREW_PREFIX/opt/gnu-tar/libexec/gnubin:$PATH"
+#export PATH="$BREW_PREFIX/opt/openjdk@17/bin:$PATH"
 
 # Some application store configuration in ~/.config directory.
 mkdir -p ~/.config
@@ -134,6 +136,11 @@ alias kgp='kubectl get pods'
 complete -F __start_kubectl k
 # Git
 alias g='git'
+# Speed-up start of Midnight Commander
+alias mc='mc --nosubshell'
+# Ansible 2.9 compatible with mitogen Project
+# - Must be installed first (brew install ansible@2.9)
+alias ansible-old='/opt/homebrew/opt/ansible@2.9/bin/ansible'
 
 # Source another Aliases from external file (if exists).
 if [ -f ~/.aliases ]; then
@@ -143,7 +150,7 @@ fi
 # Select from multiple k8s clusters configurations.
 kc() {
     local k8s_config
-    k8s_config=$(find "$HOME"/.kube/ -type f -not -path "$HOME/.kube/old-config/*" \( -iname '*.yaml' -o -iname '*.yml' -o -iname '*.conf' -o -iname 'config' \) | fzf)
+    k8s_config=$(find "$HOME"/.kube/ -type f -not -path "$HOME/.kube/old-config/*" \( -iname '*.yaml' -o -iname '*.yml' -o -iname '*.conf' -o -iname '*.kube' -o -iname 'config' \) | fzf)
     export KUBECONFIG="$k8s_config"
 }
 

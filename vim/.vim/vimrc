@@ -92,8 +92,8 @@ set undolevels=1000             " How many undos
 set undoreload=1000             " number of lines to save for undo
 set history=1000                " Remember more commands and search history
 set nofoldenable                " Don't fold by default
-set tabstop=4                   " Tabs will be displayed as 4 spaces
-set shiftwidth=4                " Number of space characters inserted for indentation
+set tabstop=2                   " Tabs will be displayed as 4 spaces
+set shiftwidth=2                " Number of space characters inserted for indentation
 set expandtab                   " Insert space characters whenever the tab key is pressed
 set ttimeoutlen=10              " Key code delays
 set timeoutlen=1000             " Papping delays ms
@@ -266,10 +266,10 @@ nmap <leader>gp :Gpush<cr>:GitGutter<cr>
 nmap <leader>gd :Gdiff<cr>
 
 " COC GoTo code navigation.
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
+nmap <silent>gd <Plug>(coc-definition)
+nmap <silent>gy <Plug>(coc-type-definition)
+nmap <silent>gi <Plug>(coc-implementation)
+nmap <silent>gr <Plug>(coc-references)
 
 " Use K to show documentation in preview window.
 nnoremap <silent> K :call <SID>show_documentation()<CR>
@@ -338,7 +338,6 @@ map <Leader>w :%s/\s\+$//
 """"""""""""""""""""""
 "  Plugins settings  "
 """"""""""""""""""""""
-
 " Airline
 let g:airline#extensions#branch#enabled = 1
 let g:airline#extensions#tabline#enabled = 1
