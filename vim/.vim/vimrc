@@ -18,6 +18,7 @@ Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 
 " Syntax highlighting plugin for many languages.
+" let g:polyglot_disabled = ['sh']
 Plug 'sheerun/vim-polyglot'
 
 " File manager
@@ -155,6 +156,7 @@ if has("patch-8.1.1904")
 endif
 
 " Color scheme
+filetype on
 syntax enable
 set background=dark
 
@@ -226,6 +228,12 @@ vnoremap > >gv
 noremap <silent> <C-n> :nohl<CR>
 vnoremap <silent> <C-n> :nohl<CR>
 inoremap <silent> <C-n> :nohl<CR>
+
+" Copy/paste from system clipboard
+noremap <Leader>y "*y
+noremap <Leader>p "*p
+noremap <Leader>Y "+y
+noremap <Leader>P "+p
 
 " Easy window navigation
 " Navigating requires you to press Ctrl first, then a navigation keys

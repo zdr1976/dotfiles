@@ -125,22 +125,7 @@ alias ll='ls -lA'
 #alias ls='exa'
 #alias ll='exa -alh'
 #alias tree='exa --tree'
-# Kubernetes
-alias k='kubectl'
-alias kgp='kubectl get pods'
-#alias kgj='kubectl get jobs'
-#alias kga='kubectl get all'
-#alias kgpv='kubectl get pvc'
-#alias kgsv='kubectl get svc'
-#alias kgl='kubectl logs'
-complete -F __start_kubectl k
-# Git
-alias g='git'
-# Speed-up start of Midnight Commander
-alias mc='mc --nosubshell'
-# Ansible 2.9 compatible with mitogen Project
-# - Must be installed first (brew install ansible@2.9)
-alias ansible-old='/opt/homebrew/opt/ansible@2.9/bin/ansible'
+alias mc='mc -uX' # Disable X and subshell to start quick on Mac
 
 # Source another Aliases from external file (if exists).
 if [ -f ~/.aliases ]; then
@@ -160,14 +145,14 @@ kexec() {
 }
 
 gli () {
-  git log --graph --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr"  | \
+  git log --graph --color=always --format="%C(red)%h%C(reset) %C(yellow)%d%C(reset) %s %C(green)(%cr) %C(bold blue)<%an>%C(reset)"  | \
    fzf --ansi --no-sort --reverse --tiebreak=index --preview \
    'f() { set -- $(echo -- "$@" | grep -o "[a-f0-9]\{7\}"); [ $# -eq 0 ] || git show --color=always $1 ; }; f {}' \
    --bind "q:abort,ctrl-m:execute:
                 (grep -o '[a-f0-9]\{7\}' | head -1 |
                 xargs -I % sh -c 'git show --color=always % | less -R') << 'FZF-EOF'
                 {}
-FZF-EOF" --preview-window=right:60%
+FZF-EOF" --preview-window=right:50%
 }
 
 # Node version manager
