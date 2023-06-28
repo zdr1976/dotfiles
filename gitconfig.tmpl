@@ -1,20 +1,30 @@
 [alias]
     st = status
     co = checkout
+    sw = switch
+    wt = worktree
     br = branch
     bra = branch -a
     brm = branch --merged
     brn = branch --no-merged
-    up = rebase
+    rb = rebase
+    mr = merge
     ci = commit
     df = diff
+    dfc = diff --cached
+    fe = fetch
+    feat = fetch --all --tags
+    feo = "!git fetch origin $(git rev-parse --abbrev-ref HEAD)"
     pu = push
-    pl = pull
     puo = "!git push origin $(git rev-parse --abbrev-ref HEAD)"
+    pl = pull
     plo = "!git pull origin $(git rev-parse --abbrev-ref HEAD)"
-    hist = log --pretty=format:\"%Cgreen%h %Creset%cd %Cblue[%cn] %Creset%s%C(yellow)%d%C(reset)\" --graph --date=relative --decorate --all
-    llog = log --graph --name-status --pretty=format:\"%C(red)%h %C(reset)(%cd) %C(green)%an %Creset%s %C(yellow)%d%Creset\" --date=relative
-    wt = worktree
+    hist = log --graph --pretty=format:'%C(red)%h%C(reset) %C(yellow)%d%C(reset) %s %C(green)(%cr) %C(bold blue)<%an>%C(reset)'
+    histn = "!f() { git log --graph --pretty=format:'%C(red)%h%C(reset) %C(yellow)%d%C(reset) %s %C(green)(%cr) %C(bold blue)<%an>%C(reset)' -n $1; }; f"
+    llog = log --graph --name-status --pretty=format:'%C(red)%h%C(reset) %C(yellow)%d%C(reset) %s %C(green)(%cr) %C(bold blue)<%an> %C(reset)'
+    llogn = "!f() { git log --graph --name-status --pretty=format:'%C(red)%h%C(reset) %C(yellow)%d%C(reset) %s %C(green)(%cr) %C(bold blue)<%an> %C(reset)' -n $1; }; f"
+    olog = log --oneline --pretty=format:'%C(red)%h%C(reset) %C(yellow)%d%C(reset) %s %C(green)(%cr) %C(bold blue)<%an>%C(reset)'
+    ologn = "!f() { git log --oneline --pretty=format:'%C(red)%h%C(reset) %C(yellow)%d%C(reset) %s %C(green)(%cr) %C(bold blue)<%an>%C(reset)' -n $1; }; f"
 [core]
     editor = vim
 [push]
