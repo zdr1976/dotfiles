@@ -61,7 +61,7 @@ git_config_templating() {
             echo "Please provide your name and email address to be used in .gitconfig file"
             read -r -p "Name: " name
             read -r -p "Email: " email
-            sed -e "s/{{NAME}}/$name/g" -e "s/{{EMAIL}}/$email/g" gitconfig.tmpl > "${LOCATION}/git/gitconfig"
+            sed -e "s/{{NAME}}/$name/g" -e "s/{{EMAIL}}/$email/g" gitconfig.tmpl > "${LOCATION}/git/.gitconfig"
             ;;
     esac
 }
