@@ -126,6 +126,9 @@ alias ll='ls -lA'
 #alias ll='exa -alh'
 #alias tree='exa --tree'
 alias mc='mc -uX' # Disable X and subshell to start quick on Mac
+# kubernetes
+alias k='kubectl'
+complete -F __start_kubectl k
 
 # Source another Aliases from external file (if exists).
 if [ -f ~/.aliases ]; then
