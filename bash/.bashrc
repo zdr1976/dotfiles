@@ -32,6 +32,13 @@ CDPATH=.:~:~/Projects/Work:~/Projects/Personal
 
 # Default editor.
 export EDITOR=vim
+export VISUAL=vim
+
+if command -v nvim >/dev/null 2>&1; then
+    export EDITOR=nvim
+    export VISUAL=nvim
+    alias vim='nvim'
+fi
 
 # Cached prompt data for lightweight shell rendering.
 K8S_PROMPT_CONTEXT=""
