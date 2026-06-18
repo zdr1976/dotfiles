@@ -86,40 +86,20 @@ augroup vimrc
     autocmd BufWritePost vimrc source %
 augroup end
 
-" Automatic toggling between line number modes
-" - Relative line numbers are helpful when moving around in normal mode, but
-"   absolute line numbers are more suited for insert mode. When the buffer
-"   doesn’t have focus, it’d also be more useful to show absolute line numbers.
-"augroup numbertoggle
-"    autocmd!
-"    autocmd BufEnter,FocusGained,InsertLeave,WinEnter * if &nu && mode() != "i" | set rnu | endif
-"    autocmd BufLeave,FocusLost,InsertEnter,WinLeave * if &nu | set nornu | endif
-"augroup end
-
 " Languages settings
 augroup languages
     autocmd!
     autocmd Filetype gitcommit setlocal spell textwidth=72
-    "autocmd FileType python setlocal tabstop=4 softtabstop=4 shiftwidth=4 expandtab
-    "autocmd BufNewFile,BufRead *.go setlocal noexpandtab tabstop=4 shiftwidth=4 softtabstop=4
     autocmd BufRead,BufNewFile */playbooks/*.yml set filetype=ansible
     autocmd FileType yaml setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
     autocmd FileType json setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
     autocmd FileType html setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
     autocmd FileType javascript,typescript  setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
     autocmd FileType sh,bash setlocal tabstop=2 softtabstop=2 shiftwidth=2 expandtab
-    "autocmd BufRead,BufNewFile *.proto set filetype=proto
-    "autocmd BufNewFile,BufRead *.kubeconfig setlocal filetype=yaml
-    "autocmd FileType c,go,python autocmd BufWritePre <buffer> :%s/\s\+$//e
-    "autocmd ColorScheme * highlight ExtraWhitespace ctermbg=red guibg=red
     autocmd InsertLeave * set nopaste " Disable paste mode when leaving Insert Mode
-    "autocmd FileType json syntax match Comment +\/\/.\+$+ " JSON with C-style line (//) and block (/* */) comments
-    "au filetype go inoremap <buffer> . .<C-x><C-o>
 augroup end
 
 " Enable to copy to clipboard for operations like yank, delete, change and put.
-" set clipboard=unnamedplus
-" set clipboard^=unnamed,unnamedplus
 if has('unnamedplus')
     set clipboard^=unnamed
     set clipboard^=unnamedplus
@@ -214,7 +194,7 @@ vnoremap > >gv
 " Re-indent entire buffer
 "map <leader>f gg=G
 
-" Bind nohl
+" Clear search highlighting
 nnoremap <silent> <C-n> :nohlsearch<CR>
 vnoremap <silent> <C-n> :nohlsearch<CR>
 inoremap <silent> <C-n> <C-o>:nohlsearch<CR>
