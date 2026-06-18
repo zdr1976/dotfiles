@@ -17,10 +17,6 @@ Plug 'morhetz/gruvbox'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 
-" Syntax highlighting plugin for many languages.
-"let g:polyglot_disabled = ['sh']
-Plug 'sheerun/vim-polyglot'
-
 " File manager
 Plug 'preservim/nerdtree'
 " icons
