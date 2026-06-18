@@ -14,7 +14,7 @@ $line_break\
 $character"""
 
 [line_break]
-disabled = true
+disabled = false
 
 [hostname]
 ssh_only = false
@@ -27,7 +27,6 @@ format = "[$user@]($style)"
 disabled = true
 show_always = true
 
-
 [character]
 #success_symbol = "[➜](bold yellow)"
 #error_symbol = "[✗](bold red)"
@@ -36,9 +35,10 @@ error_symbol = "[➜](bold yellow)"
 
 [directory]
 style = "bold yellow"
-#truncate_to_repo = false
+truncate_to_repo = false
 truncation_length = 2
 truncation_symbol = "…/"
+fish_style_pwd_dir_length = 0
 
 [git_branch]
 symbol = "⎇  "
@@ -52,7 +52,7 @@ behind = "⇣${count}"
 
 [kubernetes]
 format = '[\($context(/$namespace)\)]($style) '
-#symbol = "☸ "
+#symbol = "☸"
 style = "purple bold"
 disabled = false
 
