@@ -19,12 +19,9 @@ Plug 'junegunn/fzf.vim'
 
 " File manager
 Plug 'preservim/nerdtree'
-" icons
-"Plug 'ryanoasis/vim-devicons'
 
 " Go Lang
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
-"Plug 'govim/govim'
 
 " Templ
 Plug 'joerdav/templ.vim'
@@ -42,11 +39,9 @@ Plug 'tpope/vim-commentary'
 
 " Git
 Plug 'tpope/vim-fugitive'
-"Plug 'airblade/vim-gitgutter'
 
 " Status line
 Plug 'vim-airline/vim-airline'
-"Plug 'vim-airline/vim-airline-themes'
 
 "call vundle#end()
 call plug#end()
