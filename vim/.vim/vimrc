@@ -26,11 +26,6 @@ Plug 'joerdav/templ.vim'
 " Autocompletion
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
-" Expanding abbreviations similar to emmet.
-"  https://medium.com/vim-drops/be-a-html-ninja-with-emmet-for-vim-feee15447ef1
-"  https://alldrops.info/posts/vim-drops/2018-08-21_become-a-html-ninja-with-emmet-for-vim/
-Plug 'mattn/emmet-vim'
-
 " Comment stuff
 Plug 'tpope/vim-commentary'
 
@@ -342,9 +337,6 @@ let g:airline_symbols.maxlinenr= ''
 " let g:airline#extensions#whitespace#mixed_indent_algo = 1
 let g:airline#extensions#c_like_langs = ['c', 'cpp', 'go', 'javascript']
 let g:airline#extensions#tabline#fnamemod = ':t'
-
-" emmet-vim
-let g:user_emmet_leader_key=','
 
 " NERDTree
 let g:NERDTreeShowHidden = 1
