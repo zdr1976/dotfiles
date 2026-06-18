@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# Only continue for interactive shells.
+case $- in
+    *i*) ;;
+    *) return ;;
+esac
+
 # Don't put duplicate lines or lines starting with space in the history.
 HISTCONTROL=ignoreboth
 
@@ -13,7 +19,10 @@ HISTFILESIZE=100000
 # Remap terminal freeze/XOFF to allow forward search in bash history.
 # By default Ctrl+s is mappeed to XOFF with this remap Ctrl+p (pause) will
 # freeze termional and Ctrl+q still unfreeeze it.
-stty stop '^P'
+# Only run stty when stdin is a real terminal to avoid warnings while sourcing.
+if [[ -t 0 ]]; then
+    stty stop '^P'
+fi
 
 # Shorten the depth of directory
 PROMPT_DIRTRIM=2
@@ -24,6 +33,9 @@ CDPATH=.:~:~/Projects/Work:~/Projects/Personal
 # Default editor.
 export EDITOR=vim
 
+# Cached prompt data for lightweight shell rendering.
+K8S_PROMPT_CONTEXT=""
+
 # Add local ~/bin to PATH
 export PATH=~/bin:$PATH
 
@@ -33,12 +45,20 @@ export CLICOLOR=1
 export LSCOLORS="GxFxCxDxBxegedabagaced"
 
 # Set PATH, MANPATH, etc., for Homebrew.
-eval "$(/opt/homebrew/bin/brew shellenv)"
+if [[ -x /opt/homebrew/bin/brew ]]; then
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+elif [[ -x /usr/local/bin/brew ]]; then
+    eval "$(/usr/local/bin/brew shellenv)"
+fi
+
+BREW_PREFIX="${HOMEBREW_PREFIX:-}"
+
 # Prefer GNU command (like ls) instead of MacOS. Coreutils package need to be installed via brew first (brew install coreutils).
-BREW_PREFIX="$(brew --prefix)"
-export PATH="$BREW_PREFIX/opt/coreutils/libexec/gnubin:$PATH"
-export PATH="$BREW_PREFIX/opt/gnu-tar/libexec/gnubin:$PATH"
-export PATH="$BREW_PREFIX/opt/openjdk/bin:$PATH"
+if [[ -n $BREW_PREFIX ]]; then
+    [[ -d "$BREW_PREFIX/opt/coreutils/libexec/gnubin" ]] && export PATH="$BREW_PREFIX/opt/coreutils/libexec/gnubin:$PATH"
+    [[ -d "$BREW_PREFIX/opt/gnu-tar/libexec/gnubin" ]] && export PATH="$BREW_PREFIX/opt/gnu-tar/libexec/gnubin:$PATH"
+    [[ -d "$BREW_PREFIX/opt/openjdk/bin" ]] && export PATH="$BREW_PREFIX/opt/openjdk/bin:$PATH"
+fi
 
 # Some application store configuration in ~/.config directory.
 mkdir -p ~/.config
@@ -94,29 +114,15 @@ prompter() {
 
 # Helper function to set Git branch in shell prompt.
 parse_git_branch() {
-    # Uncomment this line if your system is not UTF-8 ready.
-    # git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ git:\1/'
-    # Uncomment this on UTF-8 compatible system.
-    git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ ⎇  \1/'
+    local branch
+
+    branch="$(git branch --show-current 2>/dev/null)"
+    [[ -n $branch ]] && printf ' ⎇  %s' "$branch"
 }
 
 # Helper function to set kubernetes context in shell prompt.
 parse_k8s_context() {
-    if [ -z "$KUBECONFIG" ]; then
-        return
-    fi
-
-    local context namespace
-    if [ -x "$(command -v yq)" ]; then
-        context=$(yq e '.current-context // ""' "$KUBECONFIG")
-        namespace=$(yq e "(.contexts[] | select(.name == \"$context\").context.namespace) // \"\"" "$KUBECONFIG")
-    fi
-
-    if [[ -n $context ]] && [[ -n $namespace ]]; then
-        echo -n " (k8s:$context/$namespace)"
-    elif [[ -n $context ]] ; then
-        echo -n " (k8s:$context)"
-    fi
+    [[ -n $K8S_PROMPT_CONTEXT ]] && printf ' (k8s:%s)' "$K8S_PROMPT_CONTEXT"
 }
 
 # Some nice aliases to have
@@ -132,7 +138,6 @@ alias ll='ls -lA'
 alias mc='mc -uX' # Disable X and subshell to start quick on Mac
 # kubernetes
 alias k='kubectl'
-complete -F __start_kubectl k
 
 # Source another Aliases from external file (if exists).
 if [ -f ~/.aliases ]; then
@@ -158,27 +163,33 @@ kc() {
         return 1
     elif [[ "$k8s_config" == "[default]" ]]; then
         unset KUBECONFIG
+        K8S_PROMPT_CONTEXT="default"
         echo "KUBECONFIG unset (using default ~/.kube/config)."
     else
         export KUBECONFIG="$k8s_config"
+        K8S_PROMPT_CONTEXT="$(basename "$k8s_config")"
         echo "KUBECONFIG set to: $k8s_config"
     fi
 }
 
 
-gli () {
-    git log --graph --color=always --format="%C(red)%h%C(reset) %C(yellow)%d%C(reset) %s %C(green)(%cr) %C(bold blue)<%an>%C(reset)"  | \
-        fzf --ansi --no-sort --reverse --tiebreak=index --preview \
-        'f() { set -- $(echo -- "$@" | grep -o "[a-f0-9]\{7\}"); [ $# -eq 0 ] || git show --color=always $1 ; }; f {}' \
-        --bind "q:abort,ctrl-m:execute:
-            (grep -o '[a-f0-9]\{7\}' | head -1 |
-            xargs -I % sh -c 'git show --color=always % | less -R') << 'FZF-EOF'
-            {}
-FZF-EOF" --preview-window=right:50%
+gli() {
+    git log --color=always \
+        --format='%h%x09%C(yellow)%d%C(reset) %s %C(green)(%cr) %C(bold blue)<%an>%C(reset)' | \
+        fzf --ansi --no-sort --reverse --tiebreak=index \
+            --delimiter=$'\t' --with-nth=2.. \
+            --preview 'git show --color=always {1}' \
+            --bind 'q:abort,enter:execute(git show --color=always {1} | less -R)' \
+            --preview-window=right:50%
 }
 
 awsp() {
     AWS_PROFILE="$(aws configure list-profiles | fzf)"
+    if [[ -z $AWS_PROFILE ]]; then
+        echo "No selection. AWS_PROFILE unchanged."
+        return 1
+    fi
+
     export AWS_PROFILE
     echo "Switched to AWS profile '$AWS_PROFILE'."
 }
@@ -189,26 +200,29 @@ awsp() {
 mkdir -p ~/.nvm
 export NVM_DIR="$HOME/.nvm"
 # This loads nvm
-[ -s "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" ] && \. "$HOMEBREW_PREFIX/opt/nvm/nvm.sh"
+[ -n "$BREW_PREFIX" ] && [ -s "$BREW_PREFIX/opt/nvm/nvm.sh" ] && \. "$BREW_PREFIX/opt/nvm/nvm.sh"
 # This loads nvm bash_completion
-[ -s "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" ] && \. "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm"
+[ -n "$BREW_PREFIX" ] && [ -s "$BREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" ] && \. "$BREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm"
 
-# Generate npm completetion.
-if [ -x "$(command -v npm)" ]; then
-    # source <(npm completion)
-    [ -s ~/.bash_completions/npm.sh ] || npm completion > ~/.bash_completions/npm.sh
-fi
+# Run manually after installing or upgrading tools that provide completions.
+refresh-completions() {
+    mkdir -p ~/.bash_completions
 
-# Generate kubectl completetion.
-if [ -x "$(command -v kubectl)" ]; then
-    # source <(kubectl completion bash)
-    [ -s ~/.bash_completions/kubectl.sh ] || kubectl completion bash > ~/.bash_completions/kubectl.sh
-fi
+    if command -v npm >/dev/null 2>&1; then
+        npm completion > ~/.bash_completions/npm.sh
+    fi
+
+    if command -v kubectl >/dev/null 2>&1; then
+        kubectl completion bash > ~/.bash_completions/kubectl.sh
+    fi
+}
 
 # goenv
 export GOENV_ROOT="$HOME/.goenv"
 export PATH="$GOENV_ROOT/bin:$PATH"
-eval "$(goenv init - bash)"
+if command -v goenv >/dev/null 2>&1; then
+    eval "$(goenv init - bash)"
+fi
 
 # If Go is available, add GOPATH/bin to PATH
 if command -v go >/dev/null 2>&1; then
@@ -239,8 +253,8 @@ fi
 # If not sources particular file.
 if ! shopt -oq posix; then
 	# MacOS system with Homebrew.
-    if [ -f "$HOMEBREW_PREFIX/etc/profile.d/bash_completion.sh" ]; then
-        LANG=C source "$HOMEBREW_PREFIX/etc/profile.d/bash_completion.sh"
+    if [ -n "$BREW_PREFIX" ] && [ -f "$BREW_PREFIX/etc/profile.d/bash_completion.sh" ]; then
+        LANG=C source "$BREW_PREFIX/etc/profile.d/bash_completion.sh"
     fi
     # Load local bash autocompletion files.
     if [ -d ~/.bash_completions ]; then
@@ -251,7 +265,10 @@ if ! shopt -oq posix; then
     fi
 fi
 
+if declare -F __start_kubectl >/dev/null 2>&1; then
+    complete -F __start_kubectl k
+fi
+
 # Added by LM Studio CLI (lms)
 export PATH="$PATH:/Users/rastislav.slavicek/.lmstudio/bin"
 # End of LM Studio CLI section
-
