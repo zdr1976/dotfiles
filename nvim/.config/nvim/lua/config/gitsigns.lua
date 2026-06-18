@@ -1,6 +1,14 @@
 local M = {}
 
 function M.setup()
+  local set_hl = vim.api.nvim_set_hl
+
+  set_hl(0, "GitSignsAdd", { fg = "#282828", bg = "#b8bb3b" })
+  set_hl(0, "GitSignsChange", { fg = "#282828", bg = "#8ec07c" })
+  set_hl(0, "GitSignsDelete", { fg = "#282828", bg = "#eb4632" })
+  set_hl(0, "GitSignsChangedelete", { fg = "#282828", bg = "#8ec07c" })
+  set_hl(0, "GitSignsTopdelete", { fg = "#282828", bg = "#eb4632" })
+
   require("gitsigns").setup({
     signs = {
       add = { text = "+" },
