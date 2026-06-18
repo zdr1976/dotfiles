@@ -61,7 +61,6 @@ call plug#end()
 set nocompatible                " Enables us Vim specific features
 "filetype off                    " Reset filetype detection first ...
 "filetype plugin indent on       " ... and enable filetype detection
-set ttyfast                     " Indicate fast terminal conn for faster redraw
 "set ttymouse=xterm2             " Indicate terminal type for mouse codes
 "set ttyscroll=3                 " Speedup scrolling
 set laststatus=2                " Show status line always
@@ -102,7 +101,6 @@ set expandtab                   " Insert space characters whenever the tab key i
 set ttimeoutlen=10              " Key code delays
 set timeoutlen=1000             " Papping delays ms
 set updatetime=100              " Smaller updatetime for CursorHold & CursorHoldI
-set t_RV=                       " Get rid of termresponse
 set fo-=t                       " Don't automatically wrap text when typing
 
 " Auto reload vimrc when it's saved
@@ -219,7 +217,7 @@ nnoremap <silent> <F5> :NERDTreeToggle<CR>
 " F12: Spell checking
 " Once the cursor is on the word, use z=, and Vim will suggest a list of
 " alternatives that it thinks may be correct.
-map <silent> <F12> :set spell!<cr>
+nnoremap <silent> <F12> :set spell!<CR>
 
 " Change the mapleader from \ to ,
 let mapleader=","
@@ -237,9 +235,9 @@ vnoremap > >gv
 "map <leader>f gg=G
 
 " Bind nohl
-noremap <silent> <C-n> :nohl<CR>
-vnoremap <silent> <C-n> :nohl<CR>
-inoremap <silent> <C-n> :nohl<CR>
+nnoremap <silent> <C-n> :nohlsearch<CR>
+vnoremap <silent> <C-n> :nohlsearch<CR>
+inoremap <silent> <C-n> <C-o>:nohlsearch<CR>
 
 " Copy/paste from system clipboard
 noremap <Leader>y "*y
@@ -266,8 +264,8 @@ nnoremap <silent> <Leader>+ :exe "vertical resize +10"<CR>
 nnoremap <silent> <Leader>- :exe "vertical resize -10"<CR>
 
 " Tab navigation.
-map <Leader>n <esc>:tabprevious<CR>
-map <Leader>m <esc>:tabnext<CR>
+nnoremap <Leader>n :tabprevious<CR>
+nnoremap <Leader>m :tabnext<CR>
 noremap <Leader>1 1gt
 noremap <Leader>2 2gt
 noremap <Leader>3 3gt
@@ -280,10 +278,10 @@ noremap <Leader>9 9gt
 noremap <Leader>0 :tablast<cr>
 
 "vim-fugitive
-nmap <leader>gs :Git<cr>
-nmap <leader>gc :Git commit<cr>
-nmap <leader>gp :Gpush<cr>:GitGutter<cr>
-nmap <leader>gd :Gdiff<cr>
+nnoremap <leader>gs :Git<CR>
+nnoremap <leader>gc :Git commit<CR>
+nnoremap <leader>gp :Gpush<CR>
+nnoremap <leader>gd :Gdiff<CR>
 
 " COC GoTo code navigation.
 nmap <silent>gd <Plug>(coc-definition)
@@ -313,8 +311,8 @@ nmap <leader>f  <Plug>(coc-format-selected)
 
 "nmap <C-F> :FZF<CR>
 "nmap <C-P> :Files<CR>
-map <C-P> :GFiles<CR>
-nmap <C-G> :Rg<CR>
+nnoremap <C-P> :GFiles<CR>
+nnoremap <C-G> :Rg<CR>
 
 " Customize fzf colors to match your color scheme
 " - fzf#wrap translates this to a set of `--color` options
@@ -339,7 +337,7 @@ let g:fzf_colors =
 " - <leader>aap for current paragraph
 " - <leader>aw for current word
 vmap <leader>a <Plug>(coc-codeaction-selected)
-nmap <leader>a <Plug>(coc-codeaction-selected)w
+nmap <leader>a <Plug>(coc-codeaction-selected)
 
 " Make <CR> to accept selected completion item or notify coc.nvim to format
 " <C-g>u breaks current undo, please make your own choice.
@@ -354,7 +352,7 @@ else
 endif
 
 " Remove all whitespace
-map <Leader>w :%s/\s\+$//
+nnoremap <Leader>w :%s/\s\+$//<CR>
 
 """"""""""""""""""""""
 "  Plugins settings  "
