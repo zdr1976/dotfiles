@@ -8,6 +8,7 @@ local function apply_theme_overrides()
   set_hl(0, "NormalFloat", { fg = "#ebdbb2", bg = "#3c3836" })
   set_hl(0, "FloatBorder", { fg = "#665c54", bg = "#3c3836" })
   set_hl(0, "FloatTitle", { fg = "#83a598", bg = "#3c3836", bold = true })
+  set_hl(0, "CursorLineNr", { fg = "#fabd2f", bold = true })
   set_hl(0, "Pmenu", { fg = "#ebdbb2", bg = "#282828" })
   set_hl(0, "PmenuSel", { fg = "#282828", bg = "#83a598", bold = true })
   set_hl(0, "PmenuSbar", { bg = "#3c3836" })
@@ -32,6 +33,7 @@ opt.completeopt = { "menu", "menuone", "popup" }
 opt.pumheight = 10
 opt.cursorcolumn = false
 opt.cursorline = true
+opt.cursorlineopt = "number"
 opt.undolevels = 1000
 opt.undoreload = 1000
 opt.history = 1000
