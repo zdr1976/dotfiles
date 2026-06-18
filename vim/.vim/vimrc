@@ -20,9 +20,6 @@ Plug 'junegunn/fzf.vim'
 " File manager
 Plug 'preservim/nerdtree'
 
-" Go Lang
-Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
-
 " Templ
 Plug 'joerdav/templ.vim'
 
