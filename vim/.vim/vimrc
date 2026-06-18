@@ -226,16 +226,16 @@ nnoremap <silent> <Leader>- :exe "vertical resize -10"<CR>
 " Tab navigation.
 nnoremap <Leader>n :tabprevious<CR>
 nnoremap <Leader>m :tabnext<CR>
-noremap <Leader>1 1gt
-noremap <Leader>2 2gt
-noremap <Leader>3 3gt
-noremap <Leader>4 4gt
-noremap <Leader>5 5gt
-noremap <Leader>6 6gt
-noremap <Leader>7 7gt
-noremap <Leader>8 8gt
-noremap <Leader>9 9gt
-noremap <Leader>0 :tablast<cr>
+nnoremap <Leader>1 1gt
+nnoremap <Leader>2 2gt
+nnoremap <Leader>3 3gt
+nnoremap <Leader>4 4gt
+nnoremap <Leader>5 5gt
+nnoremap <Leader>6 6gt
+nnoremap <Leader>7 7gt
+nnoremap <Leader>8 8gt
+nnoremap <Leader>9 9gt
+nnoremap <Leader>0 :tablast<CR>
 
 "vim-fugitive
 nnoremap <leader>gs :Git<CR>
@@ -244,10 +244,10 @@ nnoremap <leader>gp :Gpush<CR>
 nnoremap <leader>gd :Gdiff<CR>
 
 " COC GoTo code navigation.
-nmap <silent>gd <Plug>(coc-definition)
-nmap <silent>gy <Plug>(coc-type-definition)
-nmap <silent>gi <Plug>(coc-implementation)
-nmap <silent>gr <Plug>(coc-references)
+nnoremap <silent> gd <Plug>(coc-definition)
+nnoremap <silent> gy <Plug>(coc-type-definition)
+nnoremap <silent> gi <Plug>(coc-implementation)
+nnoremap <silent> gr <Plug>(coc-references)
 
 " Use K to show documentation in preview window.
 "nnoremap <silent> K :call <SID>show_documentation()<CR>
@@ -264,10 +264,10 @@ function! s:show_documentation()
 endfunction
 
 " Symbol renaming.
-nmap <leader>rn <Plug>(coc-rename)
+nnoremap <leader>rn <Plug>(coc-rename)
 
 " Formatting selected code.
-nmap <leader>f  <Plug>(coc-format-selected)
+nnoremap <leader>f <Plug>(coc-format-selected)
 
 "nmap <C-F> :FZF<CR>
 "nmap <C-P> :Files<CR>
@@ -296,8 +296,8 @@ let g:fzf_colors =
 " the list of suggestions:
 " - <leader>aap for current paragraph
 " - <leader>aw for current word
-vmap <leader>a <Plug>(coc-codeaction-selected)
-nmap <leader>a <Plug>(coc-codeaction-selected)
+xnoremap <leader>a <Plug>(coc-codeaction-selected)
+nnoremap <leader>a <Plug>(coc-codeaction-selected)
 
 " Make <CR> to accept selected completion item or notify coc.nvim to format
 " <C-g>u breaks current undo, please make your own choice.
