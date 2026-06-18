@@ -205,11 +205,25 @@ if [ -x "$(command -v kubectl)" ]; then
     [ -s ~/.bash_completions/kubectl.sh ] || kubectl completion bash > ~/.bash_completions/kubectl.sh
 fi
 
-# If Go lang is installed add GOPATH in to to PATH variable
-if [ -x "$(command -v go)" ]; then
-    gopath=$(go env GOPATH)
-    export PATH=${gopath}/bin:$PATH
+# goenv
+export GOENV_ROOT="$HOME/.goenv"
+export PATH="$GOENV_ROOT/bin:$PATH"
+eval "$(goenv init - bash)"
+
+# If Go is available, add GOPATH/bin to PATH
+if command -v go >/dev/null 2>&1; then
+    gopath="$(go env GOPATH)"
+    case ":$PATH:" in
+        *":$gopath/bin:"*) ;;
+        *) export PATH="$gopath/bin:$PATH" ;;
+    esac
 fi
+
+# If Go lang is installed add GOPATH in to to PATH variable
+#if [ -x "$(command -v go)" ]; then
+#    gopath=$(go env GOPATH)
+#    export PATH=${gopath}/bin:$PATH
+#fi
 
 # Python pyenv setup
 export PYENV_ROOT="$HOME/.pyenv"
@@ -236,3 +250,8 @@ if ! shopt -oq posix; then
         done
     fi
 fi
+
+# Added by LM Studio CLI (lms)
+export PATH="$PATH:/Users/rastislav.slavicek/.lmstudio/bin"
+# End of LM Studio CLI section
+
