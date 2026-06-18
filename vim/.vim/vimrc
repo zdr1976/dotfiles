@@ -192,10 +192,12 @@ vnoremap <silent> <C-n> :nohlsearch<CR>
 inoremap <silent> <C-n> <C-o>:nohlsearch<CR>
 
 " Copy/paste from system clipboard
-noremap <Leader>y "*y
-noremap <Leader>p "*p
-noremap <Leader>Y "+y
-noremap <Leader>P "+p
+nnoremap <Leader>y "*y
+xnoremap <Leader>y "*y
+nnoremap <Leader>p "*p
+nnoremap <Leader>Y "+y
+xnoremap <Leader>Y "+y
+nnoremap <Leader>P "+p
 
 " Easy window navigation
 " Navigating requires you to press Ctrl first, then a navigation keys
