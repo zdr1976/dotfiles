@@ -263,8 +263,6 @@ nnoremap <leader>rn <Plug>(coc-rename)
 " Formatting selected code.
 nnoremap <leader>f <Plug>(coc-format-selected)
 
-"nmap <C-F> :FZF<CR>
-"nmap <C-P> :Files<CR>
 nnoremap <C-P> :GFiles<CR>
 nnoremap <C-G> :Rg<CR>
 
