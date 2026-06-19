@@ -134,7 +134,9 @@ parse_k8s_context() {
 
 # Some nice aliases to have
 alias diff='diff --color'
+alias g='git'
 alias git-cloc='git ls-files | xargs cloc'
+alias n='nvim'
 alias sup='sudo -i'
 alias ls='ls --color --group-directories-first'
 alias ll='ls -lA'
