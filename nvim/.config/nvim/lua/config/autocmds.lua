@@ -42,7 +42,6 @@ autocmd("FileType", {
 
 autocmd("InsertLeave", {
   group = language_group,
-  pattern = "*",
   callback = function()
     vim.opt.paste = false
   end,
@@ -50,7 +49,6 @@ autocmd("InsertLeave", {
 
 autocmd("VimEnter", {
   group = config_group,
-  pattern = "*",
   callback = function()
     if vim.wo.diff then
       vim.opt_local.wrap = true

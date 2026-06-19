@@ -1,13 +1,17 @@
 local M = {}
 
 function M.setup()
-  local set_hl = vim.api.nvim_set_hl
+  local highlights = {
+    GitSignsAdd = { fg = "#282828", bg = "#b8bb3b" },
+    GitSignsChange = { fg = "#282828", bg = "#8ec07c" },
+    GitSignsDelete = { fg = "#282828", bg = "#eb4632" },
+    GitSignsChangedelete = { fg = "#282828", bg = "#8ec07c" },
+    GitSignsTopdelete = { fg = "#282828", bg = "#eb4632" },
+  }
 
-  set_hl(0, "GitSignsAdd", { fg = "#282828", bg = "#b8bb3b" })
-  set_hl(0, "GitSignsChange", { fg = "#282828", bg = "#8ec07c" })
-  set_hl(0, "GitSignsDelete", { fg = "#282828", bg = "#eb4632" })
-  set_hl(0, "GitSignsChangedelete", { fg = "#282828", bg = "#8ec07c" })
-  set_hl(0, "GitSignsTopdelete", { fg = "#282828", bg = "#eb4632" })
+  for group, value in pairs(highlights) do
+    vim.api.nvim_set_hl(0, group, value)
+  end
 
   require("gitsigns").setup({
     signs = {

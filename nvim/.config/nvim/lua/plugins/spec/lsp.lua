@@ -6,7 +6,7 @@ return {
   {
     "mason-org/mason-lspconfig.nvim",
     dependencies = {
-      { "mason-org/mason.nvim", opts = {} },
+      "mason-org/mason.nvim",
       "neovim/nvim-lspconfig",
     },
     opts = {
@@ -35,9 +35,6 @@ return {
   },
   {
     "L3MON4D3/LuaSnip",
-    dependencies = {
-      "saadparwaiz1/cmp_luasnip",
-    },
   },
   {
     "hrsh7th/nvim-cmp",

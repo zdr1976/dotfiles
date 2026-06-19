@@ -1,4 +1,6 @@
 local M = {}
+local actions = require("telescope.actions")
+local builtin = require("telescope.builtin")
 
 function M.setup()
   require("telescope").setup({
@@ -11,7 +13,7 @@ function M.setup()
       },
       mappings = {
         i = {
-          ["<Esc>"] = require("telescope.actions").close,
+          ["<Esc>"] = actions.close,
         },
       },
     },
@@ -19,8 +21,6 @@ function M.setup()
 end
 
 function M.find_project_files()
-  local builtin = require("telescope.builtin")
-
   local ok = pcall(builtin.git_files, { show_untracked = true })
   if not ok then
     builtin.find_files()

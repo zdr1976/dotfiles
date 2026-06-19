@@ -1,7 +1,5 @@
 local opt = vim.opt
 
-vim.g.gruvbox_italic = 1
-
 local function apply_theme_overrides()
   local set_hl = vim.api.nvim_set_hl
 
@@ -16,7 +14,6 @@ local function apply_theme_overrides()
 end
 
 opt.laststatus = 2
-opt.encoding = "utf-8"
 opt.autoindent = true
 opt.incsearch = true
 opt.hlsearch = true
@@ -31,7 +28,6 @@ opt.ignorecase = true
 opt.smartcase = true
 opt.completeopt = { "menu", "menuone", "popup" }
 opt.pumheight = 10
-opt.cursorcolumn = false
 opt.cursorline = true
 opt.cursorlineopt = "number"
 opt.undolevels = 1000
@@ -62,8 +58,6 @@ opt.undodir = vim.fn.expand("~/.config/nvim/undo")
 
 opt.formatoptions:remove("t")
 
-vim.cmd("syntax enable")
-vim.cmd.colorscheme("default")
 apply_theme_overrides()
 
 vim.api.nvim_create_autocmd("ColorScheme", {
