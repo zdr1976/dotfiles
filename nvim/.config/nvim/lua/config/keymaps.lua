@@ -5,7 +5,7 @@ local builtin = require("telescope.builtin")
 map("n", "<F3>", "<Cmd>set number! number?<CR>", { silent = true, desc = "Toggle line numbers" })
 map("i", "<F3>", "<C-o>:set number! number?<CR>", { silent = true, desc = "Toggle line numbers" })
 map("n", "<F4>", "<Cmd>set list! list?<CR>", { silent = true, desc = "Toggle invisible characters" })
-map("n", "<F5>", "<Cmd>NvimTreeToggle<CR>", { silent = true, desc = "Toggle file explorer" })
+map("n", "<Leader>e", "<Cmd>NvimTreeToggle<CR>", { silent = true, desc = "Toggle file explorer" })
 map("n", "<F12>", "<Cmd>set spell!<CR>", { silent = true, desc = "Toggle spell checking" })
 
 map("v", "<", "<gv")

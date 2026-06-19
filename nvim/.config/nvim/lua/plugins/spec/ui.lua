@@ -38,7 +38,7 @@ return {
         lualine_a = { "mode" },
         lualine_b = { "branch", "diff" },
         lualine_c = { { "filename", path = 1 } },
-        lualine_x = { "diagnostics", "filetype" },
+        lualine_x = { "diagnostics", "filetype", "fileformat", "encoding" },
         lualine_y = { "progress" },
         lualine_z = { "location" },
       },
