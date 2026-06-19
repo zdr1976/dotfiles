@@ -1,0 +1,8 @@
+[include]
+    path = config-base
+[include]
+    path = config-{{ .git.defaultIdentity }}
+[includeIf "gitdir:~/Projects/Personal/"]
+    path = config-personal
+[includeIf "gitdir:~/Projects/Work/"]
+    path = config-work

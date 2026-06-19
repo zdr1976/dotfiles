@@ -1,7 +1,1 @@
-git/*
-nvim/.config/nvim/lazy-lock.json
-nvim/.config/nvim/undo/
-vim/.netrwhist
-vim/.vim/.netrwhist
-vim/.vim/spell
-starship/.config/*
+.chezmoidata.yaml

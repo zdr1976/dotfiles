@@ -1,0 +1,8 @@
+git:
+  defaultIdentity: work
+  personal:
+    name: "Your Name"
+    email: "personal@example.com"
+  work:
+    name: "Your Name"
+    email: "work@example.com"

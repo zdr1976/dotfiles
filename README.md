@@ -1,174 +1,149 @@
 # dotfiles
 
-Dotfiles are used to customize your system. The “dotfiles” name is derived
-from the configuration files in Unix-like systems that start with a dot
-(e.g. .bashrc and .gitconfig). For normal users, this indicates they are not
-regular documents, and by default they are hidden in directory listings.
-For power users, they are a core tool belt.
+This repository manages personal dotfiles with [chezmoi](https://www.chezmoi.io/).
 
-## Installation
+The repository is the source of truth. Files are edited directly in git and then
+applied to the home directory with `chezmoi`. Unlike the previous GNU Stow
+setup, chezmoi renders and copies the final files into place instead of
+symlinking them.
 
-To install configuration files, use [`stow`](https://www.gnu.org/software/stow/manual/stow.html).
-GNU Stow is a symlink farm manager and works well for this repository
-layout.
+## Layout
 
-### MacOS
+This repository follows a chezmoi-style layout:
 
-If you are running `MacOS` please install brew package management before. Homebrew
-is the missing package management for `MacOS`. For more information about this
-package management and how to install it please visit the project [homepage](http://brew.sh/).
+- `dot_bash_profile` -> `~/.bash_profile`
+- `dot_bashrc` -> `~/.bashrc`
+- `dot_tmux.conf` -> `~/.tmux.conf`
+- `dot_config/git/` -> `~/.config/git/`
+- `dot_config/nvim/` -> `~/.config/nvim/`
+- `dot_config/starship.toml` -> `~/.config/starship.toml`
+- `dot_config/tmux/` -> `~/.config/tmux/`
 
-So the first step after `brew` installation is `stow` installation.
+The real Git identity values are not committed. Use a local
+`.chezmoidata.yaml` file based on `.chezmoidata.example.yaml`.
+
+## Prerequisites
+
+Install `chezmoi` first.
+
+### macOS
 
 ```console
-brew install stow
+brew install chezmoi
 ```
 
 ### Linux
 
-If you are using `Linux` use your distribution package manager to install `stow`
-application.
+Use your distribution package manager.
 
-Debian base distributions can use `apt`.
-```console
-apt-get install stow
-```
-
-For `RedHat` base distribution use `yum` or `dnf`.
-```console
-dnf install stow
-```
-
-### Package list
-
-The main packages in this repository are:
-
-- `bash`
-- `git`
-- `nvim`
-- `starship`
-- `tmux`
-- `vim`
-
-### Install
-
-Install one package:
+Debian and Ubuntu:
 
 ```console
-stow -t ~ bash
+apt-get install chezmoi
 ```
 
-Install multiple packages:
+Fedora and RHEL:
 
 ```console
-stow -t ~ bash git nvim starship tmux vim
+dnf install chezmoi
 ```
 
-### Preview changes
+## Git Identity Data
 
-Preview what `stow` would do without changing anything:
+This repository tracks `.chezmoidata.example.yaml` as a template and ignores the
+real `.chezmoidata.yaml`.
+
+Create your local data file:
 
 ```console
-stow -n -v -t ~ bash git nvim starship tmux vim
+cp .chezmoidata.example.yaml .chezmoidata.yaml
 ```
 
-### Update
+Then edit `.chezmoidata.yaml` with your real values.
 
-Usually updating means:
+Example:
 
-1. Pull the latest changes in the repository.
-2. Re-run `stow` for the packages you use.
+```yaml
+git:
+  defaultIdentity: work
+  personal:
+    name: "Your Name"
+    email: "personal@example.com"
+  work:
+    name: "Your Name"
+    email: "work@example.com"
+```
+
+`defaultIdentity` controls which identity is used by default on the machine.
+
+- `work`: use work everywhere except personal repos
+- `personal`: use personal everywhere except work repos
+
+## Daily Workflow
+
+Edit files in this repository directly with your normal editor.
+
+Preview what chezmoi would change:
 
 ```console
-git pull
-stow -R -t ~ bash git nvim starship tmux vim
+chezmoi --source "$PWD" diff
 ```
 
-The `-R` flag restows the package, which is useful after files move or
-change inside the package directory.
-
-### Remove
-
-Remove one package:
+Apply the changes to your home directory:
 
 ```console
-stow -D -t ~ bash
+chezmoi --source "$PWD" apply
 ```
 
-Remove multiple packages:
+You can also inspect rendered output without applying everything:
 
 ```console
-stow -D -t ~ bash git nvim starship tmux vim
+chezmoi --source "$PWD" cat ~/.config/git/config
 ```
 
-## Git Config Templates
+## First-Time Apply
 
-This repository keeps Git config as templates so you can generate the
-tracked files with your own name and email address.
-
-Generated files live inside the `git/` package:
-
-- `git/.gitconfig`
-- `git/.gitconfig-base`
-- `git/.gitconfig-personal`
-- `git/.gitconfig-work`
-
-Use `./generate-gitconfig.sh` to create the files, then install the
-`git` package with `stow`.
-
-### Personal account only
-
-Use `gitconfig.tmpl` when you use one Git identity everywhere.
-This now generates one shared config plus a personal identity include, so
-aliases and defaults stay in one place.
-
-Interactive:
+From the repository root:
 
 ```console
-./generate-gitconfig.sh single
+chezmoi --source "$PWD" apply
 ```
 
-Non-interactive:
+This writes the managed files into your home directory.
 
-```console
-./generate-gitconfig.sh single "Your Name" "you@example.com"
-```
+## Git Config
 
-Then stow it:
+Git config is managed under `dot_config/git/` and is rendered to:
 
-```console
-stow -t ~ git
-```
+- `~/.config/git/config`
+- `~/.config/git/config-base`
+- `~/.config/git/config-personal`
+- `~/.config/git/config-work`
 
-### Personal and work accounts
+The main config uses includes and `includeIf` rules for personal and work
+repositories.
 
-Use `gitconfig-multi.tmpl` for this setup when you want one shared `.gitconfig`, one default identity
-for the machine, and per-directory overrides for personal and work repos.
-This is the better fit for a company laptop where most repos should use
-your work identity, but `~/Projects/Personal/` should still commit as you.
+## Tmux
 
-Interactive:
+Tmux keeps `~/.tmux.conf` as the main entrypoint, while support files live
+under:
 
-```console
-./generate-gitconfig.sh multi
-```
+- `~/.config/tmux/tmux.adapta.conf`
+- `~/.config/tmux/tmux.gruvbox.conf`
+- `~/.config/tmux/tmux_cheatsheet.md`
 
-Non-interactive:
+## Neovim
 
-```console
-./generate-gitconfig.sh multi \
-  work \
-  "Personal Name" "personal@example.com" \
-  "Work Name" "work@example.com"
-```
+Neovim is managed under:
 
-The first optional argument is the default identity for that machine:
+- `~/.config/nvim/init.lua`
+- `~/.config/nvim/lua/...`
 
-- `work`: use work everywhere except repos in `~/Projects/Personal/`
-- `personal`: use personal everywhere except repos in `~/Projects/Work/`
+If you decide to track `lazy-lock.json`, keep it under `dot_config/nvim/`.
 
-Then stow it:
+## Notes
 
-```console
-stow -t ~ git
-```
+- This repository is edited as a normal git project; `chezmoi edit` is not
+  required.
+- The real `.chezmoidata.yaml` is intentionally ignored and should stay local.
+- Generated target files in `~` are not part of this repository.
