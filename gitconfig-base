@@ -26,12 +26,8 @@
     olog = log --oneline --pretty=format:'%C(red)%h%C(reset) %C(yellow)%d%C(reset) %s %C(green)(%cr) %C(bold blue)<%an>%C(reset)'
     ologn = "!f() { git log --oneline --pretty=format:'%C(red)%h%C(reset) %C(yellow)%d%C(reset) %s %C(green)(%cr) %C(bold blue)<%an>%C(reset)' -n $1; }; f"
 [core]
-    editor = vim
+    editor = nvim
 [push]
     default = simple
-[includeIf "gitdir:~/Projects/"]
-    path = .gitconfig-personal
-[includeIf "gitdir:~/Projects/Work/"]
-    path = .gitconfig-work
 [diff]
     wsErrorHighlight = all

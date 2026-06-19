@@ -109,6 +109,7 @@ tracked files with your own name and email address.
 Generated files live inside the `git/` package:
 
 - `git/.gitconfig`
+- `git/.gitconfig-base`
 - `git/.gitconfig-personal`
 - `git/.gitconfig-work`
 
@@ -118,6 +119,8 @@ Use `./generate-gitconfig.sh` to create the files, then install the
 ### Personal account only
 
 Use `gitconfig.tmpl` when you use one Git identity everywhere.
+This now generates one shared config plus a personal identity include, so
+aliases and defaults stay in one place.
 
 Interactive:
 
@@ -139,8 +142,10 @@ stow -t ~ git
 
 ### Personal and work accounts
 
-Use this setup when you want one shared `.gitconfig` plus separate
-personal and work identities.
+Use `gitconfig-multi.tmpl` for this setup when you want one shared `.gitconfig`, one default identity
+for the machine, and per-directory overrides for personal and work repos.
+This is the better fit for a company laptop where most repos should use
+your work identity, but `~/Projects/Personal/` should still commit as you.
 
 Interactive:
 
@@ -152,9 +157,15 @@ Non-interactive:
 
 ```console
 ./generate-gitconfig.sh multi \
+  work \
   "Personal Name" "personal@example.com" \
   "Work Name" "work@example.com"
 ```
+
+The first optional argument is the default identity for that machine:
+
+- `work`: use work everywhere except repos in `~/Projects/Personal/`
+- `personal`: use personal everywhere except repos in `~/Projects/Work/`
 
 Then stow it:
 
