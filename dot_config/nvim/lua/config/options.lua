@@ -13,16 +13,10 @@ local function apply_theme_overrides()
   set_hl(0, "PmenuThumb", { bg = "#665c54" })
   set_hl(0, "GruvboxRed", { fg = "#ff5f5f" })
   set_hl(0, "GruvboxRedBold", { fg = "#ff7a7a", bold = true })
-  -- set_hl(0, "Red", { fg = "#ff5f5f" })
-  -- set_hl(0, "DiffDelete", { fg = "#ff5f5f" })
-  -- set_hl(0, "DiffAdd", { fg = "#b8bb26" })
-  -- set_hl(0, "DiffChange", { fg = "#fabd2f" })
-  -- set_hl(0, "DiagnosticError", { fg = "#ff5f5f" })
-  -- set_hl(0, "DiagnosticWarn", { fg = "#fabd2f" })
-  -- set_hl(0, "Search", { fg = "#282828", bg = "#fabd2f" })
-  -- set_hl(0, "GitSignsAdd", { fg = "#b8bb26" })
-  -- set_hl(0, "GitSignsChange", { fg = "#fabd2f" })
-  -- set_hl(0, "GitSignsDelete", { fg = "#ff5f5f" })
+  set_hl(0, "SpellBad", { fg = "#fbf1c7", bg = "#ff5f5f", bold = true })
+  set_hl(0, "SpellCap", { fg = "#fbf1c7", bg = "#458588" })
+  set_hl(0, "SpellRare", { fg = "#fbf1c7", bg = "#b16286" })
+  set_hl(0, "SpellLocal", { fg = "#fbf1c7", bg = "#689d6a" })
 end
 
 opt.laststatus = 2
@@ -75,14 +69,3 @@ apply_theme_overrides()
 vim.api.nvim_create_autocmd("ColorScheme", {
   callback = apply_theme_overrides,
 })
-
-vim.cmd([[
-  highlight clear SpellBad
-  highlight SpellBad cterm=underline ctermbg=66 ctermfg=235
-  highlight clear SpellRare
-  highlight SpellRare cterm=underline ctermbg=66 ctermfg=235
-  highlight clear SpellCap
-  highlight SpellCap cterm=underline ctermbg=66 ctermfg=235
-  highlight clear SpellLocal
-  highlight SpellLocal cterm=underline ctermbg=66 ctermfg=235
-]])

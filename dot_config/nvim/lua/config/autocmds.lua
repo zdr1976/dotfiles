@@ -18,6 +18,32 @@ autocmd("FileType", {
   callback = function()
     vim.opt_local.spell = true
     vim.opt_local.textwidth = 72
+
+    local set_hl = vim.api.nvim_set_hl
+
+    set_hl(0, "GitCommitDiffAdd", { fg = "#98971a", bg = "NONE" })
+    set_hl(0, "GitCommitDiffDelete", { fg = "#ff5f5f", bg = "NONE" })
+    set_hl(0, "GitCommitDiffChange", { fg = "#d79921", bg = "NONE" })
+    set_hl(0, "GitCommitDiffText", { fg = "#458588", bg = "NONE", bold = true })
+
+    set_hl(0, "gitcommitSummary", { fg = "#ebdbb2", bold = true })
+    set_hl(0, "gitcommitComment", { fg = "#928374", italic = true })
+    set_hl(0, "gitcommitHeader", { fg = "#83a598" })
+    set_hl(0, "gitcommitBranch", { fg = "#b8bb26", bold = true })
+
+    local extra_winhighlight = table.concat({
+      "DiffAdd:GitCommitDiffAdd",
+      "DiffDelete:GitCommitDiffDelete",
+      "DiffChange:GitCommitDiffChange",
+      "DiffText:GitCommitDiffText",
+    }, ",")
+
+    local current_winhighlight = vim.api.nvim_get_option_value("winhighlight", { scope = "local" })
+    if current_winhighlight == "" then
+      vim.opt_local.winhighlight = extra_winhighlight
+    else
+      vim.opt_local.winhighlight = current_winhighlight .. "," .. extra_winhighlight
+    end
   end,
 })
 
