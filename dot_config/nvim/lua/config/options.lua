@@ -11,6 +11,18 @@ local function apply_theme_overrides()
   set_hl(0, "PmenuSel", { fg = "#282828", bg = "#83a598", bold = true })
   set_hl(0, "PmenuSbar", { bg = "#3c3836" })
   set_hl(0, "PmenuThumb", { bg = "#665c54" })
+  set_hl(0, "GruvboxRed", { fg = "#ff5f5f" })
+  set_hl(0, "GruvboxRedBold", { fg = "#ff7a7a", bold = true })
+  -- set_hl(0, "Red", { fg = "#ff5f5f" })
+  -- set_hl(0, "DiffDelete", { fg = "#ff5f5f" })
+  -- set_hl(0, "DiffAdd", { fg = "#b8bb26" })
+  -- set_hl(0, "DiffChange", { fg = "#fabd2f" })
+  -- set_hl(0, "DiagnosticError", { fg = "#ff5f5f" })
+  -- set_hl(0, "DiagnosticWarn", { fg = "#fabd2f" })
+  -- set_hl(0, "Search", { fg = "#282828", bg = "#fabd2f" })
+  -- set_hl(0, "GitSignsAdd", { fg = "#b8bb26" })
+  -- set_hl(0, "GitSignsChange", { fg = "#fabd2f" })
+  -- set_hl(0, "GitSignsDelete", { fg = "#ff5f5f" })
 end
 
 opt.laststatus = 2

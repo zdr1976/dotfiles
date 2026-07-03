@@ -81,6 +81,34 @@ export LC_NUMERIC=sk_SK.UTF-8     # Numbers (decimal separator, grouping)
 # Make sure LC_ALL is not set to override
 unset LC_ALL
 
+# fzf magic
+if command -v fzf >/dev/null 2>&1; then
+
+  # fzf gruvbox theme
+  export FZF_DEFAULT_OPTS="
+    --color=bg:#282828,fg:#ebdbb2,hl:#fabd2f
+    --color=bg+:#3c3836,fg+:#ebdbb2,hl+:#fabd2f
+    --color=info:#83a598,prompt:#83a598,pointer:#fb4934
+    --color=marker:#b8bb26,spinner:#fabd2f,header:#928374
+  "
+
+  # fzf history (Ctrl+R)
+  fh() {
+    local cmd
+    cmd=$(history | sed 's/^ *[0-9]* *//' | awk '!seen[$0]++' | \
+      fzf --tac --no-sort --reverse \
+          --preview 'echo {}' \
+          --preview-window=down:5:wrap)
+    if [ -n "$cmd" ]; then
+      READLINE_LINE="$cmd"
+      READLINE_POINT=${#cmd}
+    fi
+  }
+
+  bind -x '"\C-r": fh'
+
+fi
+
 # Check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
 shopt -s checkwinsize
@@ -137,6 +165,7 @@ alias diff='diff --color'
 alias g='git'
 alias git-cloc='git ls-files | xargs cloc'
 alias n='nvim'
+alias vim='nvim'
 alias sup='sudo -i'
 alias ls='ls --color --group-directories-first'
 alias ll='ls -lA'
@@ -182,14 +211,14 @@ kc() {
 }
 
 
-gli() {
+glf() {
     git log --color=always \
-        --format='%h%x09%C(yellow)%d%C(reset) %s %C(green)(%cr) %C(bold blue)<%an>%C(reset)' | \
+        --format='%C(auto)%h%x09%C(yellow)%d%C(reset) %C(white)%s%C(reset) %C(green)(%cr) %C(blue)<%an>' | \
         fzf --ansi --no-sort --reverse --tiebreak=index \
             --delimiter=$'\t' --with-nth=2.. \
             --preview 'git show --color=always {1}' \
             --bind 'q:abort,enter:execute(git show --color=always {1} | less -R)' \
-            --preview-window=right:50%
+            --preview-window=right:60%
 }
 
 awsp() {

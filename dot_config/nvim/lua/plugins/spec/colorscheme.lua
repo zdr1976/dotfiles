@@ -1,10 +1,18 @@
 return {
   {
-    "morhetz/gruvbox",
+    "ellisonleao/gruvbox.nvim",
     priority = 1000,
-    lazy = false,
     config = function()
-      vim.g.gruvbox_italic = 1
+      vim.o.termguicolors = true
+
+      require("gruvbox").setup({
+        contrast = "medium",
+        italic = {
+          strings = true,
+          comments = true,
+        },
+      })
+
       vim.cmd.colorscheme("gruvbox")
     end,
   },
