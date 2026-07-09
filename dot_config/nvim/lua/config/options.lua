@@ -1,5 +1,12 @@
 local opt = vim.opt
 
+vim.g.netrw_banner = 0
+vim.g.netrw_liststyle = 3
+vim.g.netrw_browse_split = 0
+vim.g.netrw_winsize = 25
+vim.g.netrw_altv = 1
+vim.g.netrw_chgwin = -1
+
 local function apply_theme_overrides()
   local set_hl = vim.api.nvim_set_hl
 
@@ -17,16 +24,17 @@ local function apply_theme_overrides()
   set_hl(0, "SpellCap", { fg = "#fbf1c7", bg = "#458588" })
   set_hl(0, "SpellRare", { fg = "#fbf1c7", bg = "#b16286" })
   set_hl(0, "SpellLocal", { fg = "#fbf1c7", bg = "#689d6a" })
+  set_hl(0, "netrwDir", { fg = "#83a598", bold = true })
+  set_hl(0, "netrwClassify", { fg = "#928374" })
+  set_hl(0, "netrwSymLink", { fg = "#b8bb26" })
+  set_hl(0, "netrwExe", { fg = "#fabd2f" })
 end
 
-opt.laststatus = 2
-opt.autoindent = true
-opt.incsearch = true
-opt.hlsearch = true
-opt.errorbells = false
+local undodir = vim.fs.joinpath(vim.fn.stdpath("state"), "undo")
+vim.fn.mkdir(undodir, "p")
+
 opt.number = true
 opt.swapfile = false
-opt.backup = false
 opt.splitright = true
 opt.splitbelow = true
 opt.showmode = false
@@ -36,18 +44,13 @@ opt.completeopt = { "menu", "menuone", "popup" }
 opt.pumheight = 10
 opt.cursorline = true
 opt.cursorlineopt = "number"
-opt.undolevels = 1000
-opt.undoreload = 1000
-opt.history = 1000
 opt.foldenable = false
 opt.tabstop = 2
 opt.shiftwidth = 2
 opt.softtabstop = 2
 opt.expandtab = true
 opt.ttimeoutlen = 10
-opt.timeoutlen = 1000
 opt.updatetime = 100
-opt.background = "dark"
 opt.termguicolors = true
 opt.colorcolumn = "80"
 opt.listchars = {
@@ -60,7 +63,7 @@ opt.listchars = {
 opt.showbreak = "↳"
 opt.clipboard:append({ "unnamed", "unnamedplus" })
 opt.undofile = true
-opt.undodir = vim.fn.expand("~/.config/nvim/undo")
+opt.undodir = undodir
 
 opt.formatoptions:remove("t")
 

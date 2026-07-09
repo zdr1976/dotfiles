@@ -1,11 +1,12 @@
 local map = vim.keymap.set
+local harpoon = require("config.harpoon")
 local telescope = require("config.telescope")
 local builtin = require("telescope.builtin")
 
 map("n", "<F3>", "<Cmd>set number! number?<CR>", { silent = true, desc = "Toggle line numbers" })
 map("i", "<F3>", "<C-o>:set number! number?<CR>", { silent = true, desc = "Toggle line numbers" })
 map("n", "<F4>", "<Cmd>set list! list?<CR>", { silent = true, desc = "Toggle invisible characters" })
-map("n", "<Leader>e", "<Cmd>NvimTreeToggle<CR>", { silent = true, desc = "Toggle file explorer" })
+map("n", "<Leader>e", "<Cmd>Lexplore<CR>", { silent = true, desc = "Toggle file explorer" })
 map("n", "<F12>", "<Cmd>set spell!<CR>", { silent = true, desc = "Toggle spell checking" })
 
 map("v", "<", "<gv")
@@ -40,8 +41,9 @@ map("n", "-", "<Cmd>resize -10<CR>", { silent = true, desc = "Decrease window he
 map("n", "<Leader>+", "<Cmd>vertical resize +10<CR>", { silent = true, desc = "Increase vertical split width" })
 map("n", "<Leader>-", "<Cmd>vertical resize -10<CR>", { silent = true, desc = "Decrease vertical split width" })
 
-map("n", "<Leader>n", "<Cmd>tabprevious<CR>", { desc = "Previous tab" })
-map("n", "<Leader>m", "<Cmd>tabnext<CR>", { desc = "Next tab" })
+map("n", "<Leader>n", "<Cmd>bprevious<CR>", { desc = "Previous buffer" })
+map("n", "<Leader>m", "<Cmd>bnext<CR>", { desc = "Next buffer" })
+map("n", "<Leader>b", builtin.buffers, { desc = "Find buffers" })
 
 for tab = 1, 9 do
   map("n", "<Leader>" .. tab, tab .. "gt", { desc = "Go to tab " .. tab })
@@ -51,5 +53,9 @@ map("n", "<Leader>0", "<Cmd>tablast<CR>", { desc = "Go to last tab" })
 
 map("n", "<C-p>", telescope.find_project_files, { desc = "Find project files" })
 map("n", "<C-g>", builtin.live_grep, { desc = "Live grep" })
+map("n", "<C-y>", harpoon.add_file, { desc = "Add file to Harpoon" })
+map("n", "<C-e>", harpoon.toggle_menu, { desc = "Open Harpoon menu" })
+map("n", "<Leader>hj", harpoon.prev, { desc = "Previous Harpoon file" })
+map("n", "<Leader>hk", harpoon.next, { desc = "Next Harpoon file" })
 
 map("n", "<Leader>w", [[:%s/\s\+$//<CR>]], { desc = "Trim trailing whitespace" })

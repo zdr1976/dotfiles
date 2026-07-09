@@ -4,8 +4,10 @@ function M.setup()
   local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
   local servers = {
+    ansiblels = {},
     bashls = {},
     cssls = {},
+    docker_language_server = {},
     gopls = {},
     html = {},
     jsonls = {},
@@ -26,6 +28,8 @@ function M.setup()
       },
     },
     pyright = {},
+    taplo = {},
+    terraformls = {},
     ts_ls = {},
     yamlls = {},
   }
@@ -53,7 +57,11 @@ function M.setup()
       map("gy", vim.lsp.buf.type_definition, "Go to type definition")
       map("gi", vim.lsp.buf.implementation, "Go to implementation")
       map("gr", vim.lsp.buf.references, "Go to references")
-      map("K", vim.lsp.buf.hover, "Hover documentation")
+      map("K", function()
+        vim.lsp.buf.hover({
+          border = "single",
+        })
+      end, "Hover documentation")
       map("<Leader>rn", vim.lsp.buf.rename, "Rename symbol")
       map("<Leader>a", vim.lsp.buf.code_action, "Code action", { "n", "x" })
       map("<Leader>f", function()

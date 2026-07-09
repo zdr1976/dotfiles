@@ -1,30 +1,5 @@
 return {
   {
-    "nvim-tree/nvim-tree.lua",
-    opts = {
-      view = {
-        width = 35,
-      },
-      renderer = {
-        group_empty = true,
-        icons = {
-          show = {
-            file = false,
-            folder = false,
-            folder_arrow = false,
-            git = false,
-          },
-        },
-      },
-      filters = {
-        dotfiles = false,
-      },
-      update_focused_file = {
-        enable = true,
-      },
-    },
-  },
-  {
     "nvim-lualine/lualine.nvim",
     opts = {
       options = {

@@ -9,4 +9,13 @@ return {
       require("config.telescope").setup()
     end,
   },
+  {
+    "ThePrimeagen/harpoon",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+    },
+    config = function()
+      require("config.harpoon").setup()
+    end,
+  },
 }

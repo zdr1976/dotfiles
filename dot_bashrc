@@ -30,21 +30,31 @@ PROMPT_DIRTRIM=2
 # A colon-separated list of directories used as a search path for the cd builtin command.
 CDPATH=.:~:~/Projects/Work:~/Projects/Personal
 
-# Default editor.
-export EDITOR=vim
-export VISUAL=vim
-
 if command -v nvim >/dev/null 2>&1; then
     export EDITOR=nvim
     export VISUAL=nvim
     alias vim='nvim'
+else
+    export EDITOR=vim
+    export VISUAL=vim
 fi
 
 # Cached prompt data for lightweight shell rendering.
 K8S_PROMPT_CONTEXT=""
 
-# Add local ~/bin to PATH
-export PATH=~/bin:$PATH
+prepend() {
+    local dir
+    for dir in "$@"; do
+        [[ -n "$dir" && -d "$dir" ]] || continue
+        case ":$PATH:" in
+            *":$dir:"*) ;;
+            *) PATH="$dir${PATH:+:$PATH}" ;;
+        esac
+    done
+}
+
+# Add local user binaries to PATH.
+prepend "$HOME/.local/bin" "$HOME/bin"
 
 # MacOS ls show colors only if the CLICOLOR environment variable is set or if -G is passed on the command line.
 export CLICOLOR=1
@@ -62,15 +72,11 @@ BREW_PREFIX="${HOMEBREW_PREFIX:-}"
 
 # Prefer GNU command (like ls) instead of MacOS. Coreutils package need to be installed via brew first (brew install coreutils).
 if [[ -n $BREW_PREFIX ]]; then
-    [[ -d "$BREW_PREFIX/opt/coreutils/libexec/gnubin" ]] && export PATH="$BREW_PREFIX/opt/coreutils/libexec/gnubin:$PATH"
-    [[ -d "$BREW_PREFIX/opt/gnu-tar/libexec/gnubin" ]] && export PATH="$BREW_PREFIX/opt/gnu-tar/libexec/gnubin:$PATH"
-    [[ -d "$BREW_PREFIX/opt/openjdk/bin" ]] && export PATH="$BREW_PREFIX/opt/openjdk/bin:$PATH"
+    prepend \
+        "$BREW_PREFIX/opt/coreutils/libexec/gnubin" \
+        "$BREW_PREFIX/opt/gnu-tar/libexec/gnubin" \
+        "$BREW_PREFIX/opt/openjdk/bin"
 fi
-
-# Some application store configuration in ~/.config directory.
-mkdir -p ~/.config
-# Create local bash completion directory if not already exists. This is used for kubernetes and npm completion files here.
-mkdir -p ~/.bash_completions
 
 # Set locales
 export LANG=en_US.UTF-8
@@ -134,9 +140,6 @@ prompter() {
     # BOLD_CYAN="\e[1;36m"
     RESET_TEXT="\e[1;0m"
 
-	# Uncoment this line if your system is not UTF-8 ready.
-    # PS1="\[$BOLD_GREEN\]@\h\[$BOLD_YELLOW\] \w\[$BOLD_BLUE\]\$(parse_git_branch)\[$BOLD_PURPLE\]\$(parse_k8s_context)\[$BOLD_YELLOW\] $ \[$RESET_TEXT\]"
-    # Uncomment this on UTF-8 compatible system.
     PS1="\[$BOLD_GREEN\]@\h\[$BOLD_YELLOW\] \w\[$BOLD_BLUE\]\$(parse_git_branch)\[$BOLD_PURPLE\]\$(parse_k8s_context)\[$BOLD_YELLOW\] → \[$RESET_TEXT\]"
 
     # Python venv
@@ -163,19 +166,26 @@ parse_k8s_context() {
 # Some nice aliases to have
 alias diff='diff --color'
 alias g='git'
-alias git-cloc='git ls-files | xargs cloc'
 alias n='nvim'
-alias vim='nvim'
 alias sup='sudo -i'
 alias ls='ls --color --group-directories-first'
 alias ll='ls -lA'
-# Some new age command replacement (like axa, zoxide, etc.)
-#alias ls='exa'
-#alias ll='exa -alh'
-#alias tree='exa --tree'
+# Optional modern replacements once you want them full-time.
+# alias ls='eza --group-directories-first'
+# alias ll='eza -la --group-directories-first'
+# alias tree='eza --tree'
+if command -v eza >/dev/null 2>&1; then
+    alias l='eza --group-directories-first'
+    alias la='eza -la --group-directories-first'
+    alias lt='eza --tree --level=2 --group-directories-first'
+fi
 alias mc='mc -uX' # Disable X and subshell to start quick on Mac
 # kubernetes
 alias k='kubectl'
+
+gcloc() {
+    git ls-files -z | xargs -0 cloc
+}
 
 # Source another Aliases from external file (if exists).
 if [ -f ~/.aliases ]; then
@@ -232,19 +242,21 @@ awsp() {
     echo "Switched to AWS profile '$AWS_PROFILE'."
 }
 
-# Node version manager
-# Install:
-# - Mac install via brew install nvm
-mkdir -p ~/.nvm
-export NVM_DIR="$HOME/.nvm"
-# This loads nvm
-[ -n "$BREW_PREFIX" ] && [ -s "$BREW_PREFIX/opt/nvm/nvm.sh" ] && \. "$BREW_PREFIX/opt/nvm/nvm.sh"
-# This loads nvm bash_completion
-[ -n "$BREW_PREFIX" ] && [ -s "$BREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" ] && \. "$BREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm"
+if command -v zoxide >/dev/null 2>&1; then
+    eval "$(zoxide init bash)"
+fi
+
+if command -v fnm >/dev/null 2>&1; then
+    eval "$(fnm env --use-on-cd --shell bash)"
+fi
 
 # Run manually after installing or upgrading tools that provide completions.
 refresh-completions() {
     mkdir -p ~/.bash_completions
+
+    if command -v fnm >/dev/null 2>&1; then
+        fnm completions --shell bash > ~/.bash_completions/fnm.sh
+    fi
 
     if command -v npm >/dev/null 2>&1; then
         npm completion > ~/.bash_completions/npm.sh
@@ -253,38 +265,20 @@ refresh-completions() {
     if command -v kubectl >/dev/null 2>&1; then
         kubectl completion bash > ~/.bash_completions/kubectl.sh
     fi
+
+    if command -v uv >/dev/null 2>&1; then
+        uv generate-shell-completion bash > ~/.bash_completions/uv.sh
+    fi
 }
 
 # goenv
 export GOENV_ROOT="$HOME/.goenv"
-export PATH="$GOENV_ROOT/bin:$PATH"
+prepend "$GOENV_ROOT/bin"
 if command -v goenv >/dev/null 2>&1; then
-    eval "$(goenv init - bash)"
+    eval "$(goenv init -)"
 fi
 
-# If Go is available, add GOPATH/bin to PATH
-if command -v go >/dev/null 2>&1; then
-    gopath="$(go env GOPATH)"
-    case ":$PATH:" in
-        *":$gopath/bin:"*) ;;
-        *) export PATH="$gopath/bin:$PATH" ;;
-    esac
-fi
-
-# If Go lang is installed add GOPATH in to to PATH variable
-#if [ -x "$(command -v go)" ]; then
-#    gopath=$(go env GOPATH)
-#    export PATH=${gopath}/bin:$PATH
-#fi
-
-# Python pyenv setup
-export PYENV_ROOT="$HOME/.pyenv"
-export PATH="${PYENV_ROOT}/bin:$PATH"
-
-if command -v pyenv >/dev/null 2>&1; then
-    eval "$(pyenv init -)"
-    # eval "$(pyenv virtualenv-init -)"
-fi
+# Python is managed with uv, which does not require shell init.
 
 # Enable programmable completion features (you don't need to enable
 # this, if it's already enabled in /etc/bash.bashrc or /etc/profile).
@@ -308,5 +302,5 @@ if declare -F __start_kubectl >/dev/null 2>&1; then
 fi
 
 # Added by LM Studio CLI (lms)
-export PATH="$PATH:/Users/rastislav.slavicek/.lmstudio/bin"
+prepend "$HOME/.lmstudio/bin"
 # End of LM Studio CLI section

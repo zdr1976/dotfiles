@@ -1,16 +1,14 @@
 local augroup = vim.api.nvim_create_augroup
 local autocmd = vim.api.nvim_create_autocmd
 
-local config_group = augroup("dotfiles_config", { clear = true })
 local language_group = augroup("dotfiles_languages", { clear = true })
-
-autocmd("BufWritePost", {
-  group = config_group,
-  pattern = { "init.lua", "*/lua/config/*.lua" },
-  callback = function()
-    dofile(vim.env.MYVIMRC)
-  end,
-})
+local ansible_paths = {
+  "/playbooks/.+%.ya?ml$",
+  "/roles/.+/tasks/.+%.ya?ml$",
+  "/roles/.+/handlers/.+%.ya?ml$",
+  "/roles/.+/vars/.+%.ya?ml$",
+  "/roles/.+/defaults/.+%.ya?ml$",
+}
 
 autocmd("FileType", {
   group = language_group,
@@ -49,38 +47,48 @@ autocmd("FileType", {
 
 autocmd({ "BufRead", "BufNewFile" }, {
   group = language_group,
-  pattern = "*/playbooks/*.yml",
-  callback = function()
-    vim.bo.filetype = "ansible"
+  pattern = { "*.yml", "*.yaml" },
+  callback = function(args)
+    local path = args.file
+
+    for _, pattern in ipairs(ansible_paths) do
+      if path:match(pattern) then
+        vim.bo[args.buf].filetype = "yaml.ansible"
+        return
+      end
+    end
+
+    local filename = vim.fn.fnamemodify(path, ":t")
+    if filename == "docker-compose.yml"
+      or filename == "docker-compose.yaml"
+      or filename == "compose.yml"
+      or filename == "compose.yaml"
+    then
+      vim.bo[args.buf].filetype = "yaml.docker-compose"
+    end
   end,
 })
 
 autocmd("FileType", {
   group = language_group,
-  pattern = { "yaml", "json", "html", "javascript", "typescript", "sh", "bash" },
+  pattern = {
+    "bash",
+    "hcl",
+    "html",
+    "javascript",
+    "json",
+    "sh",
+    "terraform",
+    "toml",
+    "typescript",
+    "yaml",
+    "yaml.ansible",
+    "yaml.docker-compose",
+  },
   callback = function()
     vim.opt_local.tabstop = 2
     vim.opt_local.softtabstop = 2
     vim.opt_local.shiftwidth = 2
     vim.opt_local.expandtab = true
-  end,
-})
-
-autocmd("InsertLeave", {
-  group = language_group,
-  callback = function()
-    vim.opt.paste = false
-  end,
-})
-
-autocmd("VimEnter", {
-  group = config_group,
-  callback = function()
-    if vim.wo.diff then
-      vim.opt_local.wrap = true
-      vim.opt_local.linebreak = true
-      vim.opt_local.showbreak = "↪"
-      vim.opt_local.display:append("lastline")
-    end
   end,
 })
