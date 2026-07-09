@@ -79,11 +79,44 @@ if [[ -n $BREW_PREFIX ]]; then
 fi
 
 # Set locales
-export LANG=en_US.UTF-8
-# Set location related locales
-export LC_TIME=en_GB.UTF-8        # Date and time format
-export LC_MONETARY=sk_SK.UTF-8    # Currency format
-export LC_NUMERIC=sk_SK.UTF-8     # Numbers (decimal separator, grouping)
+locale_available() {
+    local requested candidate
+    requested="$(printf '%s' "$1" | tr '[:upper:]' '[:lower:]' | sed 's/utf-8/utf8/')"
+
+    while IFS= read -r candidate; do
+        candidate="$(printf '%s' "$candidate" | tr '[:upper:]' '[:lower:]')"
+        [ "$candidate" = "$requested" ] && return 0
+    done < <(locale -a 2>/dev/null)
+
+    return 1
+}
+
+set_first_available_locale() {
+    local name="$1"
+    shift
+
+    local value
+    for value in "$@"; do
+        if locale_available "$value"; then
+            export "$name=$value"
+            return 0
+        fi
+    done
+
+    return 1
+}
+
+# Keep programs in English, but prefer a UTF-8 locale that actually exists.
+set_first_available_locale LANG en_US.UTF-8 C.UTF-8
+export LANGUAGE=en_US:en
+
+# Use English names with 24-hour / Monday-first conventions for time.
+set_first_available_locale LC_TIME en_IE.UTF-8 en_GB.UTF-8
+# Use Slovak regional formatting where it is helpful.
+set_first_available_locale LC_MONETARY sk_SK.UTF-8
+set_first_available_locale LC_NUMERIC sk_SK.UTF-8
+set_first_available_locale LC_MEASUREMENT sk_SK.UTF-8
+set_first_available_locale LC_PAPER sk_SK.UTF-8
 # Make sure LC_ALL is not set to override
 unset LC_ALL
 
@@ -284,9 +317,13 @@ fi
 # this, if it's already enabled in /etc/bash.bashrc or /etc/profile).
 # If not sources particular file.
 if ! shopt -oq posix; then
-	# MacOS system with Homebrew.
+    # macOS system with Homebrew.
     if [ -n "$BREW_PREFIX" ] && [ -f "$BREW_PREFIX/etc/profile.d/bash_completion.sh" ]; then
         LANG=C source "$BREW_PREFIX/etc/profile.d/bash_completion.sh"
+    elif [ -f /usr/share/bash-completion/bash_completion ]; then
+        source /usr/share/bash-completion/bash_completion
+    elif [ -f /etc/bash_completion ]; then
+        source /etc/bash_completion
     fi
     # Load local bash autocompletion files.
     if [ -d ~/.bash_completions ]; then
