@@ -304,13 +304,6 @@ refresh-completions() {
     fi
 }
 
-# goenv
-export GOENV_ROOT="$HOME/.goenv"
-prepend "$GOENV_ROOT/bin"
-if command -v goenv >/dev/null 2>&1; then
-    eval "$(goenv init -)"
-fi
-
 # Python is managed with uv, which does not require shell init.
 
 # Enable programmable completion features (you don't need to enable
@@ -341,3 +334,14 @@ fi
 # Added by LM Studio CLI (lms)
 prepend "$HOME/.lmstudio/bin"
 # End of LM Studio CLI section
+
+# Go toolchain management:
+# - Keep toolchain selection local-only so missing versions fail loudly
+#   instead of being downloaded automatically.
+# - Keep goenv init at the end so its PATH/shims setup wins.
+if command -v goenv >/dev/null 2>&1; then
+    export GOTOOLCHAIN=local
+    export GOENV_ROOT="$HOME/.goenv"
+    prepend "$GOENV_ROOT/bin"
+    eval "$(goenv init -)"
+fi
