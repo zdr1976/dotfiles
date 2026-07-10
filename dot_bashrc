@@ -364,16 +364,20 @@ refresh-completions() {
 if ! shopt -oq posix; then
     # macOS system with Homebrew.
     if [ -n "$BREW_PREFIX" ] && [ -f "$BREW_PREFIX/etc/profile.d/bash_completion.sh" ]; then
+        # shellcheck disable=SC1091
         LANG=C source "$BREW_PREFIX/etc/profile.d/bash_completion.sh"
     elif [ -f /usr/share/bash-completion/bash_completion ]; then
+        # shellcheck disable=SC1091
         source /usr/share/bash-completion/bash_completion
     elif [ -f /etc/bash_completion ]; then
+        # shellcheck disable=SC1091
         source /etc/bash_completion
     fi
     # Load local bash autocompletion files.
     if [ -d ~/.bash_completions ]; then
         for f in ~/.bash_completions/*.sh; do
             [[ -e "$f" ]] || break  # handle the case of no *.sh files
+            # shellcheck disable=SC1090
             . "$f"
         done
     fi
