@@ -79,14 +79,21 @@ if [[ -n $BREW_PREFIX ]]; then
 fi
 
 # Set locales
-locale_available() {
-    local requested candidate
-    requested="$(printf '%s' "$1" | tr '[:upper:]' '[:lower:]' | sed 's/utf-8/utf8/')"
+# Clear LC_ALL before probing locales so subprocesses do not inherit an
+# invalid override from the parent environment.
+unset LC_ALL
 
-    while IFS= read -r candidate; do
-        candidate="$(printf '%s' "$candidate" | tr '[:upper:]' '[:lower:]')"
-        [ "$candidate" = "$requested" ] && return 0
-    done < <(locale -a 2>/dev/null)
+AVAILABLE_LOCALES_NORM=$'\n'"$(
+    locale -a 2>/dev/null | tr '[:upper:]' '[:lower:]' | sed 's/utf-8/utf8/g'
+)"$'\n'
+
+locale_available() {
+    local requested
+    requested="$(printf '%s' "$1" | tr '[:upper:]' '[:lower:]' | sed 's/utf-8/utf8/g')"
+
+    case "$AVAILABLE_LOCALES_NORM" in
+        *$'\n'"$requested"$'\n'*) return 0 ;;
+    esac
 
     return 1
 }
@@ -117,8 +124,6 @@ set_first_available_locale LC_MONETARY sk_SK.UTF-8
 set_first_available_locale LC_NUMERIC sk_SK.UTF-8
 set_first_available_locale LC_MEASUREMENT sk_SK.UTF-8
 set_first_available_locale LC_PAPER sk_SK.UTF-8
-# Make sure LC_ALL is not set to override
-unset LC_ALL
 
 # fzf magic
 if command -v fzf >/dev/null 2>&1; then
@@ -154,6 +159,7 @@ shopt -s checkwinsize
 
 # Set shell prompt to `starship` if installed.
 if [ -x "$(command -v starship)" ]; then
+    export STARSHIP_LOG=error
     eval "$(starship init bash)"
 else
     # Dynamic bash prompt
