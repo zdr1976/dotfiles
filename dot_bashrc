@@ -277,11 +277,6 @@ gcloc() {
     git ls-files -z | xargs -0 cloc
 }
 
-# Source another Aliases from external file (if exists).
-if [ -f ~/.aliases ]; then
-    . "$HOME"/.aliases
-fi
-
 # Select from multiple k8s clusters configurations.
 kc() {
     local k8s_config
