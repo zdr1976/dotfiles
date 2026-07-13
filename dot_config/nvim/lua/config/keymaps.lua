@@ -16,10 +16,10 @@ map("n", "<C-n>", "<Cmd>nohlsearch<CR>", { silent = true, desc = "Clear search h
 map("v", "<C-n>", "<Cmd>nohlsearch<CR>", { silent = true, desc = "Clear search highlighting" })
 map("i", "<C-n>", "<C-o>:nohlsearch<CR>", { silent = true, desc = "Clear search highlighting" })
 
-map({ "n", "x" }, "<Leader>y", '"*y', { desc = "Yank to * clipboard" })
-map("n", "<Leader>p", '"*p', { desc = "Paste from * clipboard" })
-map({ "n", "x" }, "<Leader>Y", '"+y', { desc = "Yank to + clipboard" })
-map("n", "<Leader>P", '"+p', { desc = "Paste from + clipboard" })
+map({ "n", "x" }, "<Leader>y", '"+y', { desc = "Yank to system clipboard" })
+map("n", "<Leader>p", '"+p', { desc = "Paste from system clipboard" })
+map({ "n", "x" }, "<Leader>Y", '"*y', { desc = "Yank to primary selection" })
+map("n", "<Leader>P", '"*p', { desc = "Paste from primary selection" })
 
 local window_maps = {
   ["<C-Up>"] = { "<C-W><C-K>", "Focus upper window" },
