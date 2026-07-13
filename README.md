@@ -12,7 +12,7 @@ symlinking them.
 This repository follows a chezmoi-style layout:
 
 - `dot_bash_profile` -> `~/.bash_profile`
-- `dot_bashrc.tmpl` -> `~/.bashrc`
+- `dot_bashrc` -> `~/.bashrc`
 - `dot_tmux.conf.tmpl` -> `~/.tmux.conf`
 - `dot_config/git/` -> `~/.config/git/`
 - `dot_config/nvim/` -> `~/.config/nvim/`
@@ -64,10 +64,6 @@ Then edit `.chezmoidata.yaml` with your real values.
 Example:
 
 ```yaml
-paths:
-  personalProjects: "~/Projects/Personal"
-  workProjects: "~/Projects/Work"
-
 git:
   defaultIdentity: personal
   personal:
@@ -86,9 +82,6 @@ git:
 
 The `personal` profile is the minimum required setup. The `work` profile is
 optional.
-
-The `paths` section is shared by shell and Git config rendering. Update those
-paths if your repositories live outside the default `~/Projects/...` layout.
 
 ## Clean System Setup
 
@@ -161,9 +154,12 @@ repositories.
 By default, repository paths under `~/Projects/Personal/` use the personal
 identity and paths under `~/Projects/Work/` use the work identity.
 
-If you use a different layout, update `paths.personalProjects` and
-`paths.workProjects` in `.chezmoidata.yaml`. Those same values are also used
-for `CDPATH` in the rendered Bash config.
+If you do not use that directory layout, the path-based override will not
+trigger. In that case, Git will keep using the default identity from
+`.chezmoidata.yaml`.
+
+If you want work repos in a different location, update the `includeIf`
+patterns in [config.tmpl](/Users/rastislav.slavicek/Projects/Personal/dotfiles/dot_config/git/config.tmpl).
 
 ## Tmux
 

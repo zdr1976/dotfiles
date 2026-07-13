@@ -1,7 +1,3 @@
-paths:
-  personalProjects: "~/Projects/Personal"
-  workProjects: "~/Projects/Work"
-
 git:
   defaultIdentity: personal
   personal:
@@ -12,8 +8,3 @@ git:
   work:
     name: "Your Name"
     email: "work@example.com"
-
-shell:
-  enableGoenv: true
-  enableFnm: true
-  enableZoxide: true
