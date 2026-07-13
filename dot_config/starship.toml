@@ -9,6 +9,7 @@ $directory\
 $git_branch\
 $git_status\
 $kubernetes\
+$golang\
 $python\
 $nodejs\
 $line_break\
@@ -58,13 +59,16 @@ style = "purple bold"
 disabled = false
 
 [python]
-style = "bright-purple bold"
 version_format = "${raw}"
 symbol = "py:"
-format = '[$symbol(${version} )(ve:$virtualenv )]($style)'
+format = '[$symbol(${version} )(ve:$virtualenv )](bright-purple bold)'
 
 [nodejs]
-style = "bright-purple bold"
 version_format = "${raw}"
 symbol = "node:"
-format = "[$symbol($version )]($style)"
+format = "[$symbol($version )](bright-purple bold)"
+
+[golang]
+version_format = "${raw}"
+symbol = "go:"
+format = "[$symbol($version )](bright-purple bold)"
