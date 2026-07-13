@@ -65,10 +65,11 @@ Example:
 
 ```yaml
 git:
-  defaultIdentity: work
+  defaultIdentity: personal
   personal:
     name: "Your Name"
     email: "personal@example.com"
+  # Optional second profile.
   work:
     name: "Your Name"
     email: "work@example.com"
@@ -78,6 +79,9 @@ git:
 
 - `work`: use work everywhere except personal repos
 - `personal`: use personal everywhere except work repos
+
+The `personal` profile is the minimum required setup. The `work` profile is
+optional.
 
 ## Clean System Setup
 
@@ -146,6 +150,16 @@ Git config is managed under `dot_config/git/` and is rendered to:
 
 The main config uses includes and `includeIf` rules for personal and work
 repositories.
+
+By default, repository paths under `~/Projects/Personal/` use the personal
+identity and paths under `~/Projects/Work/` use the work identity.
+
+If you do not use that directory layout, the path-based override will not
+trigger. In that case, Git will keep using the default identity from
+`.chezmoidata.yaml`.
+
+If you want work repos in a different location, update the `includeIf`
+patterns in [config.tmpl](/Users/rastislav.slavicek/Projects/Personal/dotfiles/dot_config/git/config.tmpl).
 
 ## Tmux
 

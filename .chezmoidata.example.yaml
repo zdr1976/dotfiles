@@ -1,8 +1,10 @@
 git:
-  defaultIdentity: work
+  defaultIdentity: personal
   personal:
     name: "Your Name"
     email: "personal@example.com"
+  # Optional second profile. If omitted, the personal profile is used
+  # everywhere.
   work:
     name: "Your Name"
     email: "work@example.com"

@@ -1,8 +1,11 @@
+{{- $hasWork := and .git.work .git.work.name .git.work.email -}}
 [include]
     path = config-base
 [include]
-    path = config-{{ .git.defaultIdentity }}
+    path = config-{{ if and $hasWork (eq .git.defaultIdentity "work") }}work{{ else }}personal{{ end }}
 [includeIf "gitdir:~/Projects/Personal/"]
     path = config-personal
+{{- if $hasWork }}
 [includeIf "gitdir:~/Projects/Work/"]
     path = config-work
+{{- end }}
