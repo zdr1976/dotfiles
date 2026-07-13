@@ -1,4 +1,5 @@
 local opt = vim.opt
+local compat = require("config.compat")
 
 vim.g.netrw_banner = 0
 vim.g.netrw_liststyle = 3
@@ -30,15 +31,7 @@ local function apply_theme_overrides()
   set_hl(0, "netrwExe", { fg = "#fabd2f" })
 end
 
-local function joinpath(...)
-  if vim.fs and vim.fs.joinpath then
-    return vim.fs.joinpath(...)
-  end
-
-  return table.concat({ ... }, "/")
-end
-
-local undodir = joinpath(vim.fn.stdpath("state"), "undo")
+local undodir = compat.joinpath(vim.fn.stdpath("state"), "undo")
 vim.fn.mkdir(undodir, "p")
 
 opt.number = true
@@ -48,7 +41,10 @@ opt.splitbelow = true
 opt.showmode = false
 opt.ignorecase = true
 opt.smartcase = true
-opt.completeopt = { "menu", "menuone", "popup" }
+opt.completeopt = { "menu", "menuone" }
+if compat.has_completeopt_popup then
+  opt.completeopt:append("popup")
+end
 opt.pumheight = 10
 opt.cursorline = true
 opt.cursorlineopt = "number"

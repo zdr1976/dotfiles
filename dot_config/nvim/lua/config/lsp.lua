@@ -1,8 +1,8 @@
 local M = {}
+local compat = require("config.compat")
 
 function M.setup()
   local capabilities = require("cmp_nvim_lsp").default_capabilities()
-  local has_new_lsp_api = vim.fn.has("nvim-0.11") == 1 and vim.lsp and vim.lsp.config and type(vim.lsp.enable) == "function"
 
   local servers = {
     ansiblels = {},
@@ -37,14 +37,14 @@ function M.setup()
 
   for server, config in pairs(servers) do
     config.capabilities = capabilities
-    if has_new_lsp_api then
+    if compat.has_native_lsp_config then
       vim.lsp.config(server, config)
     else
       require("lspconfig")[server].setup(config)
     end
   end
 
-  if has_new_lsp_api then
+  if compat.has_native_lsp_config then
     vim.lsp.enable(vim.tbl_keys(servers))
   end
 
