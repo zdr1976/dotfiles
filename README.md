@@ -79,6 +79,30 @@ git:
 - `work`: use work everywhere except personal repos
 - `personal`: use personal everywhere except work repos
 
+## Clean System Setup
+
+On a new machine, clone the repository first:
+
+```console
+git clone <repo-url> ~/Projects/Personal/dotfiles
+cd ~/Projects/Personal/dotfiles
+```
+
+Create your local data file from the example and populate it with your real
+values:
+
+```console
+cp .chezmoidata.example.yaml .chezmoidata.yaml
+```
+
+If you are working directly from this cloned repository with `chezmoi --source`,
+keeping `.chezmoidata.yaml` in the repository root is enough:
+
+```console
+chezmoi --source "$PWD" diff
+chezmoi --source "$PWD" apply
+```
+
 ## Daily Workflow
 
 Edit files in this repository directly with your normal editor.
