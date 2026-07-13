@@ -13,7 +13,7 @@ This repository follows a chezmoi-style layout:
 
 - `dot_bash_profile` -> `~/.bash_profile`
 - `dot_bashrc` -> `~/.bashrc`
-- `dot_tmux.conf` -> `~/.tmux.conf`
+- `dot_tmux.conf.tmpl` -> `~/.tmux.conf`
 - `dot_config/git/` -> `~/.config/git/`
 - `dot_config/nvim/` -> `~/.config/nvim/`
 - `dot_config/starship.toml` -> `~/.config/starship.toml`
