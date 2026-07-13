@@ -30,7 +30,15 @@ local function apply_theme_overrides()
   set_hl(0, "netrwExe", { fg = "#fabd2f" })
 end
 
-local undodir = vim.fs.joinpath(vim.fn.stdpath("state"), "undo")
+local function joinpath(...)
+  if vim.fs and vim.fs.joinpath then
+    return vim.fs.joinpath(...)
+  end
+
+  return table.concat({ ... }, "/")
+end
+
+local undodir = joinpath(vim.fn.stdpath("state"), "undo")
 vim.fn.mkdir(undodir, "p")
 
 opt.number = true

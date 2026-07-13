@@ -2,12 +2,13 @@ local M = {}
 
 function M.setup()
   local capabilities = require("cmp_nvim_lsp").default_capabilities()
+  local has_new_lsp_api = vim.fn.has("nvim-0.11") == 1 and vim.lsp and vim.lsp.config and type(vim.lsp.enable) == "function"
 
   local servers = {
     ansiblels = {},
     bashls = {},
     cssls = {},
-    docker_language_server = {},
+    dockerls = {},
     gopls = {},
     html = {},
     jsonls = {},
@@ -36,10 +37,16 @@ function M.setup()
 
   for server, config in pairs(servers) do
     config.capabilities = capabilities
-    vim.lsp.config(server, config)
+    if has_new_lsp_api then
+      vim.lsp.config(server, config)
+    else
+      require("lspconfig")[server].setup(config)
+    end
   end
 
-  vim.lsp.enable(vim.tbl_keys(servers))
+  if has_new_lsp_api then
+    vim.lsp.enable(vim.tbl_keys(servers))
+  end
 
   local group = vim.api.nvim_create_augroup("dotfiles_lsp", { clear = true })
 

@@ -14,7 +14,7 @@ return {
         "ansiblels",
         "bashls",
         "cssls",
-        "docker_language_server",
+        "dockerls",
         "gopls",
         "html",
         "jsonls",
