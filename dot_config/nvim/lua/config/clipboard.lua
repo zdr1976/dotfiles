@@ -25,8 +25,8 @@ function M.setup()
     vim.g.clipboard = {
       name = "xclip",
       copy = {
-        ["+"] = "xclip -quiet -in -selection clipboard",
-        ["*"] = "xclip -quiet -in -selection primary",
+        ["+"] = "xclip -silent -in -selection clipboard",
+        ["*"] = "xclip -silent -in -selection primary",
       },
       paste = {
         ["+"] = "xclip -out -selection clipboard",
