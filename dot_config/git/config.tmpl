@@ -1,11 +1,19 @@
 {{- $hasWork := and .git.work .git.work.name .git.work.email -}}
+{{- $personalProjects := "~/Projects/Personal" -}}
+{{- if and (hasKey . "paths") (hasKey .paths "personalProjects") -}}
+{{- $personalProjects = .paths.personalProjects -}}
+{{- end -}}
+{{- $workProjects := "~/Projects/Work" -}}
+{{- if and (hasKey . "paths") (hasKey .paths "workProjects") -}}
+{{- $workProjects = .paths.workProjects -}}
+{{- end -}}
 [include]
     path = config-base
 [include]
     path = config-{{ if and $hasWork (eq .git.defaultIdentity "work") }}work{{ else }}personal{{ end }}
-[includeIf "gitdir:~/Projects/Personal/"]
+[includeIf "gitdir:{{ $personalProjects }}/"]
     path = config-personal
 {{- if $hasWork }}
-[includeIf "gitdir:~/Projects/Work/"]
+[includeIf "gitdir:{{ $workProjects }}/"]
     path = config-work
 {{- end }}

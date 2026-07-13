@@ -10,11 +10,19 @@ esac
 # - History: ignore duplicates/space-prefixed commands and keep a longer log.
 # - Prompt/dirs: trim long paths and make `cd` search common project roots.
 # - Terminal: keep LINES/COLUMNS updated.
+{{- $personalProjects := "~/Projects/Personal" }}
+{{- if and (hasKey . "paths") (hasKey .paths "personalProjects") }}
+{{- $personalProjects = .paths.personalProjects }}
+{{- end }}
+{{- $workProjects := "~/Projects/Work" }}
+{{- if and (hasKey . "paths") (hasKey .paths "workProjects") }}
+{{- $workProjects = .paths.workProjects }}
+{{- end }}
 HISTCONTROL=ignoreboth
 HISTSIZE=10000
 HISTFILESIZE=100000
 PROMPT_DIRTRIM=2
-CDPATH=.:~:~/Projects/Work:~/Projects/Personal
+CDPATH=.:~:{{ $personalProjects }}:{{ $workProjects }}
 K8S_PROMPT_CONTEXT=""
 
 shopt -s histappend
@@ -53,11 +61,10 @@ prepend() {
 # Add local user binaries to PATH.
 prepend "$HOME/.local/bin" "$HOME/bin"
 
+{{- if eq .chezmoi.os "darwin" }}
 # macOS/BSD `ls` colors.
-if [[ $OSTYPE == darwin* ]]; then
-    export CLICOLOR=1
-    export LSCOLORS="GxFxCxDxBxegedabagaced"
-fi
+export CLICOLOR=1
+export LSCOLORS="GxFxCxDxBxegedabagaced"
 
 # Set PATH for Homebrew using its default prefix.
 if [[ -d /opt/homebrew ]]; then
@@ -80,6 +87,7 @@ if [[ -n $BREW_PREFIX ]]; then
         "$BREW_PREFIX/opt/coreutils/libexec/gnubin" \
         "$BREW_PREFIX/opt/gnu-tar/libexec/gnubin"
 fi
+{{- end }}
 
 # Set locales
 # Clear LC_ALL before probing locales so subprocesses do not inherit an
@@ -327,21 +335,27 @@ awsp() {
     echo "Switched to AWS profile '$AWS_PROFILE'."
 }
 
+{{- if not (and (hasKey . "shell") (hasKey .shell "enableZoxide") (eq .shell.enableZoxide false)) }}
 if command -v zoxide >/dev/null 2>&1; then
     eval "$(zoxide init bash)"
 fi
+{{- end }}
 
+{{- if not (and (hasKey . "shell") (hasKey .shell "enableFnm") (eq .shell.enableFnm false)) }}
 if command -v fnm >/dev/null 2>&1; then
     eval "$(fnm env --use-on-cd --shell bash)"
 fi
+{{- end }}
 
 # Run manually after installing or upgrading tools that provide completions.
 refresh-completions() {
     mkdir -p ~/.bash_completions
 
+{{- if not (and (hasKey . "shell") (hasKey .shell "enableFnm") (eq .shell.enableFnm false)) }}
     if command -v fnm >/dev/null 2>&1; then
         fnm completions --shell bash > ~/.bash_completions/fnm.sh
     fi
+{{- end }}
 
     if command -v npm >/dev/null 2>&1; then
         npm completion > ~/.bash_completions/npm.sh
@@ -391,6 +405,7 @@ fi
 prepend "$HOME/.lmstudio/bin"
 # End of LM Studio CLI section
 
+{{- if not (and (hasKey . "shell") (hasKey .shell "enableGoenv") (eq .shell.enableGoenv false)) }}
 # Go toolchain management:
 # - Keep toolchain selection local-only so missing versions fail loudly
 #   instead of being downloaded automatically.
@@ -401,3 +416,4 @@ if command -v goenv >/dev/null 2>&1; then
     prepend "$GOENV_ROOT/bin"
     eval "$(goenv init -)"
 fi
+{{- end }}
