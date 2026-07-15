@@ -32,7 +32,27 @@ function M.setup()
     taplo = {},
     terraformls = {},
     ts_ls = {},
-    yamlls = {},
+    yamlls = {
+      settings = {
+        yaml = {
+          validate = true,
+          completion = true,
+          hover = true,
+          schemaStore = {
+            enable = false,
+            url = "",
+          },
+          schemas = {
+            ["https://raw.githubusercontent.com/microsoft/azure-pipelines-vscode/main/service-schema.json"] = {
+              "azure-pipelines.yml",
+              "azure-pipelines.yaml",
+              "azure-pipelines-*.yml",
+              "azure-pipelines-*.yaml",
+            },
+          },
+        },
+      },
+    },
   }
 
   for server, config in pairs(servers) do
