@@ -160,6 +160,11 @@ if command -v fzf >/dev/null 2>&1; then
 
 fi
 
+# Run system fetch on terminal startup before the prompt renders
+if command -v fastfetch &> /dev/null; then
+    fastfetch
+fi
+
 # Prompt selection:
 # - Prefer starship when it is installed.
 # - Fall back to the native bash prompter otherwise.
