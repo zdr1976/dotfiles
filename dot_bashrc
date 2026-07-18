@@ -260,6 +260,20 @@ parse_k8s_context() {
     [[ -n $K8S_PROMPT_CONTEXT ]] && printf ' (k8s:%s)' "$K8S_PROMPT_CONTEXT"
 }
 
+# Function to format the current working directory path and update Ghostty's title
+update_terminal_title() {
+    # Replaces the absolute home path /home/zdr with a clean ~ symbol
+    local current_dir="${PWD/#$HOME/\~}"
+
+    # Send the special terminal escape sequence (\e]2;TITLE\a) to set the window title
+    printf "\e]2;%s\a" "$current_dir"
+}
+
+# Automatically run this formatting function every time Bash displays a prompt
+if [[ "$TERM" == "xterm-ghostty" || -n "$GHOSTTY_RESOURCES_DIR" ]]; then
+    PROMPT_COMMAND="update_terminal_title; $PROMPT_COMMAND"
+fi
+
 # Some nice aliases to have
 alias diff='diff --color'
 alias g='git'
