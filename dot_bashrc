@@ -62,7 +62,9 @@ fi
 # Set PATH for Homebrew using its default prefix.
 if [[ -d /opt/homebrew ]]; then
     HOMEBREW_PREFIX=/opt/homebrew
-elif [[ -d /usr/local/Homebrew || -x /usr/local/bin/brew ]]; then
+elif [[ -d /home/linuxbrew/.linuxbrew && -x /home/linuxbrew/.linuxbrew/bin/brew ]]; then
+    HOMEBREW_PREFIX=/home/linuxbrew/.linuxbrew
+elif [[ -d /usr/local/Homebrew && -x /usr/local/bin/brew ]]; then
     HOMEBREW_PREFIX=/usr/local
 fi
 
@@ -75,7 +77,7 @@ BREW_PREFIX="${HOMEBREW_PREFIX:-}"
 
 # Prefer GNU command (like ls) instead of MacOS. Coreutils package need to be
 # installed via brew first (brew install coreutils).
-if [[ -n $BREW_PREFIX ]]; then
+if [[ -n $BREW_PREFIX && $OSTYPE == darwin* ]]; then
     prepend \
         "$BREW_PREFIX/opt/coreutils/libexec/gnubin" \
         "$BREW_PREFIX/opt/gnu-tar/libexec/gnubin"
