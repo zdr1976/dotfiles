@@ -1,0 +1,19 @@
+# --- Window Geometry ---
+window-width = 140
+window-height = 40
+
+# Prevent Ghostty from dynamically changing the window title
+title = ""
+
+# --- Font Settings ---
+# Ensure you have the JetBrainsMono Nerd Font installed on your Linux Mint system
+font-family = "JetBrainsMono Nerd Font"
+font-size = 10
+
+# --- Theme Settings ---
+# Ghostty ships with several Gruvbox variations built-in
+theme = Gruvbox Dark
+
+# Force the Linux system window manager style
+window-decoration = server
+#window-decoration = none
