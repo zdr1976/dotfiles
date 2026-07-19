@@ -3,3 +3,4 @@ README-nvim.md
 Brewfile
 .gitignore
 .chezmoidata.example.yaml
+.config/mc/ini
