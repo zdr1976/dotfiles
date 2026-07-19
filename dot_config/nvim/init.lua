@@ -6,3 +6,9 @@ require("config.options")
 require("plugins")
 require("config.keymaps")
 require("config.autocmds")
+
+vim.filetype.add({
+  extension = {
+    tmpl = "gotmpl",
+  },
+})
