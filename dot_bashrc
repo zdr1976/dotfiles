@@ -28,16 +28,9 @@ if [[ -t 0 ]]; then
     stty stop '^P'
 fi
 
+# Set default editor to fallback to.
 EDITOR=vim
 VISUAL=vim
-
-if command -v nvim >/dev/null 2>&1; then
-    EDITOR=nvim
-    VISUAL=nvim
-    alias vim='nvim'
-fi
-
-export EDITOR VISUAL
 
 prepend() {
     local dir
@@ -59,17 +52,23 @@ if [[ $OSTYPE == darwin* ]]; then
     export LSCOLORS="GxFxCxDxBxegedabagaced"
 fi
 
-# Set PATH for Homebrew using its default prefix.
-if [[ -d /opt/homebrew ]]; then
-    HOMEBREW_PREFIX=/opt/homebrew
-elif [[ -d /home/linuxbrew/.linuxbrew && -x /home/linuxbrew/.linuxbrew/bin/brew ]]; then
-    HOMEBREW_PREFIX=/home/linuxbrew/.linuxbrew
-elif [[ -d /usr/local/Homebrew && -x /usr/local/bin/brew ]]; then
-    HOMEBREW_PREFIX=/usr/local
-fi
+# Detect Homebrew prefix function
+detect_brew_prefix() {
+    local prefixes=("/opt/homebrew" "/home/linuxbrew/.linuxbrew" "/usr/local/Homebrew")
 
-if [[ -n ${HOMEBREW_PREFIX:-} ]]; then
-    export HOMEBREW_PREFIX
+    for prefix in "${prefixes[@]}"; do
+        if [[ -d "$prefix" && -x "$prefix/bin/brew" ]]; then
+            echo "$prefix"
+            return 0
+        fi
+    done
+
+    return 1
+}
+
+# Set HOMEBREW_PREFIX using the function and append to PATH.
+if brew_prefix=$(detect_brew_prefix); then
+    export HOMEBREW_PREFIX="$brew_prefix"
     prepend "$HOMEBREW_PREFIX/bin" "$HOMEBREW_PREFIX/sbin"
 fi
 
@@ -83,54 +82,63 @@ if [[ -n $BREW_PREFIX && $OSTYPE == darwin* ]]; then
         "$BREW_PREFIX/opt/gnu-tar/libexec/gnubin"
 fi
 
+# Preffer the neovim when available if not vim will be used.
+if command -v nvim >/dev/null 2>&1; then
+    EDITOR=nvim
+    VISUAL=nvim
+    alias vim='nvim'
+fi
+export EDITOR VISUAL
+
 # Set locales
 # Clear LC_ALL before probing locales so subprocesses do not inherit an
 # invalid override from the parent environment.
 unset LC_ALL
 
-declare -A AVAILABLE_LOCALES=()
-while IFS= read -r locale_name; do
-    locale_name="${locale_name,,}"
-    locale_name="${locale_name//utf-8/utf8}"
-    AVAILABLE_LOCALES["$locale_name"]=1
-done < <(locale -a 2>/dev/null)
+# 1. Call locale -a EXACTLY ONCE.
+# 2. Convert to lowercase and normalize 'utf-8' to 'utf8' for consistent matching.
+# 3. Store it in a single string variable.
 
-locale_available() {
-    local requested
-    requested="${1,,}"
-    requested="${requested//utf-8/utf8}"
-
-    [[ -n ${AVAILABLE_LOCALES["$requested"]:-} ]] && return 0
-
-    return 1
+# Normalize locale string.
+# This handles lowercase conversion and the utf-8 -> utf8 replacement.
+normalize_locale() {
+    echo "$1" | tr '[:upper:]' '[:lower:]' | sed 's/utf-8/utf8/g'
 }
 
-set_first_available_locale() {
-    local name="$1"
-    shift
+# 1. Get the master list once.
+_raw_locales=$(locale -a 2>/dev/null)
 
-    local value
-    for value in "$@"; do
-        if locale_available "$value"; then
-            export "$name=$value"
+# 2. Normalize the entire master list once.
+_loc_list_normalized=$(normalize_locale "$_raw_locales")
+
+set_loc() {
+    local var=$1; shift
+    for loc in "$@"; do
+        # 3. Normalize the candidate using the same function.
+        local norm_candidate
+        norm_candidate=$(normalize_locale "$loc")
+
+        # 4. Check if normalized candidate is in normalized list.
+        if echo "$_loc_list_normalized" | grep -qiF "$norm_candidate"; then
+            export "$var"="$loc"
             return 0
         fi
     done
-
     return 1
 }
 
-# Keep programs in English, but prefer a UTF-8 locale that actually exists.
-set_first_available_locale LANG en_US.UTF-8 C.UTF-8
+# Application
+set_loc LANG en_US.UTF-8 C.UTF-8
 export LANGUAGE=en_US:en
 
-# Use English names with 24-hour / Monday-first conventions for time.
-set_first_available_locale LC_TIME en_IE.UTF-8 en_GB.UTF-8
-# Use Slovak regional formatting where it is helpful.
-set_first_available_locale LC_MONETARY sk_SK.UTF-8
-set_first_available_locale LC_NUMERIC sk_SK.UTF-8
-set_first_available_locale LC_MEASUREMENT sk_SK.UTF-8
-set_first_available_locale LC_PAPER sk_SK.UTF-8
+set_loc LC_TIME en_IE.UTF-8 en_GB.UTF-8
+set_loc LC_MONETARY sk_SK.UTF-8
+set_loc LC_NUMERIC sk_SK.UTF-8
+set_loc LC_MEASUREMENT sk_SK.UTF-8
+set_loc LC_PAPER sk_SK.UTF-8
+
+# Clean up the helper variables so it doesn't pollute your environment.
+unset _raw_locales _loc_list_normalized
 
 # fzf magic
 if command -v fzf >/dev/null 2>&1; then
