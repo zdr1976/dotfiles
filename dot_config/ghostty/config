@@ -17,3 +17,6 @@ theme = Gruvbox Dark
 # Force the Linux system window manager style
 window-decoration = server
 #window-decoration = none
+
+# Turn off all copy desktop/toast notifications
+app-notifications = no-clipboard-copy
