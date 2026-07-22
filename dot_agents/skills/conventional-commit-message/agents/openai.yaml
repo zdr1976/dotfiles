@@ -1,0 +1,7 @@
+interface:
+  display_name: "Conventional Commit Message"
+  short_description: "Formats copy-ready conventional commits"
+  default_prompt: "Use $conventional-commit-message to write a copy-ready conventional commit with a 50 character subject limit and 72 character body lines."
+
+policy:
+  allow_implicit_invocation: true
