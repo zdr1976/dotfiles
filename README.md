@@ -18,6 +18,8 @@ This repository follows a chezmoi-style layout:
 - `dot_config/nvim/` -> `~/.config/nvim/`
 - `dot_config/starship.toml` -> `~/.config/starship.toml`
 - `dot_config/tmux/` -> `~/.config/tmux/`
+- `Library/Application Support/com.mitchellh.ghostty/symlink_config.tmpl` -> `~/Library/Application Support/com.mitchellh.ghostty/config` (macOS only)
+- `Library/Application Support/lazygit/symlink_config.yml.tmpl` -> `~/Library/Application Support/lazygit/config.yml` (macOS only)
 
 The real Git identity values are not committed. Use a local
 `.chezmoidata.yaml` file based on `.chezmoidata.example.yaml`.
@@ -169,6 +171,19 @@ under:
 - `~/.config/tmux/tmux.adapta.conf`
 - `~/.config/tmux/tmux.gruvbox.conf`
 - `~/.config/tmux/tmux_cheatsheet.md`
+
+## macOS App Support Paths
+
+Some macOS apps look under `~/Library/Application Support/...` even when the
+real config lives under `~/.config/...`.
+
+This repository keeps the canonical files in:
+
+- `~/.config/ghostty/config`
+- `~/.config/lazygit/config.yml`
+
+On macOS, chezmoi also manages symlinks from the App Support paths back to
+those files so there is only one source of truth.
 
 ## Neovim
 
