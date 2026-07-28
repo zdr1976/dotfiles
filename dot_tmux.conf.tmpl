@@ -93,10 +93,6 @@ bind - split-window -v -c "#{pane_current_path}"
 
 setw -g mode-keys vi
 
-# Enter copy mode when selecting text with the mouse in a pane.
-bind -n MouseDown1Pane select-pane -t= \; copy-mode -M
-bind -n MouseDrag1Pane if-shell -F '#{pane_in_mode}' 'send-keys -M' 'copy-mode -M'
-
 bind -T copy-mode-vi v send -X begin-selection
 bind -T copy-mode-vi V send -X select-line
 bind -T copy-mode-vi Enter send -X copy-pipe-and-cancel "#{@copy_command}"
